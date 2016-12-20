@@ -43,7 +43,7 @@ const m = {
   }
 };
 
-function getInstance (name, map, context) {
+export default function getInstance (name, map, context) {
   let instance;
 
   if (typeof name === 'string' && map instanceof Object) {

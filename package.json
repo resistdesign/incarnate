@@ -1,0 +1,29 @@
+{
+  "name": "incarnate",
+  "version": "0.0.0",
+  "description": "Dependency Injection (DI) with Lifecycle features for JavaScript.",
+  "main": "src/incarnate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/resistdesign/incarnate.git"
+  },
+  "keywords": [
+    "javascript",
+    "dependency",
+    "injection",
+    "DI",
+    "lifecycle",
+    "browser",
+    "node",
+    "node.js"
+  ],
+  "author": "Resist Design",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/resistdesign/incarnate/issues"
+  },
+  "homepage": "https://github.com/resistdesign/incarnate#readme"
+}

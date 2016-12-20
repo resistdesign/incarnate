@@ -20,7 +20,7 @@ module.exports = {
         }
       }, {});
 
-      expect(instance).toEqual(MOCK_INSTANCE);
+      expect(instance).toBe(MOCK_INSTANCE);
     },
     'should resolve an injected dependency': () => {
       const instance = Incarnate('mock', {
@@ -40,7 +40,7 @@ module.exports = {
         }
       }, {});
 
-      expect(instance).toEqual(MOCK_DEPENDENCY);
+      expect(instance).toBe(MOCK_DEPENDENCY);
     },
     'should resolve injected dependencies recursively': () => {
       const instance = Incarnate('mock', {
@@ -68,7 +68,7 @@ module.exports = {
         }
       }, {});
 
-      expect(instance).toEqual(MOCK_DEPENDENCY_DEPENDENCY);
+      expect(instance).toBe(MOCK_DEPENDENCY_DEPENDENCY);
     }
   }
 };

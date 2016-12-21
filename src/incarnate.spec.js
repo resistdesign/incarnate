@@ -8,8 +8,13 @@ const MOCK_CTX_PROP_VALUE = 'MOCK_CTX_PROP_VALUE';
 const MOCK_ARG_1_VALUE = 'MOCK_ARG_1_VALUE';
 const MOCK_ARG_2_VALUE = 'MOCK_ARG_2_VALUE';
 
+let CACHE_COUNT;
+
 module.exports = {
   'incarnate': {
+    beforeEach: () => {
+      CACHE_COUNT = 0;
+    },
     'should be a function': () => {
       expect(incarnate).toBeA(Function);
     },
@@ -182,6 +187,48 @@ module.exports = {
       expect(instance).toBeAn(Object);
       expect(instance.a).toBe(MOCK_DEPENDENCY);
       expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
+    },
+    'should asynchronously cache dependencies': async () => {
+      const map = {
+        'mock-dep': {
+          args: [],
+          factory: async () => {
+            return await new Promise((res, rej) => {
+              const cacheCount = CACHE_COUNT;
+
+              setTimeout(() => res(cacheCount), 0);
+              CACHE_COUNT += 1;
+            });
+          },
+          refreshCache: async (ctx, cachedValue, path) => {
+            return await new Promise((res, rej) => {
+              setTimeout(() => res(ctx.refreshProp), 0);
+            });
+          }
+        },
+        'mock': {
+          args: [
+            'mock-dep'
+          ],
+          factory: async (arg1) => {
+            return {
+              a: arg1
+            };
+          }
+        }
+      };
+      const context = {
+        refreshProp: false
+      };
+      const cache = {};
+      const instance = await incarnate('mock', map, context, '.', cache);
+      const dependency = await incarnate('mock-dep', map, context, '.', cache);
+
+      expect(cache['mock-dep']).toBe(dependency);
+      expect(CACHE_COUNT).toBe(1);
+      expect(instance).toBeAn(Object);
+      expect(instance.a).toBe(0);
+      expect(dependency).toBe(0);
     }
   }
 };

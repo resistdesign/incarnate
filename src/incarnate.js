@@ -1,60 +1,104 @@
-async function resolveFactory (map, context, args, factory, pathDelimiter) {
+async function resolveDependency (map, context, dependencyDefinition, pathDelimiter, cacheMap, path) {
   let instance;
 
-  if (args instanceof Array && factory instanceof Function) {
-    const resolvedArgs = [];
+  if (dependencyDefinition instanceof Object) {
+    const {
+      args,
+      factory,
+      refreshCache
+    } = dependencyDefinition;
 
-    for (let i = 0; i < args.length; i++) {
-      const argItem = args[i];
+    if (args instanceof Array && factory instanceof Function) {
+      const resolvedArgs = [];
 
-      if (typeof argItem === 'string') {
-        resolvedArgs.push(incarnate(argItem, map, context, pathDelimiter));
-      } else if (argItem instanceof Function) {
-        resolvedArgs.push(argItem(context));
+      for (let i = 0; i < args.length; i++) {
+        const argItem = args[i];
+
+        if (typeof argItem === 'string') {
+          resolvedArgs.push(
+            incarnate(
+              argItem,
+              map,
+              context,
+              pathDelimiter,
+              cacheMap
+            )
+          );
+        } else if (argItem instanceof Function) {
+          resolvedArgs.push(argItem(context));
+        }
+      }
+
+      if (
+        cacheMap instanceof Object &&
+        refreshCache instanceof Function &&
+        typeof path === 'string'
+      ) {
+        const cachedValue = cacheMap[path];
+
+        if (!cacheMap.hasOwnProperty(path) || await refreshCache(context, cachedValue, path)) {
+          instance = await factory.apply(
+            null,
+            await Promise.all(resolvedArgs)
+          );
+
+          cacheMap[path] = instance;
+        } else {
+          instance = cachedValue;
+        }
+      } else {
+        instance = factory.apply(
+          null,
+          await Promise.all(resolvedArgs)
+        );
       }
     }
-
-    instance = factory.apply(
-      null,
-      await Promise.all(resolvedArgs)
-    );
   }
 
   return instance;
 }
 
-async function incarnate (path, map, context, pathDelimiter = '.') {
+async function incarnate (path, map, context, pathDelimiter = '.', cacheMap) {
   const delimiter = typeof pathDelimiter === 'string' ? pathDelimiter : '.';
 
   let instance;
 
   if (typeof path === 'string' && map instanceof Object) {
     const pathParts = path.split(delimiter);
-    // TRICKY: Use `shift` to remove the current path part.
-    const subMapResolver = map[pathParts.shift()];
-    const def = map[path];
+    // TRICKY: Use `shift` to remove the current path part being processed.
+    const currentPath = pathParts.shift();
+    const subMapResolver = map[currentPath];
+    const dependencyDefinition = map[path];
 
-    if (
-      pathParts.length &&
-      pathParts.indexOf('') === -1 &&
-      subMapResolver instanceof Function
-    ) {
+    if (pathParts.length && subMapResolver instanceof Function) {
       if (subMapResolver instanceof Function) {
         const subPath = pathParts.join(delimiter);
         const subMap = await subMapResolver(context, subPath);
+
+        let subCache;
+
+        if (cacheMap instanceof Object) {
+          subCache = {};
+          cacheMap[currentPath] = subCache;
+        }
 
         instance = incarnate(
           subPath,
           subMap,
           context,
-          pathDelimiter
+          pathDelimiter,
+          subCache
         );
       }
-    } else if (def instanceof Object) {
-      const args = def.args;
-      const factory = def.factory;
-
-      instance = resolveFactory(map, context, args, factory, pathDelimiter);
+    } else {
+      instance = resolveDependency(
+        map,
+        context,
+        dependencyDefinition,
+        pathDelimiter,
+        cacheMap,
+        path
+      );
     }
   }
 

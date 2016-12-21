@@ -1,49 +1,4 @@
-// JSDI
-
-class K {
-  handler;
-
-  constructor (handler) {
-    this.handler = handler;
-  }
-
-  exec () {
-    this.handler();
-  }
-}
-
-const m = {
-  thing1: {
-    args: [
-      (context) => context.xyz
-    ],
-    factory: (a) => {
-      return {
-        success: a
-      };
-    }
-  },
-  thing2: {
-    args: [
-      'thing1'
-    ],
-    factory: (a) => {
-      return () => {
-        console.log('Data:', a);
-      };
-    }
-  },
-  thing3: {
-    args: [
-      'thing2'
-    ],
-    factory: (a) => {
-      return new K(a);
-    }
-  }
-};
-
-export default function getInstance (name, map, context) {
+export default function incarnate (name, map, context) {
   let instance;
 
   if (typeof name === 'string' && map instanceof Object) {
@@ -58,7 +13,7 @@ export default function getInstance (name, map, context) {
         const argItem = args[i];
 
         if (typeof argItem === 'string') {
-          resolvedArgs.push(getInstance(argItem, map, context));
+          resolvedArgs.push(incarnate(argItem, map, context));
         } else if (argItem instanceof Function) {
           resolvedArgs.push(argItem(context));
         }
@@ -70,10 +25,6 @@ export default function getInstance (name, map, context) {
 
   return instance;
 }
-
-const inst = getInstance('thing3', m, { xyz: 'yes' });
-
-inst.exec();
 
 /*** Async Solution Demo ***/
 

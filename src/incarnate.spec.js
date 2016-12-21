@@ -1,5 +1,5 @@
 import expect from 'expect';
-import Incarnate from './Incarnate';
+import incarnate from './incarnate';
 
 const MOCK_INSTANCE = {};
 const MOCK_DEPENDENCY = {};
@@ -7,12 +7,12 @@ const MOCK_DEPENDENCY_DEPENDENCY = {};
 const MOCK_CTX_PROP_VALUE = 'MOCK_CTX_PROP_VALUE';
 
 module.exports = {
-  'Incarnate': {
+  'incarnate': {
     'should be a function': () => {
-      expect(Incarnate).toBeA(Function);
+      expect(incarnate).toBeA(Function);
     },
     'should resolve a path': () => {
-      const instance = Incarnate('mock', {
+      const instance = incarnate('mock', {
         'mock': {
           args: [],
           factory: () => {
@@ -24,7 +24,7 @@ module.exports = {
       expect(instance).toBe(MOCK_INSTANCE);
     },
     'should resolve an injected dependency': () => {
-      const instance = Incarnate('mock', {
+      const instance = incarnate('mock', {
         'mock-dep': {
           args: [],
           factory: () => {
@@ -44,7 +44,7 @@ module.exports = {
       expect(instance).toBe(MOCK_DEPENDENCY);
     },
     'should resolve injected dependencies recursively': () => {
-      const instance = Incarnate('mock', {
+      const instance = incarnate('mock', {
         'mock-dep-dep': {
           args: [],
           factory: () => {
@@ -72,7 +72,7 @@ module.exports = {
       expect(instance).toBe(MOCK_DEPENDENCY_DEPENDENCY);
     },
     'should resolve a context specific dependency': () => {
-      const instance = Incarnate('mock', {
+      const instance = incarnate('mock', {
         'mock-dep-dep': {
           args: [],
           factory: () => {

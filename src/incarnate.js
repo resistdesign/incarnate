@@ -62,3 +62,8 @@ async function incarnate (path, map, context, pathDelimiter = '.') {
 }
 
 export default incarnate;
+
+// TODO: Lifecycle.
+// TODO: Caching.
+// TODO: Documentation.
+// TODO: Comprehensive Examples.

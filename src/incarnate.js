@@ -1,4 +1,12 @@
-async function resolveDependency (map, context, dependencyDefinition, pathDelimiter, cacheMap, path) {
+async function resolveDependency ({
+  map,
+  context,
+  dependencyDefinition,
+  pathDelimiter,
+  cacheMap,
+  path,
+  incarnate
+}) {
   let instance;
 
   if (dependencyDefinition instanceof Object) {
@@ -92,12 +100,15 @@ async function incarnate (path, map, context, pathDelimiter = '.', cacheMap) {
       }
     } else {
       instance = resolveDependency(
-        map,
-        context,
-        dependencyDefinition,
-        pathDelimiter,
-        cacheMap,
-        path
+        {
+          map,
+          context,
+          dependencyDefinition,
+          pathDelimiter,
+          cacheMap,
+          path,
+          incarnate
+        }
       );
     }
   }

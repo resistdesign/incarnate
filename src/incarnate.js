@@ -99,17 +99,15 @@ async function incarnate (path, map, context, pathDelimiter = '.', cacheMap) {
         );
       }
     } else {
-      instance = resolveDependency(
-        {
-          map,
-          context,
-          dependencyDefinition,
-          pathDelimiter,
-          cacheMap,
-          path,
-          incarnate
-        }
-      );
+      instance = resolveDependency({
+        map,
+        context,
+        dependencyDefinition,
+        pathDelimiter,
+        cacheMap,
+        path,
+        incarnate
+      });
     }
   }
 

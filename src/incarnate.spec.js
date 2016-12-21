@@ -139,6 +139,49 @@ module.exports = {
       expect(instance.a).toBe(MOCK_ARG_1_VALUE);
       expect(instance.b).toBe(MOCK_ARG_2_VALUE);
       expect(diff < 20).toBe(true);
+    },
+    'should resolve deeply nested dependencies asynchronously': async () => {
+      const instance = await incarnate('mock', {
+          'nested': async ctx => {
+            return await new Promise((res, rej) => {
+              setTimeout(() => res({
+                'mock-dep': {
+                  args: [],
+                  factory: async () => {
+                    return await new Promise((res2, rej2) => {
+                      setTimeout(() => res2(ctx.mockCtxProp), 0);
+                    });
+                  }
+                }
+              }), 0);
+            });
+          },
+          'mock-dep': {
+            args: [],
+            factory: () => MOCK_DEPENDENCY
+          },
+          'mock': {
+            args: [
+              'mock-dep',
+              'nested/mock-dep'
+            ],
+            factory: async (arg1, arg2) => {
+              return await new Promise((res, rej) => {
+                setTimeout(() => res({
+                  a: arg1,
+                  b: arg2
+                }), 0);
+              });
+            }
+          }
+        }, {
+          mockCtxProp: MOCK_CTX_PROP_VALUE
+        },
+        '/');
+
+      expect(instance).toBeAn(Object);
+      expect(instance.a).toBe(MOCK_DEPENDENCY);
+      expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
     }
   }
 };

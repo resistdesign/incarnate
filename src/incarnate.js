@@ -43,7 +43,7 @@ async function incarnate (path, map, context, pathDelimiter = '.') {
         const subPath = pathParts.join(delimiter);
         const subMap = await subMapResolver(context, subPath);
 
-        return incarnate(
+        instance = incarnate(
           subPath,
           subMap,
           context,

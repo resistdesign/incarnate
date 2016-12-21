@@ -21,6 +21,10 @@
     "DI",
     "resolve",
     "lifecycle",
+    "event",
+    "handle",
+    "handler",
+    "handling",
     "browser",
     "node",
     "node.js",
@@ -30,7 +34,10 @@
     "asynchronous",
     "promise",
     "parallel",
-    "cache"
+    "cache",
+    "caching",
+    "store",
+    "model"
   ],
   "author": "Resist Design",
   "license": "MIT",

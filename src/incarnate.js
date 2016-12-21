@@ -1,8 +1,8 @@
-export default async function incarnate (name, map, context) {
+export default async function incarnate (path, map, context) {
   let instance;
 
-  if (typeof name === 'string' && map instanceof Object) {
-    const def = map[name];
+  if (typeof path === 'string' && map instanceof Object) {
+    const def = map[path];
     const args = def.args;
     const factory = def.factory;
 

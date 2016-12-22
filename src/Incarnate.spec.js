@@ -216,7 +216,7 @@ module.exports = {
         expect(instance.a).toBe(MOCK_DEPENDENCY);
         expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
       },
-      'should asynchronously cache dependencies': async () => {
+      'should cache dependencies': async () => {
         const map = {
           'mock-dep': {
             args: [],
@@ -226,11 +226,6 @@ module.exports = {
 
                 setTimeout(() => res(cacheCount), 0);
                 CACHE_COUNT += 1;
-              });
-            },
-            cacheIsValid: async (ctx, cachedValue) => {
-              return await new Promise((res, rej) => {
-                setTimeout(() => res(ctx.refreshProp), 0);
               });
             }
           },
@@ -245,9 +240,7 @@ module.exports = {
             }
           }
         };
-        const context = {
-          refreshProp: true
-        };
+        const context = {};
         const cache = {};
         const inc = new Incarnate({
           map,
@@ -262,6 +255,47 @@ module.exports = {
         expect(instance).toBeAn(Object);
         expect(instance.a).toBe(0);
         expect(dependency).toBe(0);
+      },
+      'should not cache dependencies marked with cache = `false`': async () => {
+        const map = {
+          'mock-dep': {
+            args: [],
+            cache: false,
+            factory: async () => {
+              return await new Promise((res, rej) => {
+                const cacheCount = CACHE_COUNT;
+
+                setTimeout(() => res(cacheCount), 0);
+                CACHE_COUNT += 1;
+              });
+            }
+          },
+          'mock': {
+            args: [
+              'mock-dep'
+            ],
+            factory: async (arg1) => {
+              return {
+                a: arg1
+              };
+            }
+          }
+        };
+        const context = {};
+        const cache = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap: cache
+        });
+        const instance = await inc.resolvePath('mock');
+        const dependency = await inc.resolvePath('mock-dep');
+
+        expect(cache['mock-dep']).toNotBe(dependency);
+        expect(CACHE_COUNT).toBe(2);
+        expect(instance).toBeAn(Object);
+        expect(instance.a).toBe(0);
+        expect(dependency).toBe(1);
       }
     }
   }

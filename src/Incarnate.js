@@ -52,20 +52,20 @@ export default class Incarnate {
       const {
         args,
         factory,
-        cacheIsValid
+        cache
       } = dependencyDefinition;
 
       if (factory instanceof Function) {
         const resolvedArgs = this.getResolvedArgs(args);
 
         if (
+          cache !== false &&
           this.cacheMap instanceof Object &&
-          cacheIsValid instanceof Function &&
           typeof path === 'string'
         ) {
           const cachedValue = this.cacheMap[path];
 
-          if (!this.cacheMap.hasOwnProperty(path) || !(await cacheIsValid(this.context, cachedValue))) {
+          if (!this.cacheMap.hasOwnProperty(path)) {
             instance = await factory.apply(
               null,
               await Promise.all(resolvedArgs)

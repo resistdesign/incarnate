@@ -105,10 +105,10 @@ export default class Incarnate {
           let subCache;
 
           if (this.cacheMap instanceof Object) {
-            // TRICKY: Get the existing `subCache` or a new one.
-            subCache = this.cacheMap[currentPath] instanceof Object ?
-              this.cacheMap[currentPath] :
-              {};
+            // TRICKY: Get the properties (and ONLY the properties) from a potentially existing `subCache`.
+            subCache = {
+              ...this.cacheMap[currentPath]
+            };
             this.cacheMap[currentPath] = subCache;
           }
 

@@ -1,4 +1,4 @@
-async function resolveDependency ({
+async function resolveDependencies ({
   map,
   context,
   dependencyDefinition,
@@ -99,7 +99,7 @@ async function incarnate (path, map, context, pathDelimiter = '.', cacheMap) {
         );
       }
     } else {
-      instance = resolveDependency({
+      instance = resolveDependencies({
         map,
         context,
         dependencyDefinition,

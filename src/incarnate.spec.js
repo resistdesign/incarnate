@@ -200,7 +200,7 @@ module.exports = {
               CACHE_COUNT += 1;
             });
           },
-          cacheIsValid: async (ctx, cachedValue, path) => {
+          cacheIsValid: async (ctx, cachedValue) => {
             return await new Promise((res, rej) => {
               setTimeout(() => res(ctx.refreshProp), 0);
             });

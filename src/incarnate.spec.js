@@ -200,7 +200,7 @@ module.exports = {
               CACHE_COUNT += 1;
             });
           },
-          refreshCache: async (ctx, cachedValue, path) => {
+          cacheIsValid: async (ctx, cachedValue, path) => {
             return await new Promise((res, rej) => {
               setTimeout(() => res(ctx.refreshProp), 0);
             });
@@ -218,7 +218,7 @@ module.exports = {
         }
       };
       const context = {
-        refreshProp: false
+        refreshProp: true
       };
       const cache = {};
       const instance = await incarnate('mock', map, context, '.', cache);

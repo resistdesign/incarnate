@@ -13,7 +13,7 @@ async function resolveDependencies ({
     const {
       args,
       factory,
-      refreshCache
+      cacheIsValid
     } = dependencyDefinition;
 
     if (args instanceof Array && factory instanceof Function) {
@@ -39,12 +39,12 @@ async function resolveDependencies ({
 
       if (
         cacheMap instanceof Object &&
-        refreshCache instanceof Function &&
+        cacheIsValid instanceof Function &&
         typeof path === 'string'
       ) {
         const cachedValue = cacheMap[path];
 
-        if (!cacheMap.hasOwnProperty(path) || await refreshCache(context, cachedValue, path)) {
+        if (!cacheMap.hasOwnProperty(path) || !(await cacheIsValid(context, cachedValue))) {
           instance = await factory.apply(
             null,
             await Promise.all(resolvedArgs)

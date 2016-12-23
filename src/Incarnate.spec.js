@@ -296,6 +296,55 @@ module.exports = {
         expect(instance).toBeAn(Object);
         expect(instance.a).toBe(0);
         expect(dependency).toBe(1);
+      },
+      'should enable invalidation of cached dependencies including all dependants': async () => {
+        const map = {
+          'mock-dep': {
+            args: [],
+            factory: async () => {
+              return await new Promise((res, rej) => {
+                const cacheCount = CACHE_COUNT;
+
+                setTimeout(() => res(cacheCount), 0);
+                CACHE_COUNT += 1;
+              });
+            }
+          },
+          'mock': {
+            args: [
+              'mock-dep',
+              (ctx, inc) => {
+                return () => inc.invalidate(['mock-dep']);
+              }
+            ],
+            factory: async (arg1, arg2) => {
+              return {
+                a: arg1,
+                b: arg2
+              };
+            }
+          }
+        };
+        const context = {};
+        const cache = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap: cache
+        });
+        const instance1 = await inc.resolvePath('mock');
+        instance1.b();
+        const dependency = await inc.resolvePath('mock-dep');
+        const instance2 = await inc.resolvePath('mock');
+
+        expect(instance2).toNotBe(instance1);
+        expect(cache['mock-dep']).toBe(dependency);
+        expect(CACHE_COUNT).toBe(2);
+        expect(instance1).toBeAn(Object);
+        expect(instance1.a).toBe(0);
+        expect(instance2).toBeAn(Object);
+        expect(instance2.a).toBe(1);
+        expect(dependency).toBe(1);
       }
     }
   }

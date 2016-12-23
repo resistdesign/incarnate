@@ -54,5 +54,8 @@
     "expect": "^1.20.2",
     "mocha": "^3.2.0",
     "npm-watch": "^0.1.6"
+  },
+  "dependencies": {
+    "event-emitter": "^0.3.4"
   }
 }

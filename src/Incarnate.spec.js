@@ -216,7 +216,7 @@ module.exports = {
         expect(instance.a).toBe(MOCK_DEPENDENCY);
         expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
       },
-      'should asynchronously cache dependencies': async () => {
+      'should cache dependencies': async () => {
         const map = {
           'mock-dep': {
             args: [],
@@ -226,11 +226,6 @@ module.exports = {
 
                 setTimeout(() => res(cacheCount), 0);
                 CACHE_COUNT += 1;
-              });
-            },
-            cacheIsValid: async (ctx, cachedValue) => {
-              return await new Promise((res, rej) => {
-                setTimeout(() => res(ctx.refreshProp), 0);
               });
             }
           },
@@ -245,9 +240,7 @@ module.exports = {
             }
           }
         };
-        const context = {
-          refreshProp: true
-        };
+        const context = {};
         const cache = {};
         const inc = new Incarnate({
           map,
@@ -262,6 +255,196 @@ module.exports = {
         expect(instance).toBeAn(Object);
         expect(instance.a).toBe(0);
         expect(dependency).toBe(0);
+      },
+      'should not cache dependencies marked with cache = `false`': async () => {
+        const map = {
+          'mock-dep': {
+            args: [],
+            cache: false,
+            factory: async () => {
+              return await new Promise((res, rej) => {
+                const cacheCount = CACHE_COUNT;
+
+                setTimeout(() => res(cacheCount), 0);
+                CACHE_COUNT += 1;
+              });
+            }
+          },
+          'mock': {
+            args: [
+              'mock-dep'
+            ],
+            factory: async (arg1) => {
+              return {
+                a: arg1
+              };
+            }
+          }
+        };
+        const context = {};
+        const cache = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap: cache
+        });
+        const instance = await inc.resolvePath('mock');
+        const dependency = await inc.resolvePath('mock-dep');
+
+        expect(cache['mock-dep']).toNotBe(dependency);
+        expect(CACHE_COUNT).toBe(2);
+        expect(instance).toBeAn(Object);
+        expect(instance.a).toBe(0);
+        expect(dependency).toBe(1);
+      },
+      'should enable invalidation of cached dependencies including all dependants': async () => {
+        const map = {
+          'mock-dep': {
+            args: [],
+            factory: async () => {
+              return await new Promise((res, rej) => {
+                const cacheCount = CACHE_COUNT;
+
+                setTimeout(() => res(cacheCount), 0);
+                CACHE_COUNT += 1;
+              });
+            }
+          },
+          'mock': {
+            args: [
+              'mock-dep',
+              (ctx, inc) => {
+                return () => inc.invalidate(['mock-dep']);
+              }
+            ],
+            factory: async (arg1, arg2) => {
+              return {
+                a: arg1,
+                b: arg2
+              };
+            }
+          }
+        };
+        const context = {};
+        const cache = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap: cache
+        });
+        const instance1 = await inc.resolvePath('mock');
+        instance1.b();
+        const dependency = await inc.resolvePath('mock-dep');
+        const instance2 = await inc.resolvePath('mock');
+
+        expect(instance2).toNotBe(instance1);
+        expect(cache['mock-dep']).toBe(dependency);
+        expect(CACHE_COUNT).toBe(2);
+        expect(instance1).toBeAn(Object);
+        expect(instance1.a).toBe(0);
+        expect(instance2).toBeAn(Object);
+        expect(instance2.a).toBe(1);
+        expect(dependency).toBe(1);
+      }
+    },
+    'addInvalidationListener/removeInvalidationListener': {
+      beforeEach: () => {
+        CACHE_COUNT = 0;
+      },
+      'should listen and un-listen for dependency invalidation for a specified path': async () => {
+        const map = {
+          'mock-dep': {
+            args: [],
+            factory: async () => {
+              return await new Promise((res, rej) => {
+                const cacheCount = CACHE_COUNT;
+
+                setTimeout(() => res(cacheCount), 0);
+                CACHE_COUNT += 1;
+              });
+            }
+          },
+          'mock': {
+            args: [
+              'mock-dep',
+              (ctx, inc) => {
+                return () => inc.invalidate(['mock-dep']);
+              }
+            ],
+            factory: async (arg1, arg2) => {
+              return {
+                a: arg1,
+                b: arg2
+              };
+            }
+          }
+        };
+        const context = {};
+        const cache = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap: cache
+        });
+        const instance1 = await inc.resolvePath('mock');
+        const onInvalidation = () => {
+          invalidationTriggered += 1;
+        };
+
+        let invalidationTriggered = 0;
+
+        inc.addInvalidationListener('mock-dep', onInvalidation);
+        instance1.b();
+        inc.removeInvalidationListener('mock-dep', onInvalidation);
+        await inc.resolvePath('mock-dep');
+        instance1.b();
+
+        expect(invalidationTriggered).toBe(1);
+      },
+      'should listen and un-listen for dependency invalidation for a specified, deeply nested path': async () => {
+        const map = {
+          'mock-dep': () => ({
+            'mock-deep': {
+              args: [],
+              factory: () => true
+            }
+          }),
+          'mock': {
+            args: [
+              'mock-dep.mock-deep',
+              (ctx, inc) => {
+                return () => inc.invalidate(['mock-dep.mock-deep']);
+              }
+            ],
+            factory: async (arg1, arg2) => {
+              return {
+                a: arg1,
+                b: arg2
+              };
+            }
+          }
+        };
+        const context = {};
+        const cache = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap: cache
+        });
+        const instance1 = await inc.resolvePath('mock');
+        const onInvalidation = () => {
+          invalidationTriggered += 1;
+        };
+
+        let invalidationTriggered = 0;
+
+        inc.addInvalidationListener('mock-dep.mock-deep', onInvalidation);
+        instance1.b();
+        inc.removeInvalidationListener('mock-dep.mock-deep', onInvalidation);
+        await inc.resolvePath('mock-dep.mock-deep');
+        instance1.b();
+
+        expect(invalidationTriggered).toBe(1);
       }
     }
   }

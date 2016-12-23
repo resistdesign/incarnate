@@ -1,12 +1,16 @@
-// TODO: Lifecycle.
 // TODO: Documentation.
 // TODO: Comprehensive Examples.
+import EventEmitter from 'event-emitter';
 
 export default class Incarnate {
   map;
   context;
   pathDelimiter;
   cacheMap;
+
+  _eventEmitter = new EventEmitter();
+  _nestedMap = {};
+  _nestedInvalidationCancellers = {};
 
   constructor ({
     map,
@@ -22,7 +26,77 @@ export default class Incarnate {
 
     this.context = context instanceof Object ? context : {};
     this.pathDelimiter = typeof pathDelimiter === 'string' ? pathDelimiter : '.';
-    this.cacheMap = cacheMap;
+    this.cacheMap = cacheMap instanceof Object ? cacheMap : undefined;
+  }
+
+  _addNestedInvalidationCanceller (fullPath, canceller) {
+    if (typeof fullPath === 'string' && canceller instanceof Function) {
+      const cancellerList = this._nestedInvalidationCancellers[fullPath] instanceof Array ?
+        this._nestedInvalidationCancellers[fullPath] :
+        [];
+
+      if (cancellerList.indexOf(canceller) === -1) {
+        cancellerList.push(canceller);
+      }
+
+      this._nestedInvalidationCancellers[fullPath] = cancellerList;
+    }
+  }
+
+  _emitInvalidationEvent (path) {
+    if (typeof path === 'string') {
+      this._eventEmitter.emit(path, path);
+    }
+  }
+
+  invalidate (dependencies) {
+    if (
+      this.cacheMap instanceof Object &&
+      this.map instanceof Object &&
+      dependencies instanceof Array &&
+      dependencies.length
+    ) {
+      const invalidRelatedDepPaths = [];
+
+      for (let i = 0; i < dependencies.length; i++) {
+        const invalidDepPath = dependencies[i];
+
+        if (typeof invalidDepPath === 'string') {
+          const invalidDepPathParts = invalidDepPath.split(this.pathDelimiter);
+          // TRICKY: Remove the top path from the path parts.
+          const currentPath = invalidDepPathParts.shift();
+          const depDef = this.map[currentPath];
+          const subIncarnate = this._nestedMap[currentPath];
+
+          if (depDef instanceof Function && subIncarnate instanceof Incarnate) {
+            subIncarnate.invalidate([invalidDepPathParts.join(this.pathDelimiter)]);
+          } else if (depDef instanceof Object) {
+            if (this.cacheMap.hasOwnProperty(invalidDepPath)) {
+              delete this.cacheMap[invalidDepPath];
+              // IMPORTANT: Notify invalidation handler.
+              this._emitInvalidationEvent(invalidDepPath);
+            }
+          }
+
+          for (const k in this.map) {
+            if (this.map.hasOwnProperty(k)) {
+              const relatedDepDef = this.map[k];
+
+              if (
+                invalidRelatedDepPaths.indexOf(k) === -1 &&
+                relatedDepDef instanceof Object &&
+                relatedDepDef.args instanceof Array &&
+                relatedDepDef.args.indexOf(invalidDepPath) !== -1
+              ) {
+                invalidRelatedDepPaths.push(k);
+              }
+            }
+          }
+        }
+      }
+
+      this.invalidate(invalidRelatedDepPaths);
+    }
   }
 
   getResolvedArgs (args) {
@@ -35,7 +109,7 @@ export default class Incarnate {
         if (typeof argItem === 'string') {
           resolvedArgs.push(this.resolvePath(argItem));
         } else if (argItem instanceof Function) {
-          resolvedArgs.push(argItem(this.context));
+          resolvedArgs.push(argItem(this.context, this));
         } else {
           resolvedArgs.push(argItem);
         }
@@ -52,20 +126,20 @@ export default class Incarnate {
       const {
         args,
         factory,
-        cacheIsValid
+        cache
       } = dependencyDefinition;
 
       if (factory instanceof Function) {
         const resolvedArgs = this.getResolvedArgs(args);
 
         if (
+          cache !== false &&
           this.cacheMap instanceof Object &&
-          cacheIsValid instanceof Function &&
           typeof path === 'string'
         ) {
           const cachedValue = this.cacheMap[path];
 
-          if (!this.cacheMap.hasOwnProperty(path) || !(await cacheIsValid(this.context, cachedValue))) {
+          if (!this.cacheMap.hasOwnProperty(path)) {
             instance = await factory.apply(
               null,
               await Promise.all(resolvedArgs)
@@ -98,27 +172,53 @@ export default class Incarnate {
       const dependencyDefinition = this.map[path];
 
       if (pathParts.length && subMapResolver instanceof Function) {
+        // Sub instances for nested resolution.
         if (subMapResolver instanceof Function) {
           const subPath = pathParts.join(this.pathDelimiter);
           const subMap = await subMapResolver(this.context, subPath);
 
           let subCache;
+          let subIncarnate;
 
           if (this.cacheMap instanceof Object) {
-            // TRICKY: Get the existing `subCache` or a new one.
+            // TRICKY: Get the potentially existing `subCache`.
             subCache = this.cacheMap[currentPath] instanceof Object ?
               this.cacheMap[currentPath] :
               {};
             this.cacheMap[currentPath] = subCache;
           }
 
-          const subIncarnate = new Incarnate({
+          const subProps = {
             map: subMap,
             context: this.context,
             pathDelimiter: this.pathDelimiter,
             cacheMap: subCache
-          });
+          };
 
+          if (this._nestedMap[currentPath] instanceof Incarnate) {
+            subIncarnate = this._nestedMap[currentPath];
+            Object.assign(subIncarnate, subProps);
+          } else {
+            subIncarnate = new Incarnate(subProps);
+            const onInvalid = () => {
+              /*
+               * TRICKY: Invalidate this *full* path so that anything listening for it or
+               * depending on it can be updated/invalidated.
+               * */
+              this.invalidate([path]);
+              this._emitInvalidationEvent(path);
+            };
+
+            // Listen for invalidation on the `subPath`.
+            subIncarnate.addInvalidationListener(subPath, onInvalid);
+
+            // TRICKY: Save a function used to remove the handler when destroying this instance.
+            this._addNestedInvalidationCanceller(path, () => {
+              subIncarnate.removeInvalidationListener(subPath, onInvalid);
+            });
+          }
+
+          this._nestedMap[currentPath] = subIncarnate;
           instance = subIncarnate.resolvePath(subPath);
         }
       } else {
@@ -127,5 +227,52 @@ export default class Incarnate {
     }
 
     return instance;
+  }
+
+  addInvalidationListener (path, handler) {
+    if (typeof path === 'string' && handler instanceof Function) {
+      this._eventEmitter.on(path, handler);
+    }
+  }
+
+  removeInvalidationListener (path, handler) {
+    if (typeof path === 'string' && handler instanceof Function) {
+      this._eventEmitter.off(path, handler);
+    }
+  }
+
+  destroy () {
+    // TRICKY: Cancel nested invalidation handlers before destroying the nested instances.
+    // Destroy invalidation handlers.
+    for (const k in this._nestedInvalidationCancellers) {
+      if (this._nestedInvalidationCancellers.hasOwnProperty(k)) {
+        const cancellerList = this._nestedInvalidationCancellers[k];
+
+        if (cancellerList instanceof Array) {
+          for (let i = 0; i < cancellerList.length; i++) {
+            const canceller = cancellerList[i];
+
+            if (canceller instanceof Function) {
+              canceller();
+            }
+          }
+        }
+      }
+    }
+
+    this._nestedInvalidationCancellers = {};
+
+    // Destroy nested instances.
+    for (const k in this._nestedMap) {
+      if (this._nestedMap.hasOwnProperty(k)) {
+        const subIncarnate = this._nestedMap[k];
+
+        if (subIncarnate instanceof Incarnate) {
+          subIncarnate.destroy();
+        }
+      }
+    }
+
+    this._nestedMap = {};
   }
 }

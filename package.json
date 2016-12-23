@@ -1,5 +1,5 @@
 {
-  "name": "incarnate",
+  "name": "@resistdesign/incarnate",
   "version": "0.0.0",
   "description": "Dependency Injection (DI) with Lifecycle features for JavaScript.",
   "main": "src/Incarnate.js",

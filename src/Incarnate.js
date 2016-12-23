@@ -8,6 +8,8 @@ export default class Incarnate {
   pathDelimiter;
   cacheMap;
 
+  _nestedMap = {};
+
   constructor ({
     map,
     context,
@@ -22,7 +24,59 @@ export default class Incarnate {
 
     this.context = context instanceof Object ? context : {};
     this.pathDelimiter = typeof pathDelimiter === 'string' ? pathDelimiter : '.';
-    this.cacheMap = cacheMap;
+    this.cacheMap = cacheMap instanceof Object ? cacheMap : undefined;
+  }
+
+  invalidateCachedDependencies (dependencies) {
+    if (
+      this.cacheMap instanceof Object &&
+      this.map instanceof Object &&
+      dependencies instanceof Array &&
+      dependencies.length
+    ) {
+      const invalidRelatedDepPaths = [];
+
+      for (let i = 0; i < dependencies.length; i++) {
+        const invalidDepPath = dependencies[i];
+
+        if (typeof invalidDepPath === 'string') {
+          const invalidDepPathParts = invalidDepPath.split(this.pathDelimiter);
+          // TRICKY: Remove the top path from the path parts.
+          const currentPath = invalidDepPathParts.shift();
+          const depDef = this.map[invalidDepPath];
+          const subIncarnate = this._nestedMap[currentPath];
+
+          if (depDef instanceof Function && subIncarnate instanceof Incarnate) {
+            subIncarnate.invalidateCachedDependencies([invalidDepPathParts.join(this.pathDelimiter)]);
+          } else if (depDef instanceof Object) {
+            const notify = this.cacheMap.hasOwnProperty(invalidDepPath);
+
+            delete this.cacheMap[invalidDepPath];
+
+            if (notify) {
+              // TODO: Notify handlers.
+            }
+          }
+
+          for (const k in this.map) {
+            if (this.map.hasOwnProperty(k)) {
+              const relatedDepDef = this.map[k];
+
+              if (
+                invalidRelatedDepPaths.indexOf(k) === -1 &&
+                relatedDepDef instanceof Object &&
+                relatedDepDef.args instanceof Array &&
+                relatedDepDef.args.indexOf(invalidDepPath) !== -1
+              ) {
+                invalidRelatedDepPaths.push(k);
+              }
+            }
+          }
+        }
+      }
+
+      this.invalidateCachedDependencies(invalidRelatedDepPaths);
+    }
   }
 
   getResolvedArgs (args) {
@@ -103,22 +157,31 @@ export default class Incarnate {
           const subMap = await subMapResolver(this.context, subPath);
 
           let subCache;
+          let subIncarnate;
 
           if (this.cacheMap instanceof Object) {
-            // TRICKY: Get the properties (and ONLY the properties) from a potentially existing `subCache`.
-            subCache = {
-              ...this.cacheMap[currentPath]
-            };
+            // TRICKY: Get the potentially existing `subCache`.
+            subCache = this.cacheMap[currentPath] instanceof Object ?
+              this.cacheMap[currentPath] :
+              {};
             this.cacheMap[currentPath] = subCache;
           }
 
-          const subIncarnate = new Incarnate({
+          const subProps = {
             map: subMap,
             context: this.context,
             pathDelimiter: this.pathDelimiter,
             cacheMap: subCache
-          });
+          };
 
+          if (this._nestedMap[currentPath] instanceof Incarnate) {
+            subIncarnate = this._nestedMap[currentPath];
+            Object.assign(subIncarnate, subProps);
+          } else {
+            subIncarnate = new Incarnate(subProps);
+          }
+
+          this._nestedMap[currentPath] = subIncarnate;
           instance = subIncarnate.resolvePath(subPath);
         }
       } else {
@@ -127,5 +190,20 @@ export default class Incarnate {
     }
 
     return instance;
+  }
+
+  destroy () {
+    // TRICKY: Destroy nested instances.
+    for (const k in this._nestedMap) {
+      if (this._nestedMap.hasOwnProperty(k)) {
+        const subIncarnate = this._nestedMap[k];
+
+        if (subIncarnate instanceof Incarnate) {
+          subIncarnate.destroy();
+        }
+      }
+    }
+
+    this._nestedMap = {};
   }
 }

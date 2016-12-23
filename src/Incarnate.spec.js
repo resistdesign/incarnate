@@ -346,6 +346,106 @@ module.exports = {
         expect(instance2.a).toBe(1);
         expect(dependency).toBe(1);
       }
+    },
+    'addInvalidationListener/removeInvalidationListener': {
+      beforeEach: () => {
+        CACHE_COUNT = 0;
+      },
+      'should listen and un-listen for dependency invalidation for a specified path': async () => {
+        const map = {
+          'mock-dep': {
+            args: [],
+            factory: async () => {
+              return await new Promise((res, rej) => {
+                const cacheCount = CACHE_COUNT;
+
+                setTimeout(() => res(cacheCount), 0);
+                CACHE_COUNT += 1;
+              });
+            }
+          },
+          'mock': {
+            args: [
+              'mock-dep',
+              (ctx, inc) => {
+                return () => inc.invalidate(['mock-dep']);
+              }
+            ],
+            factory: async (arg1, arg2) => {
+              return {
+                a: arg1,
+                b: arg2
+              };
+            }
+          }
+        };
+        const context = {};
+        const cache = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap: cache
+        });
+        const instance1 = await inc.resolvePath('mock');
+        const onInvalidation = () => {
+          invalidationTriggered += 1;
+        };
+
+        let invalidationTriggered = 0;
+
+        inc.addInvalidationListener('mock-dep', onInvalidation);
+        instance1.b();
+        inc.removeInvalidationListener('mock-dep', onInvalidation);
+        await inc.resolvePath('mock-dep');
+        instance1.b();
+
+        expect(invalidationTriggered).toBe(1);
+      },
+      'should listen and un-listen for dependency invalidation for a specified, deeply nested path': async () => {
+        const map = {
+          'mock-dep': () => ({
+            'mock-deep': {
+              args: [],
+              factory: () => true
+            }
+          }),
+          'mock': {
+            args: [
+              'mock-dep.mock-deep',
+              (ctx, inc) => {
+                return () => inc.invalidate(['mock-dep.mock-deep']);
+              }
+            ],
+            factory: async (arg1, arg2) => {
+              return {
+                a: arg1,
+                b: arg2
+              };
+            }
+          }
+        };
+        const context = {};
+        const cache = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap: cache
+        });
+        const instance1 = await inc.resolvePath('mock');
+        const onInvalidation = () => {
+          invalidationTriggered += 1;
+        };
+
+        let invalidationTriggered = 0;
+
+        inc.addInvalidationListener('mock-dep.mock-deep', onInvalidation);
+        instance1.b();
+        inc.removeInvalidationListener('mock-dep.mock-deep', onInvalidation);
+        await inc.resolvePath('mock-dep.mock-deep');
+        instance1.b();
+
+        expect(invalidationTriggered).toBe(1);
+      }
     }
   }
 };

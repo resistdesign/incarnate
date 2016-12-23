@@ -45,7 +45,7 @@ export default class Incarnate {
 
   _emitInvalidationEvent (path) {
     if (typeof path === 'string') {
-      this._eventEmitter.emit(path);
+      this._eventEmitter.emit(path, path);
     }
   }
 
@@ -65,7 +65,7 @@ export default class Incarnate {
           const invalidDepPathParts = invalidDepPath.split(this.pathDelimiter);
           // TRICKY: Remove the top path from the path parts.
           const currentPath = invalidDepPathParts.shift();
-          const depDef = this.map[invalidDepPath];
+          const depDef = this.map[currentPath];
           const subIncarnate = this._nestedMap[currentPath];
 
           if (depDef instanceof Function && subIncarnate instanceof Incarnate) {
@@ -206,6 +206,7 @@ export default class Incarnate {
                * depending on it can be updated/invalidated.
                * */
               this.invalidate([path]);
+              this._emitInvalidationEvent(path);
             };
 
             // Listen for invalidation on the `subPath`.

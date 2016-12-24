@@ -1,5 +1,3 @@
-// TODO: Documentation.
-// TODO: Comprehensive Examples.
 import EventEmitter from 'event-emitter';
 
 export default class Incarnate {

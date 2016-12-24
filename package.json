@@ -1,6 +1,6 @@
 {
   "name": "@resistdesign/incarnate",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "public": true,
   "description": "Dependency Injection (DI) with Lifecycle features for JavaScript.",
   "main": "src/Incarnate.js",

@@ -2,6 +2,10 @@
 
 Dependency Injection (DI) with Lifecycle features for JavaScript.
 
+## Usage
+
+See the website: http://incarnate.resist.design
+
 ## License
 
 [MIT](LICENSE.txt)

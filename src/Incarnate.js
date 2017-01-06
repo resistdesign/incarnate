@@ -128,8 +128,6 @@ export default class Incarnate {
       } = dependencyDefinition;
 
       if (factory instanceof Function) {
-        const resolvedArgs = this.getResolvedArgs(args);
-
         if (
           cache !== false &&
           this.cacheMap instanceof Object &&
@@ -138,6 +136,8 @@ export default class Incarnate {
           const cachedValue = this.cacheMap[path];
 
           if (!this.cacheMap.hasOwnProperty(path)) {
+            const resolvedArgs = this.getResolvedArgs(args);
+
             instance = await factory.apply(
               null,
               await Promise.all(resolvedArgs)
@@ -148,6 +148,8 @@ export default class Incarnate {
             instance = cachedValue;
           }
         } else {
+          const resolvedArgs = this.getResolvedArgs(args);
+
           instance = factory.apply(
             null,
             await Promise.all(resolvedArgs)

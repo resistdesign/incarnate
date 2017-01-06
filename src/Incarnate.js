@@ -97,7 +97,7 @@ export default class Incarnate {
     }
   }
 
-  getResolvedArgs (args) {
+  getResolvedArgs (args, context) {
     const resolvedArgs = [];
 
     if (args instanceof Array) {
@@ -105,9 +105,18 @@ export default class Incarnate {
         const argItem = args[i];
 
         if (typeof argItem === 'string') {
-          resolvedArgs.push(this.resolvePath(argItem));
+          resolvedArgs.push(this.resolvePath(argItem, context));
         } else if (argItem instanceof Function) {
-          resolvedArgs.push(argItem(this.context, this));
+          resolvedArgs.push(
+            argItem(
+              {
+                ...this.context,
+                // Override instance level context with parameter level context.
+                ...context
+              },
+              this
+            )
+          );
         } else {
           resolvedArgs.push(argItem);
         }
@@ -117,7 +126,7 @@ export default class Incarnate {
     return resolvedArgs;
   }
 
-  async resolveDependencies (path, dependencyDefinition) {
+  async resolveDependencies (path, dependencyDefinition, context) {
     let instance;
 
     if (dependencyDefinition instanceof Object) {
@@ -129,6 +138,7 @@ export default class Incarnate {
 
       if (factory instanceof Function) {
         if (
+          !context &&
           cache !== false &&
           this.cacheMap instanceof Object &&
           typeof path === 'string'
@@ -148,7 +158,7 @@ export default class Incarnate {
             instance = cachedValue;
           }
         } else {
-          const resolvedArgs = this.getResolvedArgs(args);
+          const resolvedArgs = this.getResolvedArgs(args, context);
 
           instance = factory.apply(
             null,
@@ -161,7 +171,7 @@ export default class Incarnate {
     return instance;
   }
 
-  async resolvePath (path) {
+  async resolvePath (path, context) {
     let instance;
 
     if (typeof path === 'string' && this.map instanceof Object) {
@@ -219,10 +229,10 @@ export default class Incarnate {
           }
 
           this._nestedMap[currentPath] = subIncarnate;
-          instance = subIncarnate.resolvePath(subPath);
+          instance = subIncarnate.resolvePath(subPath, context);
         }
       } else {
-        instance = this.resolveDependencies(path, dependencyDefinition);
+        instance = this.resolveDependencies(path, dependencyDefinition, context);
       }
     }
 

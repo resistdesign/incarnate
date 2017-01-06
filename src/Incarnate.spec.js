@@ -5,6 +5,7 @@ const MOCK_INSTANCE = { x: 10 };
 const MOCK_DEPENDENCY = { y: 100 };
 const MOCK_DEPENDENCY_DEPENDENCY = { z: 1000 };
 const MOCK_CTX_PROP_VALUE = 'MOCK_CTX_PROP_VALUE';
+const MOCK_CTX_PROP_VALUE_2 = 'MOCK_CTX_PROP_VALUE_2';
 const MOCK_ARG_1_VALUE = 'MOCK_ARG_1_VALUE';
 const MOCK_ARG_2_VALUE = 'MOCK_ARG_2_VALUE';
 
@@ -142,6 +143,61 @@ module.exports = {
         const instance = await inc.resolvePath('mock');
 
         expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
+      },
+      'should resolve a context specific dependency from both instance and parameter contexts': async () => {
+        const inc = new Incarnate({
+          map: {
+            'mock-dep-dep': {
+              args: [],
+              factory: () => {
+                return MOCK_DEPENDENCY_DEPENDENCY;
+              }
+            },
+            'mock-dep': {
+              args: [
+                'mock-dep-dep',
+                async (ctx) => {
+                  return await new Promise((res, rej) => {
+                    setTimeout(() => res(ctx.mockCtxProp), 0);
+                  });
+                },
+                async (ctx) => {
+                  return await new Promise((res, rej) => {
+                    setTimeout(() => res(ctx.mockCtxProp2), 0);
+                  });
+                }
+              ],
+              factory: (mockDepDep, mockCtxProp, mockCtxProp2) => {
+                return {
+                  a: mockDepDep,
+                  b: mockCtxProp,
+                  c: mockCtxProp2
+                };
+              }
+            },
+            'mock': {
+              args: [
+                'mock-dep'
+              ],
+              factory: (mockDep) => {
+                return mockDep;
+              }
+            }
+          },
+          context: {
+            mockCtxProp: MOCK_CTX_PROP_VALUE,
+            mockCtxProp2: MOCK_CTX_PROP_VALUE
+          }
+        });
+        const instance = await inc.resolvePath(
+          'mock',
+          {
+            mockCtxProp2: MOCK_CTX_PROP_VALUE_2
+          }
+        );
+
+        expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
+        expect(instance.c).toBe(MOCK_CTX_PROP_VALUE_2);
       },
       'should resolve args asynchronously and in parallel': async () => {
         const inc = new Incarnate({

@@ -1,14 +1,13 @@
 {
-  "name": "@resistdesign/incarnate",
+  "name": "incarnate",
   "version": "1.1.0",
-  "public": true,
   "description": "Dependency Injection (DI) with Lifecycle features for JavaScript.",
-  "main": "src/Incarnate.js",
+  "main": "src/Incarnate.jsx",
   "watch": {
-    "test": "{src,test}/*.js"
+    "test": "{src,test}/*.jsx"
   },
   "scripts": {
-    "test": "mocha -u exports --require babel-register -- '**/*.spec.js'",
+    "test": "mocha --require resistdesign-babel-register --ui exports **/*.spec.jsx",
     "watch": "npm-watch"
   },
   "repository": {
@@ -47,17 +46,12 @@
   },
   "homepage": "https://github.com/resistdesign/incarnate#readme",
   "devDependencies": {
-    "babel-plugin-transform-class-properties": "^6.19.0",
-    "babel-plugin-transform-object-rest-spread": "^6.20.2",
-    "babel-plugin-transform-runtime": "^6.15.0",
-    "babel-preset-env": "^1.1.4",
-    "babel-register": "^6.18.0",
-    "expect": "^1.20.2",
-    "mocha": "^3.2.0",
-    "npm-watch": "^0.1.6"
+    "mocha": "^3.5.3",
+    "npm-watch": "^0.1.6",
+    "resistdesign-babel-register": "^2.0.0"
   },
   "dependencies": {
-    "babel-runtime": "^6.20.0",
-    "event-emitter": "^0.3.4"
+    "event-emitter": "^0.3.5",
+    "expect.js": "^0.3.1"
   }
 }

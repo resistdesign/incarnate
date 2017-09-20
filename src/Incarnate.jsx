@@ -1,6 +1,7 @@
 import EventEmitter from 'event-emitter';
 
 export default class Incarnate {
+  name;
   map;
   context;
   pathDelimiter;
@@ -11,11 +12,14 @@ export default class Incarnate {
   _nestedInvalidationCancellers = {};
 
   constructor ({
-    map,
-    context,
-    pathDelimiter,
-    cacheMap
-  }) {
+                 name,
+                 map,
+                 context,
+                 pathDelimiter,
+                 cacheMap
+               }) {
+    this.name = name;
+
     if (map instanceof Object) {
       this.map = map;
     } else {
@@ -68,11 +72,11 @@ export default class Incarnate {
 
           if (depDef instanceof Function && subIncarnate instanceof Incarnate) {
             subIncarnate.invalidate([invalidDepPathParts.join(this.pathDelimiter)]);
-          } else if (depDef instanceof Object) {
-            if (this.cacheMap.hasOwnProperty(invalidDepPath)) {
-              delete this.cacheMap[invalidDepPath];
+          } else if (depDef instanceof Object && invalidDepPathParts.length === 0) {
+            if (this.cacheMap.hasOwnProperty(currentPath)) {
+              delete this.cacheMap[currentPath];
               // IMPORTANT: Notify invalidation handler.
-              this._emitInvalidationEvent(invalidDepPath);
+              this._emitInvalidationEvent(currentPath);
             }
           }
 
@@ -199,6 +203,9 @@ export default class Incarnate {
           }
 
           const subProps = {
+            name: typeof this.name === 'string' ?
+              [this.name, currentPath].join(this.pathDelimiter) :
+              currentPath,
             map: subMap,
             context: this.context,
             pathDelimiter: this.pathDelimiter,
@@ -210,6 +217,10 @@ export default class Incarnate {
             Object.assign(subIncarnate, subProps);
           } else {
             subIncarnate = new Incarnate(subProps);
+          }
+
+          // Add a nested validation if none exists.
+          if (!this._nestedInvalidationCancellers.hasOwnProperty(path)) {
             const onInvalid = () => {
               /*
                * TRICKY: Invalidate this *full* path so that anything listening for it or

@@ -549,9 +549,10 @@ module.exports = {
               },
               lmn: {
                 args: [
-                  'ijk'
+                  'ijk',
+                  (ctx, inc3) => inc3
                 ],
-                factory: () => true
+                factory: (arg1, inc4) => inc4
               }
             };
           },
@@ -563,7 +564,8 @@ module.exports = {
           },
           def: {
             args: [
-              'abc'
+              'abc',
+              'xyz.opq.nop'
             ],
             factory: () => true
           }
@@ -575,20 +577,25 @@ module.exports = {
           context,
           cacheMap
         });
-        const deepInc = await inc.resolvePath('xyz.opq.nop');
+        const deepInc = await inc.resolvePath('xyz.lmn');
+        const deepDeepInc = await inc.resolvePath('xyz.opq.nop');
 
-        let invalidationCount = 0;
+        let invalidatedPaths = [];
 
         await inc.resolvePath('def');
 
-        inc.addInvalidationListener('abc', () => {
-          invalidationCount++;
-        });
+        inc.addInvalidationListener('abc', ::invalidatedPaths.push);
+        inc.addInvalidationListener('def', ::invalidatedPaths.push);
+        deepInc.addInvalidationListener('lmn', ::invalidatedPaths.push);
 
         inc.invalidate(['abc']);
-        deepInc.invalidate(['nop']);
 
-        expect(invalidationCount).to.equal(2);
+        await inc.resolvePath('def');
+
+        deepDeepInc.invalidate(['nop']);
+
+        expect(invalidatedPaths.length).to.equal(5);
+        expect(invalidatedPaths).to.eql(['abc', 'def', 'abc', 'def', 'lmn']);
       }
     }
   }

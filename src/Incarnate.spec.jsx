@@ -1,4 +1,4 @@
-import expect from 'expect';
+import expect from 'expect.js';
 import Incarnate from './Incarnate';
 
 const MOCK_INSTANCE = { x: 10 };
@@ -14,7 +14,7 @@ let CACHE_COUNT;
 module.exports = {
   'Incarnate': {
     'should be a class': () => {
-      expect(Incarnate).toBeA(Function);
+      expect(Incarnate).to.be.a(Function);
     },
     'resolvePath': {
       beforeEach: () => {
@@ -25,7 +25,7 @@ module.exports = {
           map: {}
         });
 
-        expect(inc.resolvePath).toBeA(Function);
+        expect(inc.resolvePath).to.be.a(Function);
       },
       'should resolve a path asynchronously': async () => {
         const inc = new Incarnate({
@@ -42,7 +42,7 @@ module.exports = {
         });
         const instance = await inc.resolvePath('mock');
 
-        expect(instance).toBe(MOCK_INSTANCE);
+        expect(instance).to.equal(MOCK_INSTANCE);
       },
       'should resolve an injected dependency asynchronously': async () => {
         const inc = new Incarnate({
@@ -67,7 +67,7 @@ module.exports = {
         });
         const instance = await inc.resolvePath('mock');
 
-        expect(instance).toBe(MOCK_DEPENDENCY);
+        expect(instance).to.equal(MOCK_DEPENDENCY);
       },
       'should resolve injected dependencies recursively and asynchronously': async () => {
         const inc = new Incarnate({
@@ -100,7 +100,7 @@ module.exports = {
         });
         const instance = await inc.resolvePath('mock');
 
-        expect(instance).toBe(MOCK_DEPENDENCY_DEPENDENCY);
+        expect(instance).to.equal(MOCK_DEPENDENCY_DEPENDENCY);
       },
       'should resolve a context specific dependency asynchronously': async () => {
         const inc = new Incarnate({
@@ -142,7 +142,7 @@ module.exports = {
         });
         const instance = await inc.resolvePath('mock');
 
-        expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
+        expect(instance.b).to.equal(MOCK_CTX_PROP_VALUE);
       },
       'should resolve a context specific dependency from both instance and parameter contexts': async () => {
         const inc = new Incarnate({
@@ -196,8 +196,8 @@ module.exports = {
           }
         );
 
-        expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
-        expect(instance.c).toBe(MOCK_CTX_PROP_VALUE_2);
+        expect(instance.b).to.equal(MOCK_CTX_PROP_VALUE);
+        expect(instance.c).to.equal(MOCK_CTX_PROP_VALUE_2);
       },
       'should resolve args asynchronously and in parallel': async () => {
         const inc = new Incarnate({
@@ -220,10 +220,10 @@ module.exports = {
         const instance = await inc.resolvePath('mock');
         const diff = new Date().getTime() - start;
 
-        expect(instance).toBeAn(Object);
-        expect(instance.a).toBe(MOCK_ARG_1_VALUE);
-        expect(instance.b).toBe(MOCK_ARG_2_VALUE);
-        expect(diff < 20).toBe(true);
+        expect(instance).to.be.an(Object);
+        expect(instance.a).to.equal(MOCK_ARG_1_VALUE);
+        expect(instance.b).to.equal(MOCK_ARG_2_VALUE);
+        expect(diff < 20).to.equal(true);
       },
       'should resolve deeply nested dependencies asynchronously': async () => {
         const inc = new Incarnate({
@@ -268,9 +268,9 @@ module.exports = {
         });
         const instance = await inc.resolvePath('mock');
 
-        expect(instance).toBeAn(Object);
-        expect(instance.a).toBe(MOCK_DEPENDENCY);
-        expect(instance.b).toBe(MOCK_CTX_PROP_VALUE);
+        expect(instance).to.be.an(Object);
+        expect(instance.a).to.equal(MOCK_DEPENDENCY);
+        expect(instance.b).to.equal(MOCK_CTX_PROP_VALUE);
       },
       'should cache dependencies': async () => {
         const map = {
@@ -306,11 +306,11 @@ module.exports = {
         const instance = await inc.resolvePath('mock');
         const dependency = await inc.resolvePath('mock-dep');
 
-        expect(cache['mock-dep']).toBe(dependency);
-        expect(CACHE_COUNT).toBe(1);
-        expect(instance).toBeAn(Object);
-        expect(instance.a).toBe(0);
-        expect(dependency).toBe(0);
+        expect(cache['mock-dep']).to.equal(dependency);
+        expect(CACHE_COUNT).to.equal(1);
+        expect(instance).to.be.an(Object);
+        expect(instance.a).to.equal(0);
+        expect(dependency).to.equal(0);
       },
       'should not cache dependencies marked with cache = `false`': async () => {
         const map = {
@@ -347,11 +347,11 @@ module.exports = {
         const instance = await inc.resolvePath('mock');
         const dependency = await inc.resolvePath('mock-dep');
 
-        expect(cache['mock-dep']).toNotBe(dependency);
-        expect(CACHE_COUNT).toBe(2);
-        expect(instance).toBeAn(Object);
-        expect(instance.a).toBe(0);
-        expect(dependency).toBe(1);
+        expect(cache['mock-dep']).to.not.equal(dependency);
+        expect(CACHE_COUNT).to.equal(2);
+        expect(instance).to.be.an(Object);
+        expect(instance.a).to.equal(0);
+        expect(dependency).to.equal(1);
       },
       'should enable invalidation of cached dependencies including all dependants': async () => {
         const map = {
@@ -393,14 +393,14 @@ module.exports = {
         const dependency = await inc.resolvePath('mock-dep');
         const instance2 = await inc.resolvePath('mock');
 
-        expect(instance2).toNotBe(instance1);
-        expect(cache['mock-dep']).toBe(dependency);
-        expect(CACHE_COUNT).toBe(2);
-        expect(instance1).toBeAn(Object);
-        expect(instance1.a).toBe(0);
-        expect(instance2).toBeAn(Object);
-        expect(instance2.a).toBe(1);
-        expect(dependency).toBe(1);
+        expect(instance2).to.not.equal(instance1);
+        expect(cache['mock-dep']).to.equal(dependency);
+        expect(CACHE_COUNT).to.equal(2);
+        expect(instance1).to.be.an(Object);
+        expect(instance1.a).to.equal(0);
+        expect(instance2).to.be.an(Object);
+        expect(instance2.a).to.equal(1);
+        expect(dependency).to.equal(1);
       }
     },
     'addInvalidationListener/removeInvalidationListener': {
@@ -455,7 +455,7 @@ module.exports = {
         await inc.resolvePath('mock-dep');
         instance1.b();
 
-        expect(invalidationTriggered).toBe(1);
+        expect(invalidationTriggered).to.equal(1);
       },
       'should listen and un-listen for dependency invalidation for a specified, deeply nested path': async () => {
         const map = {
@@ -500,7 +500,7 @@ module.exports = {
         await inc.resolvePath('mock-dep.mock-deep');
         instance1.b();
 
-        expect(invalidationTriggered).toBe(1);
+        expect(invalidationTriggered).to.equal(1);
       }
     }
   }

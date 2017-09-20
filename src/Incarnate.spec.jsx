@@ -502,6 +502,94 @@ module.exports = {
 
         expect(invalidationTriggered).to.equal(1);
       }
+    },
+    'invalidate': {
+      'should trigger invalidation for all dependents of multiple, deeply nested dependencies': async () => {
+        const map = {
+          xyz: () => {
+            return {
+              opq: () => {
+                return {
+                  nop: {
+                    args: [
+                      (ctx, inc1) => inc1
+                    ],
+                    factory: inc2 => inc2
+                  },
+                  hij: {
+                    args: [],
+                    factory: () => true
+                  },
+                  qrs: {
+                    args: [
+                      'hij',
+                      'nop'
+                    ],
+                    factory: () => true
+                  }
+                };
+              },
+              gh: {
+                args: [
+                  'opq.qrs',
+                  'opq.hij'
+                ],
+                factory: () => true
+              },
+              tuv: {
+                args: [],
+                factory: () => true
+              },
+              ijk: {
+                args: [
+                  'gh',
+                  'tuv'
+                ],
+                factory: () => true
+              },
+              lmn: {
+                args: [
+                  'ijk'
+                ],
+                factory: () => true
+              }
+            };
+          },
+          abc: {
+            args: [
+              'xyz.lmn'
+            ],
+            factory: () => true
+          },
+          def: {
+            args: [
+              'abc'
+            ],
+            factory: () => true
+          }
+        };
+        const context = {};
+        const cacheMap = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap
+        });
+        const deepInc = await inc.resolvePath('xyz.opq.nop');
+
+        let invalidationCount = 0;
+
+        await inc.resolvePath('def');
+
+        inc.addInvalidationListener('abc', () => {
+          invalidationCount++;
+        });
+
+        inc.invalidate(['abc']);
+        deepInc.invalidate(['nop']);
+
+        expect(invalidationCount).to.equal(2);
+      }
     }
   }
 };

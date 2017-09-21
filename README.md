@@ -2,6 +2,10 @@
 
 Dependency Injection (DI) with Lifecycle features for JavaScript.
 
+## Install
+
+`npm i -S incarnate`
+
 ## Usage
 
 See the website: http://incarnate.resist.design

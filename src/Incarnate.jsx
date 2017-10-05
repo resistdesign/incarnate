@@ -155,20 +155,27 @@ export default class Incarnate {
           if (!this.cacheMap.hasOwnProperty(path)) {
             const resolvedArgs = this.getResolvedArgs(args);
 
-            // IMPORTANT: Do not use `await`, the `Promise` will act as
+            // IMPORTANT: Do not use `await`, the `Promise` will act as a
             // placeholder in the cache.
-            instance = factory.apply(
-              null,
-              await Promise.all(resolvedArgs)
-            );
+            instance = new Promise(async (res, rej) => {
+              try {
+                res(factory.apply(
+                  null,
+                  await Promise.all(resolvedArgs)
+                ));
+              } catch (error) {
+                rej(error);
+              }
+            });
 
             // TRICKY: Caching a `Promise` will and MUST function correctly.
             this.cacheMap[path] = instance;
+
             // TRICKY: The resolved instance MUST be cached once a placeholder
             // is created.
             this.cacheMap[path] = await instance;
           } else {
-            // IMPORTANT: The `cachedValue` could be a `Promise`.
+            // IMPORTANT: The `cachedValue` *could be* a `Promise`.
             instance = cachedValue;
           }
         } else {

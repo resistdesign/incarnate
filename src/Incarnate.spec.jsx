@@ -401,6 +401,32 @@ module.exports = {
         expect(instance2).to.be.an(Object);
         expect(instance2.a).to.equal(1);
         expect(dependency).to.equal(1);
+      },
+      'should resolve an alias': async () => {
+        const value = {};
+        const map = {
+          subMap: () => {
+            return {
+              subDep: {
+                args: [
+                  ''
+                ],
+                factory: () => value
+              }
+            };
+          },
+          dep: 'subMap.subDep'
+        };
+        const context = {};
+        const cacheMap = {};
+        const inc = new Incarnate({
+          map,
+          context,
+          cacheMap
+        });
+        const resolvedValue = await inc.resolvePath('dep');
+
+        expect(resolvedValue).to.equal(value);
       }
     },
     'addInvalidationListener/removeInvalidationListener': {

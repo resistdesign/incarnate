@@ -135,7 +135,7 @@ export default class Incarnate {
 
     if (typeof dependencyDefinition === 'string') {
       // This path is an alias.
-      instance = await this.resolvePath(dependencyDefinition, context);
+      instance = this.resolvePath(dependencyDefinition, context);
     } else if (dependencyDefinition instanceof Object) {
       const {
         args,
@@ -155,13 +155,20 @@ export default class Incarnate {
           if (!this.cacheMap.hasOwnProperty(path)) {
             const resolvedArgs = this.getResolvedArgs(args);
 
-            instance = await factory.apply(
+            // IMPORTANT: Do not use `await`, the `Promise` will act as
+            // placeholder in the cache.
+            instance = factory.apply(
               null,
               await Promise.all(resolvedArgs)
             );
 
+            // TRICKY: Caching a `Promise` will and MUST function correctly.
             this.cacheMap[path] = instance;
+            // TRICKY: The resolved instance MUST be cached once a placeholder
+            // is created.
+            this.cacheMap[path] = await instance;
           } else {
+            // IMPORTANT: The `cachedValue` could be a `Promise`.
             instance = cachedValue;
           }
         } else {
@@ -175,7 +182,9 @@ export default class Incarnate {
       }
     }
 
-    return instance;
+    // TRICKY: It is IMPORTANT and necessary to await the `instance` in case it
+    // is a `Promise`.
+    return await instance;
   }
 
   async resolvePath (path, context) {

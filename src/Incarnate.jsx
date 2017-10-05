@@ -133,7 +133,10 @@ export default class Incarnate {
   async resolveDependencies (path, dependencyDefinition, context) {
     let instance;
 
-    if (dependencyDefinition instanceof Object) {
+    if (typeof dependencyDefinition === 'string') {
+      // This path is an alias.
+      instance = await this.resolvePath(dependencyDefinition, context);
+    } else if (dependencyDefinition instanceof Object) {
       const {
         args,
         factory,
@@ -240,10 +243,10 @@ export default class Incarnate {
           }
 
           this._nestedMap[currentPath] = subIncarnate;
-          instance = subIncarnate.resolvePath(subPath, context);
+          instance = await subIncarnate.resolvePath(subPath, context);
         }
       } else {
-        instance = this.resolveDependencies(path, dependencyDefinition, context);
+        instance = await this.resolveDependencies(path, dependencyDefinition, context);
       }
     }
 

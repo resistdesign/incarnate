@@ -446,7 +446,6 @@ module.exports = {
               factory: (shared) => {
                 return {
                   secondLevel: {
-                    junk: 'JUNK!!!',
                     args: [],
                     factory: async () => await shared()
                   }

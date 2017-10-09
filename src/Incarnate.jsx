@@ -202,6 +202,11 @@ export default class Incarnate {
             this.getArgDelegates(args, context) :
             this.getResolvedArgs(args, context);
 
+          // TRICKY: Add the current `path` as a key to the `cacheMap` to support invalidation.
+          if (subMap && this.cacheMap instanceof Object) {
+            this.cacheMap[path] = undefined;
+          }
+
           instance = factory.apply(
             null,
             await Promise.all(resolvedArgs)

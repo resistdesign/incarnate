@@ -1,9 +1,9 @@
 import expect from 'expect.js';
 import Incarnate from './Incarnate';
 
-const MOCK_INSTANCE = { x: 10 };
-const MOCK_DEPENDENCY = { y: 100 };
-const MOCK_DEPENDENCY_DEPENDENCY = { z: 1000 };
+const MOCK_INSTANCE = {x: 10};
+const MOCK_DEPENDENCY = {y: 100};
+const MOCK_DEPENDENCY_DEPENDENCY = {z: 1000};
 const MOCK_CTX_PROP_VALUE = 'MOCK_CTX_PROP_VALUE';
 const MOCK_CTX_PROP_VALUE_2 = 'MOCK_CTX_PROP_VALUE_2';
 const MOCK_ARG_1_VALUE = 'MOCK_ARG_1_VALUE';
@@ -427,6 +427,43 @@ module.exports = {
         const resolvedValue = await inc.resolvePath('dep');
 
         expect(resolvedValue).to.equal(value);
+      },
+      'should support factory supplied subMaps': async () => {
+        const sharedValue = {SHARED: 'SHARED'};
+        const inc = new Incarnate({
+          context: {},
+          cacheMap: {},
+          map: {
+            shared: {
+              args: [],
+              factory: () => sharedValue
+            },
+            subDeps: {
+              subMap: true,
+              args: [
+                'shared'
+              ],
+              factory: (shared) => {
+                return {
+                  secondLevel: {
+                    junk: 'JUNK!!!',
+                    args: [],
+                    factory: async () => await shared()
+                  }
+                };
+              }
+            },
+            topLevel: {
+              args: [
+                'subDeps.secondLevel'
+              ],
+              factory: (sharedFromSecondLevel) => sharedFromSecondLevel
+            }
+          }
+        });
+        const resolvedDep = await inc.resolvePath('topLevel');
+
+        expect(resolvedDep).to.equal(sharedValue);
       }
     },
     'addInvalidationListener/removeInvalidationListener': {

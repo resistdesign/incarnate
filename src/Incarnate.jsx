@@ -11,13 +11,13 @@ export default class Incarnate {
   _nestedMap = {};
   _nestedInvalidationCancellers = {};
 
-  constructor ({
-                 name,
-                 map,
-                 context,
-                 pathDelimiter,
-                 cacheMap
-               }) {
+  constructor({
+                name,
+                map,
+                context,
+                pathDelimiter,
+                cacheMap
+              }) {
     this.name = name;
 
     if (map instanceof Object) {
@@ -31,7 +31,7 @@ export default class Incarnate {
     this.cacheMap = cacheMap instanceof Object ? cacheMap : undefined;
   }
 
-  _addNestedInvalidationCanceller (fullPath, canceller) {
+  _addNestedInvalidationCanceller(fullPath, canceller) {
     if (typeof fullPath === 'string' && canceller instanceof Function) {
       const cancellerList = this._nestedInvalidationCancellers[fullPath] instanceof Array ?
         this._nestedInvalidationCancellers[fullPath] :
@@ -45,13 +45,13 @@ export default class Incarnate {
     }
   }
 
-  _emitInvalidationEvent (path) {
+  _emitInvalidationEvent(path) {
     if (typeof path === 'string') {
       this._eventEmitter.emit(path, path);
     }
   }
 
-  invalidate (dependencies) {
+  invalidate(dependencies) {
     if (
       this.cacheMap instanceof Object &&
       this.map instanceof Object &&
@@ -101,36 +101,52 @@ export default class Incarnate {
     }
   }
 
-  getResolvedArgs (args, context) {
+  getResolvedArgItem(argItem, context) {
+    if (typeof argItem === 'string') {
+      return this.resolvePath(argItem, context);
+    } else if (argItem instanceof Function) {
+      return argItem(
+        {
+          ...this.context,
+          // Override instance level context with parameter level context.
+          ...context
+        },
+        this
+      );
+    } else {
+      return argItem;
+    }
+  }
+
+  getResolvedArgs(args, context) {
     const resolvedArgs = [];
 
     if (args instanceof Array) {
       for (let i = 0; i < args.length; i++) {
         const argItem = args[i];
 
-        if (typeof argItem === 'string') {
-          resolvedArgs.push(this.resolvePath(argItem, context));
-        } else if (argItem instanceof Function) {
-          resolvedArgs.push(
-            argItem(
-              {
-                ...this.context,
-                // Override instance level context with parameter level context.
-                ...context
-              },
-              this
-            )
-          );
-        } else {
-          resolvedArgs.push(argItem);
-        }
+        resolvedArgs.push(this.getResolvedArgItem(argItem, context));
       }
     }
 
     return resolvedArgs;
   }
 
-  async resolveDependencies (path, dependencyDefinition, context) {
+  getArgDelegates(args, context) {
+    const delegates = [];
+
+    if (args instanceof Array) {
+      for (const arg of args) {
+        delegates.push(async () => {
+          return await this.getResolvedArgItem(arg, context);
+        });
+      }
+    }
+
+    return delegates;
+  }
+
+  async resolveDependencies(path, dependencyDefinition, context, subMap) {
     let instance;
 
     if (typeof dependencyDefinition === 'string') {
@@ -145,6 +161,7 @@ export default class Incarnate {
 
       if (factory instanceof Function) {
         if (
+          !subMap &&
           !context &&
           cache !== false &&
           this.cacheMap instanceof Object &&
@@ -153,7 +170,9 @@ export default class Incarnate {
           const cachedValue = this.cacheMap[path];
 
           if (!this.cacheMap.hasOwnProperty(path)) {
-            const resolvedArgs = this.getResolvedArgs(args);
+            const resolvedArgs = subMap ?
+              this.getArgDelegates(args) :
+              this.getResolvedArgs(args);
 
             // IMPORTANT: Do not use `await`, the `Promise` will act as a
             // placeholder in the cache.
@@ -179,7 +198,14 @@ export default class Incarnate {
             instance = cachedValue;
           }
         } else {
-          const resolvedArgs = this.getResolvedArgs(args, context);
+          const resolvedArgs = subMap ?
+            this.getArgDelegates(args, context) :
+            this.getResolvedArgs(args, context);
+
+          // TRICKY: Add the current `path` as a key to the `cacheMap` to support invalidation.
+          if (subMap && this.cacheMap instanceof Object) {
+            this.cacheMap[path] = undefined;
+          }
 
           instance = factory.apply(
             null,
@@ -194,7 +220,61 @@ export default class Incarnate {
     return await instance;
   }
 
-  async resolvePath (path, context) {
+  configureSubMap(subMap, path, currentPath, subPath) {
+    let subCache;
+    let subIncarnate;
+
+    if (this.cacheMap instanceof Object) {
+      // TRICKY: Get the potentially existing `subCache`.
+      subCache = this.cacheMap[currentPath] instanceof Object ?
+        this.cacheMap[currentPath] :
+        {};
+      this.cacheMap[currentPath] = subCache;
+    }
+
+    const subProps = {
+      name: typeof this.name === 'string' ?
+        [this.name, currentPath].join(this.pathDelimiter) :
+        currentPath,
+      map: subMap,
+      context: this.context,
+      pathDelimiter: this.pathDelimiter,
+      cacheMap: subCache
+    };
+
+    if (this._nestedMap[currentPath] instanceof Incarnate) {
+      subIncarnate = this._nestedMap[currentPath];
+      Object.assign(subIncarnate, subProps);
+    } else {
+      subIncarnate = new Incarnate(subProps);
+    }
+
+    // Add a nested validation if none exists.
+    if (!this._nestedInvalidationCancellers.hasOwnProperty(path)) {
+      const onInvalid = () => {
+        /*
+         * TRICKY: Invalidate this *full* path so that anything listening for it or
+         * depending on it can be updated/invalidated.
+         * */
+        this.invalidate([path]);
+        this._emitInvalidationEvent(path);
+      };
+
+      // Listen for invalidation on the `subPath`.
+      subIncarnate.addInvalidationListener(subPath, onInvalid);
+
+      // TRICKY: Save a function used to remove the handler when destroying this instance.
+      this._addNestedInvalidationCanceller(path, () => {
+        subIncarnate.removeInvalidationListener(subPath, onInvalid);
+      });
+    }
+
+    this._nestedMap[currentPath] = subIncarnate;
+
+    return subIncarnate;
+  }
+
+  async resolvePath(path, context) {
     let instance;
 
     if (typeof path === 'string' && this.map instanceof Object) {
@@ -202,66 +282,29 @@ export default class Incarnate {
       // TRICKY: Use `shift` to remove the current path part being processed.
       const currentPath = pathParts.shift();
       const subMapResolver = this.map[currentPath];
-      const dependencyDefinition = this.map[path];
 
-      if (pathParts.length && subMapResolver instanceof Function) {
-        // Sub instances for nested resolution.
+      // Sub instances for nested resolution.
+      if (pathParts.length) {
+        const subPath = pathParts.join(this.pathDelimiter);
+
+        let subMap,
+          subIncarnate;
+
         if (subMapResolver instanceof Function) {
-          const subPath = pathParts.join(this.pathDelimiter);
-          const subMap = await subMapResolver(this.context, subPath);
-
-          let subCache;
-          let subIncarnate;
-
-          if (this.cacheMap instanceof Object) {
-            // TRICKY: Get the potentially existing `subCache`.
-            subCache = this.cacheMap[currentPath] instanceof Object ?
-              this.cacheMap[currentPath] :
-              {};
-            this.cacheMap[currentPath] = subCache;
-          }
-
-          const subProps = {
-            name: typeof this.name === 'string' ?
-              [this.name, currentPath].join(this.pathDelimiter) :
-              currentPath,
-            map: subMap,
-            context: this.context,
-            pathDelimiter: this.pathDelimiter,
-            cacheMap: subCache
-          };
-
-          if (this._nestedMap[currentPath] instanceof Incarnate) {
-            subIncarnate = this._nestedMap[currentPath];
-            Object.assign(subIncarnate, subProps);
-          } else {
-            subIncarnate = new Incarnate(subProps);
-          }
-
-          // Add a nested validation if none exists.
-          if (!this._nestedInvalidationCancellers.hasOwnProperty(path)) {
-            const onInvalid = () => {
-              /*
-               * TRICKY: Invalidate this *full* path so that anything listening for it or
-               * depending on it can be updated/invalidated.
-               * */
-              this.invalidate([path]);
-              this._emitInvalidationEvent(path);
-            };
-
-            // Listen for invalidation on the `subPath`.
-            subIncarnate.addInvalidationListener(subPath, onInvalid);
-
-            // TRICKY: Save a function used to remove the handler when destroying this instance.
-            this._addNestedInvalidationCanceller(path, () => {
-              subIncarnate.removeInvalidationListener(subPath, onInvalid);
-            });
-          }
-
-          this._nestedMap[currentPath] = subIncarnate;
-          instance = await subIncarnate.resolvePath(subPath, context);
+          subMap = await subMapResolver(context || this.context, subPath);
+        } else if (subMapResolver instanceof Object && subMapResolver.subMap === true) {
+          subMap = await this.resolveDependencies(currentPath, subMapResolver, context, true);
+        } else {
+          // TRICKY: No subMap.
+          return undefined;
         }
+
+        subIncarnate = this.configureSubMap(subMap, path, currentPath, subPath);
+
+        instance = await subIncarnate.resolvePath(subPath, context);
       } else {
+        const dependencyDefinition = this.map[path];
+
         instance = await this.resolveDependencies(path, dependencyDefinition, context);
       }
     }
@@ -269,19 +312,19 @@ export default class Incarnate {
     return instance;
   }
 
-  addInvalidationListener (path, handler) {
+  addInvalidationListener(path, handler) {
     if (typeof path === 'string' && handler instanceof Function) {
       this._eventEmitter.on(path, handler);
     }
   }
 
-  removeInvalidationListener (path, handler) {
+  removeInvalidationListener(path, handler) {
     if (typeof path === 'string' && handler instanceof Function) {
       this._eventEmitter.off(path, handler);
     }
   }
 
-  destroy () {
+  destroy() {
     // TRICKY: Cancel nested invalidation handlers before destroying the nested instances.
     // Destroy invalidation handlers.
     for (const k in this._nestedInvalidationCancellers) {

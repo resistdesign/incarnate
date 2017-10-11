@@ -463,6 +463,37 @@ module.exports = {
         const resolvedDep = await inc.resolvePath('topLevel');
 
         expect(resolvedDep).to.equal(sharedValue);
+      },
+      'should use a HashMatrix for dependencies simply declared as `true`': async () => {
+        const inc = new Incarnate({
+          context: {},
+          cacheMap: {},
+          map: {
+            first: {
+              subMap: true,
+              args: [],
+              factory: () => ({
+                second: true
+              })
+            }
+          }
+        });
+        const secondLevelHashMatrix = await inc.resolvePath('first.second');
+
+        let fourthInvalidated = false;
+
+        inc.addInvalidationListener('first.second.third.fourth', () => fourthInvalidated = true);
+
+        // TRICKY: Initialize the Incarnate lifecycle by
+        // requesting the target value for the first time before modifying it.
+        await inc.resolvePath('first.second.third.fourth');
+
+        secondLevelHashMatrix.setPath('third.fourth', 'FOURTH');
+
+        const fourthLevelValue = await inc.resolvePath('first.second.third.fourth');
+
+        expect(fourthInvalidated).to.equal(true);
+        expect(fourthLevelValue).to.equal('FOURTH');
       }
     },
     'addInvalidationListener/removeInvalidationListener': {

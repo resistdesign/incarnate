@@ -1,6 +1,20 @@
 import EventEmitter from 'event-emitter';
+import HashMatrix from './HashMatrix';
 
 export default class Incarnate {
+  static getPathInfo(path, pathDelimiter) {
+    const pathInfo = {};
+
+    if (typeof path === 'string' && typeof pathDelimiter === 'string') {
+      const pathParts = path.split(pathDelimiter);
+
+      pathInfo.currentPath = pathParts.shift();
+      pathInfo.subPathParts = pathParts;
+    }
+
+    return pathInfo;
+  }
+
   name;
   map;
   context;
@@ -10,6 +24,7 @@ export default class Incarnate {
   _eventEmitter = new EventEmitter();
   _nestedMap = {};
   _nestedInvalidationCancellers = {};
+  _hashMatrixServiceMap = {};
 
   constructor({
                 name,
@@ -278,14 +293,35 @@ export default class Incarnate {
     let instance;
 
     if (typeof path === 'string' && this.map instanceof Object) {
-      const pathParts = path.split(this.pathDelimiter);
-      // TRICKY: Use `shift` to remove the current path part being processed.
-      const currentPath = pathParts.shift();
-      const subMapResolver = this.map[currentPath];
+      const {currentPath, subPathParts} = Incarnate.getPathInfo(
+        path,
+        this.pathDelimiter
+      );
 
-      // Sub instances for nested resolution.
-      if (pathParts.length) {
-        const subPath = pathParts.join(this.pathDelimiter);
+      if (this.map[currentPath] === true) {
+        if (!(this._hashMatrixServiceMap[currentPath] instanceof HashMatrix)) {
+          this._hashMatrixServiceMap[currentPath] = new HashMatrix({
+            pathDelimiter: this.pathDelimiter,
+            onPathChange: subPath => {
+              const invalidPath = `${currentPath}${this.pathDelimiter}${subPath}`;
+
+              this.invalidate([invalidPath]);
+              this._emitInvalidationEvent(invalidPath);
+            }
+          });
+        }
+
+        if (subPathParts.length) {
+          return this._hashMatrixServiceMap[currentPath].getPath(
+            subPathParts.join(this.pathDelimiter)
+          );
+        } else {
+          return this._hashMatrixServiceMap[currentPath];
+        }
+      } else if (subPathParts.length) {
+        // Sub instances for nested resolution.
+        const subMapResolver = this.map[currentPath];
+        const subPath = subPathParts.join(this.pathDelimiter);
 
         let subMap,
           subIncarnate;
@@ -357,5 +393,6 @@ export default class Incarnate {
     }
 
     this._nestedMap = {};
+    this._hashMatrixServiceMap = {};
   }
 }

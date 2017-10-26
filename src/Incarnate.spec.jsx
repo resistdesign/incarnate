@@ -1,5 +1,5 @@
 import expect from 'expect.js';
-import Incarnate from './Incarnate';
+import Incarnate, {HashMatrix} from './Incarnate';
 
 const MOCK_INSTANCE = {x: 10};
 const MOCK_DEPENDENCY = {y: 100};
@@ -494,6 +494,25 @@ module.exports = {
 
         expect(fourthInvalidated).to.equal(true);
         expect(fourthLevelValue).to.equal('FOURTH');
+      },
+      'should use a preconfigured HashMatrix for a dependency declared as a HashMatrix instance': async () => {
+        const inc = new Incarnate({
+          context: {},
+          cacheMap: {},
+          map: {
+            first: {
+              subMap: true,
+              args: [],
+              factory: () => ({
+                second: new HashMatrix({hashMatrix: {third: {fourth: 'USE THE FOURTH'}}})
+              })
+            }
+          }
+        });
+
+        const fourthLevelValue = await inc.resolvePath('first.second.third.fourth');
+
+        expect(fourthLevelValue).to.equal('USE THE FOURTH');
       }
     },
     'addInvalidationListener/removeInvalidationListener': {

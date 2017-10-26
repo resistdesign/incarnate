@@ -1,6 +1,8 @@
 import EventEmitter from 'event-emitter';
 import HashMatrix from './HashMatrix';
 
+export {default as HashMatrix} from './HashMatrix';
+
 export default class Incarnate {
   static getPathInfo(path, pathDelimiter) {
     const pathInfo = {};
@@ -24,7 +26,7 @@ export default class Incarnate {
   _eventEmitter = new EventEmitter();
   _nestedMap = {};
   _nestedInvalidationCancellers = {};
-  _hashMatrixServiceMap = {};
+  _hashMatrixMap = {};
 
   constructor({
                 name,
@@ -297,26 +299,46 @@ export default class Incarnate {
         path,
         this.pathDelimiter
       );
+      const currentDepDeclaration = this.map[currentPath];
 
-      if (this.map[currentPath] === true) {
-        if (!(this._hashMatrixServiceMap[currentPath] instanceof HashMatrix)) {
-          this._hashMatrixServiceMap[currentPath] = new HashMatrix({
-            pathDelimiter: this.pathDelimiter,
-            onPathChange: subPath => {
-              const invalidPath = `${currentPath}${this.pathDelimiter}${subPath}`;
+      if (currentDepDeclaration === true || currentDepDeclaration instanceof HashMatrix) {
+        // Using a HashMatrix.
+        if (!(this._hashMatrixMap[currentPath] instanceof HashMatrix)) {
+          const onPathChange = subPath => {
+            const invalidPath = `${currentPath}${this.pathDelimiter}${subPath}`;
 
-              this.invalidate([invalidPath]);
-              this._emitInvalidationEvent(invalidPath);
-            }
-          });
+            this.invalidate([invalidPath]);
+            this._emitInvalidationEvent(invalidPath);
+          };
+
+          if (currentDepDeclaration === true) {
+            // Simple HashMatrix instance.
+            this._hashMatrixMap[currentPath] = new HashMatrix({
+              pathDelimiter: this.pathDelimiter,
+              onPathChange
+            });
+          } else if (currentDepDeclaration instanceof HashMatrix) {
+            // Preconfigured HashMatrix instance.
+            const existingOnPathChange = currentDepDeclaration.onPathChange;
+
+            currentDepDeclaration.onPathChange = (...args) => {
+              if (existingOnPathChange instanceof Function) {
+                // IMPORTANT: Combine `onPathChange` methods.
+                existingOnPathChange(...args);
+              }
+
+              onPathChange(...args);
+            };
+            this._hashMatrixMap[currentPath] = currentDepDeclaration;
+          }
         }
 
         if (subPathParts.length) {
-          return this._hashMatrixServiceMap[currentPath].getPath(
+          return this._hashMatrixMap[currentPath].getPath(
             subPathParts.join(this.pathDelimiter)
           );
         } else {
-          return this._hashMatrixServiceMap[currentPath];
+          return this._hashMatrixMap[currentPath];
         }
       } else if (subPathParts.length) {
         // Sub instances for nested resolution.
@@ -327,8 +349,10 @@ export default class Incarnate {
           subIncarnate;
 
         if (subMapResolver instanceof Function) {
+          // Simple sub-map.
           subMap = await subMapResolver(context || this.context, subPath);
         } else if (subMapResolver instanceof Object && subMapResolver.subMap === true) {
+          // Factory supplied sub-map.
           subMap = await this.resolveDependencies(currentPath, subMapResolver, context, true);
         } else {
           // TRICKY: No subMap.
@@ -393,6 +417,6 @@ export default class Incarnate {
     }
 
     this._nestedMap = {};
-    this._hashMatrixServiceMap = {};
+    this._hashMatrixMap = {};
   }
 }

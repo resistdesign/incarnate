@@ -27,6 +27,7 @@ export default class Incarnate {
   _nestedMap = {};
   _nestedInvalidationCancellers = {};
   _hashMatrixMap = {};
+  _factorySuppliedSubMapCache = {};
 
   constructor({
                 name,
@@ -95,6 +96,12 @@ export default class Incarnate {
               // IMPORTANT: Notify invalidation handler.
               this._emitInvalidationEvent(currentPath);
             }
+            if (this._factorySuppliedSubMapCache.hasOwnProperty(currentPath)) {
+              // Factory supplied SubMaps.
+              delete this._factorySuppliedSubMapCache[currentPath];
+              // IMPORTANT: Notify invalidation handler.
+              this._emitInvalidationEvent(currentPath);
+            }
           }
 
           for (const k in this.map) {
@@ -108,6 +115,11 @@ export default class Incarnate {
                 relatedDepDef.args.indexOf(invalidDepPath) !== -1
               ) {
                 invalidRelatedDepPaths.push(k);
+              }
+
+              if (typeof relatedDepDef === 'string' && invalidDepPath === relatedDepDef) {
+                // TRICKY: Invalidate aliases.
+                this._emitInvalidationEvent(k);
               }
             }
           }
@@ -178,15 +190,15 @@ export default class Incarnate {
 
       if (factory instanceof Function) {
         if (
-          !subMap &&
           !context &&
           cache !== false &&
           this.cacheMap instanceof Object &&
           typeof path === 'string'
         ) {
-          const cachedValue = this.cacheMap[path];
+          const targetCacheMap = subMap ? this._factorySuppliedSubMapCache : this.cacheMap;
+          const cachedValue = targetCacheMap[path];
 
-          if (!this.cacheMap.hasOwnProperty(path)) {
+          if (!targetCacheMap.hasOwnProperty(path)) {
             const resolvedArgs = subMap ?
               this.getArgDelegates(args) :
               this.getResolvedArgs(args);
@@ -205,24 +217,17 @@ export default class Incarnate {
             });
 
             // TRICKY: Caching a `Promise` will and MUST function correctly.
-            this.cacheMap[path] = instance;
+            targetCacheMap[path] = instance;
 
             // TRICKY: The resolved instance MUST be cached once a placeholder
             // is created.
-            this.cacheMap[path] = await instance;
+            targetCacheMap[path] = await instance;
           } else {
             // IMPORTANT: The `cachedValue` *could be* a `Promise`.
             instance = cachedValue;
           }
         } else {
-          const resolvedArgs = subMap ?
-            this.getArgDelegates(args, context) :
-            this.getResolvedArgs(args, context);
-
-          // TRICKY: Add the current `path` as a key to the `cacheMap` to support invalidation.
-          if (subMap && this.cacheMap instanceof Object) {
-            this.cacheMap[path] = undefined;
-          }
+          const resolvedArgs = this.getResolvedArgs(args, context);
 
           instance = factory.apply(
             null,
@@ -418,5 +423,6 @@ export default class Incarnate {
 
     this._nestedMap = {};
     this._hashMatrixMap = {};
+    this._factorySuppliedSubMapCache = {};
   }
 }

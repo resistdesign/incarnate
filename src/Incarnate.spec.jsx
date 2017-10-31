@@ -186,7 +186,7 @@ module.exports = {
           },
           context: {
             mockCtxProp: MOCK_CTX_PROP_VALUE,
-            mockCtxProp2: MOCK_CTX_PROP_VALUE_2
+            mockCtxProp2: MOCK_CTX_PROP_VALUE
           }
         });
         const instance = await inc.resolvePath(

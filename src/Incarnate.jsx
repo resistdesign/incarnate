@@ -230,8 +230,8 @@ export default class Incarnate {
         } else {
           // Not caching
           const resolvedArgs = subMap ?
-            this.getArgDelegates(args) :
-            this.getResolvedArgs(args);
+            this.getArgDelegates(args, context) :
+            this.getResolvedArgs(args, context);
 
           instance = factory.apply(
             null,

@@ -195,6 +195,7 @@ export default class Incarnate {
           this.cacheMap instanceof Object &&
           typeof path === 'string'
         ) {
+          // Caching
           const targetCacheMap = subMap ? this._factorySuppliedSubMapCache : this.cacheMap;
           const cachedValue = targetCacheMap[path];
 
@@ -227,7 +228,10 @@ export default class Incarnate {
             instance = cachedValue;
           }
         } else {
-          const resolvedArgs = this.getResolvedArgs(args, context);
+          // Not caching
+          const resolvedArgs = subMap ?
+            this.getArgDelegates(args, context) :
+            this.getResolvedArgs(args, context);
 
           instance = factory.apply(
             null,

@@ -40,6 +40,61 @@ export default {
       MOCK_HASH_MATRIX = undefined;
       MOCK_SERVICE = undefined;
     },
+    static: {
+      keyIsNumeric: {
+        'should properly identify numeric keys': () => {
+          const isNum1 = Incarnate.keyIsNumeric(3);
+          const isNum2 = Incarnate.keyIsNumeric('five');
+
+          expect(isNum1).to.be(true);
+          expect(isNum2).to.be(false);
+        }
+      },
+      getPathParts: {
+        'should create path parts from a string': () => {
+          const parts = Incarnate.getPathParts('this.is.a.path', '.');
+
+          expect(parts).to.eql(['this', 'is', 'a', 'path']);
+        },
+        'should allow an array path to pass through': () => {
+          const path = ['this', 'is', 'a', 'path'];
+          const parts = Incarnate.getPathParts(path, '.');
+
+          expect(parts).to.equal(path);
+        },
+        'should throw an error when path is not a valid type': () => {
+          let message;
+
+          try {
+            Incarnate.getPathParts({}, '.');
+          } catch (error) {
+            message = error.message;
+          }
+
+          expect(message).to.equal('Invalid Path: {}');
+        }
+      },
+      getStringPath: {
+        'should convert an array path to a string path': () => {
+          const path = Incarnate.getStringPath(['this', 'is', 'a', 'path'], '.');
+
+          expect(path).to.equal('this.is.a.path');
+        },
+        'should allow a string path to pass through': () => {
+          const path = Incarnate.getStringPath('this.is.a.path', '.');
+
+          expect(path).to.equal('this.is.a.path');
+        }
+      },
+      getPathInfo: {
+        'should provide the top path and the sub-path for a path array': () => {
+          const {topPath, subPath} = Incarnate.getPathInfo(['this', 'is', 'a', 'path']);
+
+          expect(topPath).to.equal('this');
+          expect(subPath).to.eql(['is', 'a', 'path']);
+        }
+      }
+    },
     setPath: {
       beforeEach: () => {
         MOCK_HASH_MATRIX = {

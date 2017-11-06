@@ -1,432 +1,401 @@
-import EventEmitter from 'event-emitter';
-import HashMatrix from './HashMatrix';
-
-export {default as HashMatrix} from './HashMatrix';
-
 export default class Incarnate {
-  static getPathInfo(path, pathDelimiter) {
+  static DEFAULT_PATH_DELIMITER = '.';
+
+  static keyIsNumeric(key) {
+    let numeric = false;
+
+    try {
+      numeric = Number.isInteger(parseInt(key, 10));
+    } catch (error) {
+      // Ignore.
+    }
+
+    return numeric;
+  }
+
+  static getPathParts(path, pathDelimiter) {
+    if (typeof path === 'string') {
+      return path.split(pathDelimiter);
+    } else if (path instanceof Array) {
+      return path;
+    } else {
+      throw new Error(`Invalid Path: ${JSON.stringify(path, null, '  ')}`);
+    }
+  }
+
+  static getStringPath(pathParts, pathDelimiter) {
+    if (typeof pathParts === 'string') {
+      return pathParts;
+    } else if (pathParts instanceof Array) {
+      return pathParts.join(pathDelimiter);
+    }
+  }
+
+  static getPathInfo(pathParts) {
     const pathInfo = {};
 
-    if (typeof path === 'string' && typeof pathDelimiter === 'string') {
-      const pathParts = path.split(pathDelimiter);
+    if (pathParts instanceof Array) {
+      const newPathParts = [...pathParts];
 
-      pathInfo.currentPath = pathParts.shift();
-      pathInfo.subPathParts = pathParts;
+      pathInfo.topPath = newPathParts.shift();
+      pathInfo.subPath = newPathParts;
     }
 
     return pathInfo;
   }
 
-  name;
-  map;
-  context;
-  pathDelimiter;
-  cacheMap;
+  _subMapCache = {};
 
-  _eventEmitter = new EventEmitter();
-  _nestedMap = {};
-  _nestedInvalidationCancellers = {};
-  _hashMatrixMap = {};
-  _factorySuppliedSubMapCache = {};
+  map;
+  pathDelimiter;
+  hashMatrix;
+  onPathChange;
+  onResolveError;
 
   constructor({
-                name,
                 map,
-                context,
-                pathDelimiter,
-                cacheMap
+                hashMatrix = {},
+                pathDelimiter = Incarnate.DEFAULT_PATH_DELIMITER,
+                onPathChange,
+                onResolveError
               }) {
-    this.name = name;
-
-    if (map instanceof Object) {
-      this.map = map;
-    } else {
-      throw new Error('A normalized dependency map is required.');
-    }
-
-    this.context = context instanceof Object ? context : {};
-    this.pathDelimiter = typeof pathDelimiter === 'string' ? pathDelimiter : '.';
-    this.cacheMap = cacheMap instanceof Object ? cacheMap : undefined;
+    this.map = map;
+    this.hashMatrix = hashMatrix;
+    this.pathDelimiter = pathDelimiter;
+    this.onPathChange = onPathChange;
+    this.onResolveError = onResolveError;
   }
 
-  _addNestedInvalidationCanceller(fullPath, canceller) {
-    if (typeof fullPath === 'string' && canceller instanceof Function) {
-      const cancellerList = this._nestedInvalidationCancellers[fullPath] instanceof Array ?
-        this._nestedInvalidationCancellers[fullPath] :
-        [];
-
-      if (cancellerList.indexOf(canceller) === -1) {
-        cancellerList.push(canceller);
-      }
-
-      this._nestedInvalidationCancellers[fullPath] = cancellerList;
+  handleResolveError(path, error) {
+    if (this.onResolveError instanceof Function) {
+      this.onResolveError(path, error);
     }
   }
 
-  _emitInvalidationEvent(path) {
-    if (typeof path === 'string') {
-      this._eventEmitter.emit(path, path);
-    }
-  }
+  pathIsSet(path) {
+    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
 
-  invalidate(dependencies) {
-    if (
-      this.cacheMap instanceof Object &&
-      this.map instanceof Object &&
-      dependencies instanceof Array &&
-      dependencies.length
-    ) {
-      const invalidRelatedDepPaths = [];
+    let isSet = true,
+      currentValue = this.hashMatrix;
 
-      for (let i = 0; i < dependencies.length; i++) {
-        const invalidDepPath = dependencies[i];
-
-        if (typeof invalidDepPath === 'string') {
-          const invalidDepPathParts = invalidDepPath.split(this.pathDelimiter);
-          // TRICKY: Remove the top path from the path parts.
-          const currentPath = invalidDepPathParts.shift();
-          const depDef = this.map[currentPath];
-          const subIncarnate = this._nestedMap[currentPath];
-
-          if (depDef instanceof Function && subIncarnate instanceof Incarnate) {
-            subIncarnate.invalidate([invalidDepPathParts.join(this.pathDelimiter)]);
-          } else if (depDef instanceof Object && invalidDepPathParts.length === 0) {
-            if (this.cacheMap.hasOwnProperty(currentPath)) {
-              delete this.cacheMap[currentPath];
-              // IMPORTANT: Notify invalidation handler.
-              this._emitInvalidationEvent(currentPath);
-            }
-            if (this._factorySuppliedSubMapCache.hasOwnProperty(currentPath)) {
-              // Factory supplied SubMaps.
-              delete this._factorySuppliedSubMapCache[currentPath];
-              // IMPORTANT: Notify invalidation handler.
-              this._emitInvalidationEvent(currentPath);
-            }
-          }
-
-          for (const k in this.map) {
-            if (this.map.hasOwnProperty(k)) {
-              const relatedDepDef = this.map[k];
-
-              if (
-                invalidRelatedDepPaths.indexOf(k) === -1 &&
-                relatedDepDef instanceof Object &&
-                relatedDepDef.args instanceof Array &&
-                relatedDepDef.args.indexOf(invalidDepPath) !== -1
-              ) {
-                invalidRelatedDepPaths.push(k);
-              }
-
-              if (typeof relatedDepDef === 'string' && invalidDepPath === relatedDepDef) {
-                // TRICKY: Invalidate aliases.
-                this._emitInvalidationEvent(k);
-              }
-            }
-          }
+    for (const part of pathParts) {
+      if (currentValue instanceof Array && Incarnate.keyIsNumeric(part)) {
+        if (currentValue.length < (parseInt(part, 10) + 1)) {
+          isSet = false;
+          break;
         }
-      }
-
-      this.invalidate(invalidRelatedDepPaths);
-    }
-  }
-
-  getResolvedArgItem(argItem, context) {
-    if (typeof argItem === 'string') {
-      return this.resolvePath(argItem, context);
-    } else if (argItem instanceof Function) {
-      return argItem(
-        {
-          ...this.context,
-          // Override instance level context with parameter level context.
-          ...context
-        },
-        this
-      );
-    } else {
-      return argItem;
-    }
-  }
-
-  getResolvedArgs(args, context) {
-    const resolvedArgs = [];
-
-    if (args instanceof Array) {
-      for (let i = 0; i < args.length; i++) {
-        const argItem = args[i];
-
-        resolvedArgs.push(this.getResolvedArgItem(argItem, context));
-      }
-    }
-
-    return resolvedArgs;
-  }
-
-  getArgDelegates(args, context) {
-    const delegates = [];
-
-    if (args instanceof Array) {
-      for (const arg of args) {
-        delegates.push(async () => {
-          return await this.getResolvedArgItem(arg, context);
-        });
-      }
-    }
-
-    return delegates;
-  }
-
-  async resolveDependencies(path, dependencyDefinition, context, subMap) {
-    let instance;
-
-    if (typeof dependencyDefinition === 'string') {
-      // This path is an alias.
-      instance = this.resolvePath(dependencyDefinition, context);
-    } else if (dependencyDefinition instanceof Object) {
-      const {
-        args,
-        factory,
-        cache
-      } = dependencyDefinition;
-
-      if (factory instanceof Function) {
-        if (
-          !context &&
-          cache !== false &&
-          this.cacheMap instanceof Object &&
-          typeof path === 'string'
-        ) {
-          // Caching
-          const targetCacheMap = subMap ? this._factorySuppliedSubMapCache : this.cacheMap;
-          const cachedValue = targetCacheMap[path];
-
-          if (!targetCacheMap.hasOwnProperty(path)) {
-            const resolvedArgs = subMap ?
-              this.getArgDelegates(args) :
-              this.getResolvedArgs(args);
-
-            // IMPORTANT: Do not use `await`, the `Promise` will act as a
-            // placeholder in the cache.
-            instance = new Promise(async (res, rej) => {
-              try {
-                res(factory.apply(
-                  null,
-                  await Promise.all(resolvedArgs)
-                ));
-              } catch (error) {
-                rej(error);
-              }
-            });
-
-            // TRICKY: Caching a `Promise` will and MUST function correctly.
-            targetCacheMap[path] = instance;
-
-            // TRICKY: The resolved instance MUST be cached once a placeholder
-            // is created.
-            targetCacheMap[path] = await instance;
-          } else {
-            // IMPORTANT: The `cachedValue` *could be* a `Promise`.
-            instance = cachedValue;
-          }
-        } else {
-          // Not caching
-          const resolvedArgs = subMap ?
-            this.getArgDelegates(args, context) :
-            this.getResolvedArgs(args, context);
-
-          instance = factory.apply(
-            null,
-            await Promise.all(resolvedArgs)
-          );
+      } else if (currentValue instanceof Object) {
+        if (!currentValue.hasOwnProperty(part)) {
+          isSet = false;
+          break;
         }
+      } else {
+        isSet = false;
+        break;
+      }
+
+      // Don't fail, just return `false`.
+      try {
+        currentValue = currentValue[part];
+      } catch (error) {
+        isSet = false;
+        break;
       }
     }
 
-    // TRICKY: It is IMPORTANT and necessary to await the `instance` in case it
-    // is a `Promise`.
-    return await instance;
+    return isSet;
   }
 
-  configureSubMap(subMap, path, currentPath, subPath) {
-    let subCache;
-    let subIncarnate;
+  async handleAsyncDependency(path, promise, subMap) {
+    let value;
 
-    if (this.cacheMap instanceof Object) {
-      // TRICKY: Get the potentially existing `subCache`.
-      subCache = this.cacheMap[currentPath] instanceof Object ?
-        this.cacheMap[currentPath] :
-        {};
-      this.cacheMap[currentPath] = subCache;
+    try {
+      value = await promise;
+    } catch (error) {
+      this.handleResolveError(path, error);
+
+      return;
     }
 
-    const subProps = {
-      name: typeof this.name === 'string' ?
-        [this.name, currentPath].join(this.pathDelimiter) :
-        currentPath,
-      map: subMap,
-      context: this.context,
-      pathDelimiter: this.pathDelimiter,
-      cacheMap: subCache
-    };
-
-    if (this._nestedMap[currentPath] instanceof Incarnate) {
-      subIncarnate = this._nestedMap[currentPath];
-      Object.assign(subIncarnate, subProps);
+    if (subMap) {
+      this._subMapCache = value;
     } else {
-      subIncarnate = new Incarnate(subProps);
+      this.setPath(path, value);
     }
+  }
 
-    // Add a nested validation if none exists.
-    if (!this._nestedInvalidationCancellers.hasOwnProperty(path)) {
-      const onInvalid = () => {
-        /*
-         * TRICKY: Invalidate this *full* path so that anything listening for it or
-         * depending on it can be updated/invalidated.
-         * */
-        this.invalidate([path]);
-        this._emitInvalidationEvent(path);
-      };
+  updateDependencyList(paths, map, prefix) {
+    let fullyResolved = true;
 
-      // Listen for invalidation on the `subPath`.
-      subIncarnate.addInvalidationListener(subPath, onInvalid);
-
-      // TRICKY: Save a function used to remove the handler when destroying this instance.
-      this._addNestedInvalidationCanceller(path, () => {
-        subIncarnate.removeInvalidationListener(subPath, onInvalid);
+    if (paths instanceof Array) {
+      paths.forEach(path => {
+        try {
+          if (!this.updateDependency(path, map, prefix)) {
+            fullyResolved = false;
+          }
+        } catch (error) {
+          fullyResolved = false;
+        }
       });
     }
 
-    this._nestedMap[currentPath] = subIncarnate;
-
-    return subIncarnate;
+    return fullyResolved;
   }
 
-  async resolvePath(path, context) {
-    let instance;
+  createSetter(path) {
+    return (value) => {
+      this.setPath(path, value);
+    };
+  }
 
-    if (typeof path === 'string' && this.map instanceof Object) {
-      const {currentPath, subPathParts} = Incarnate.getPathInfo(
-        path,
-        this.pathDelimiter
-      );
-      const currentDepDeclaration = this.map[currentPath];
+  createInvalidator(path) {
+    return () => {
+      this.invalidatePath(path);
+    };
+  }
 
-      if (currentDepDeclaration === true || currentDepDeclaration instanceof HashMatrix) {
-        // Using a HashMatrix.
-        if (!(this._hashMatrixMap[currentPath] instanceof HashMatrix)) {
-          const onPathChange = subPath => {
-            const invalidPath = `${currentPath}${this.pathDelimiter}${subPath}`;
+  prefixPath(path, prefix = []) {
+    return Incarnate.getStringPath([
+      ...Incarnate.getPathParts(prefix),
+      path
+    ]);
+  }
 
-            this.invalidate([invalidPath]);
-            this._emitInvalidationEvent(invalidPath);
-          };
+  updateDependency(path, map, prefix = []) {
+    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
+    const {topPath: topPathBase, subPath = []} = Incarnate.getPathInfo(pathParts);
+    const topPath = this.prefixPath(topPathBase, prefix);
 
-          if (currentDepDeclaration === true) {
-            // Simple HashMatrix instance.
-            this._hashMatrixMap[currentPath] = new HashMatrix({
-              pathDelimiter: this.pathDelimiter,
-              onPathChange
-            });
-          } else if (currentDepDeclaration instanceof HashMatrix) {
-            // Preconfigured HashMatrix instance.
-            const existingOnPathChange = currentDepDeclaration.onPathChange;
+    let resolved = false;
 
-            currentDepDeclaration.onPathChange = (...args) => {
-              if (existingOnPathChange instanceof Function) {
-                // IMPORTANT: Combine `onPathChange` methods.
-                existingOnPathChange(...args);
+    if (map instanceof Object && map.hasOwnProperty(topPath)) {
+      const {
+        [topPath]: {
+          subMap,
+          required = [],
+          optional = [],
+          setters = [],
+          invalidators = [],
+          factory
+        }
+      } = map;
+
+      if (
+        factory instanceof Function &&
+        // Don't process if there is an unresolved sub-map for this path.
+        !(subMap && this._subMapCache[topPath] instanceof Promise)
+      ) {
+        const topPathIsSet = subMap ? this._subMapCache.hasOwnProperty(topPath) : this.pathIsSet(topPath);
+
+        if (!topPathIsSet) {
+          // The value for the current path is mapped as a dependency but
+          // has not been added to the `hashMatrix`, so get it.
+          const requiredDependenciesResolved = this.updateDependencyList(required, map, prefix);
+
+          if (requiredDependenciesResolved) {
+            // The required dependencies have been resolved and are available on the `hashMatrix`.
+            const requiredValues = required
+              .map(p => this.prefixPath(p, prefix))
+              .map(::this.getPath);
+            const optionalValues = optional
+              .map(p => this.prefixPath(p, prefix))
+              .map(::this.getPath);
+            const setterHandlers = setters
+              .map(p => this.prefixPath(p, prefix))
+              .map(::this.createSetter);
+            const invalidationHandlers = invalidators
+              .map(p => this.prefixPath(p, prefix))
+              .map(::this.createInvalidator);
+            const factoryArgs = [
+              ...requiredValues,
+              ...optionalValues,
+              ...setterHandlers,
+              ...invalidationHandlers
+            ];
+            let factoryValue;
+
+            try {
+              factoryValue = factory(...factoryArgs);
+            } catch (error) {
+              this.handleResolveError(topPath, error);
+
+              return false;
+            }
+
+            if (factoryValue instanceof Promise) {
+              if (subMap) {
+                // IMPORTANT: Cache the promise so that dependency resolution isn't repeatedly attempted while
+                // resolving a complex nested path.
+                this._subMapCache[topPath] = factoryValue;
               }
 
-              onPathChange(...args);
-            };
-            this._hashMatrixMap[currentPath] = currentDepDeclaration;
+              this.handleAsyncDependency(topPath, factoryValue, subMap);
+            } else {
+              this.updateDependency(topPath, factoryValue);
+
+              resolved = true;
+            }
           }
+        } else if (subMap && subPath.length) {
+          // The value for the current path is set and it is a sub-map with remaining path parts to be resolved.
+          const subMapValue = this._subMapCache[topPath];
+
+          resolved = this.updateDependency(subPath, subMapValue, topPath);
         }
-
-        if (subPathParts.length) {
-          return this._hashMatrixMap[currentPath].getPath(
-            subPathParts.join(this.pathDelimiter)
-          );
-        } else {
-          return this._hashMatrixMap[currentPath];
-        }
-      } else if (subPathParts.length) {
-        // Sub instances for nested resolution.
-        const subMapResolver = this.map[currentPath];
-        const subPath = subPathParts.join(this.pathDelimiter);
-
-        let subMap,
-          subIncarnate;
-
-        if (subMapResolver instanceof Function) {
-          // Simple sub-map.
-          subMap = await subMapResolver(context || this.context, subPath);
-        } else if (subMapResolver instanceof Object && subMapResolver.subMap === true) {
-          // Factory supplied sub-map.
-          subMap = await this.resolveDependencies(currentPath, subMapResolver, context, true);
-        } else {
-          // TRICKY: No subMap.
-          return undefined;
-        }
-
-        subIncarnate = this.configureSubMap(subMap, path, currentPath, subPath);
-
-        instance = await subIncarnate.resolvePath(subPath, context);
-      } else {
-        const dependencyDefinition = this.map[path];
-
-        instance = await this.resolveDependencies(path, dependencyDefinition, context);
       }
     }
 
-    return instance;
+    return resolved;
   }
 
-  addInvalidationListener(path, handler) {
-    if (typeof path === 'string' && handler instanceof Function) {
-      this._eventEmitter.on(path, handler);
-    }
-  }
+  invalidatePath(path = []) {
+    const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
 
-  removeInvalidationListener(path, handler) {
-    if (typeof path === 'string' && handler instanceof Function) {
-      this._eventEmitter.off(path, handler);
-    }
-  }
+    // Invalidate sub-maps.
+    delete this._subMapCache[stringPath];
 
-  destroy() {
-    // TRICKY: Cancel nested invalidation handlers before destroying the nested instances.
-    // Destroy invalidation handlers.
-    for (const k in this._nestedInvalidationCancellers) {
-      if (this._nestedInvalidationCancellers.hasOwnProperty(k)) {
-        const cancellerList = this._nestedInvalidationCancellers[k];
+    // Unset path on `hashMatrix`.
+    this.updateHashMatrix(stringPath, undefined, true);
 
-        if (cancellerList instanceof Array) {
-          for (let i = 0; i < cancellerList.length; i++) {
-            const canceller = cancellerList[i];
+    // Dispatch changes AFTER removing cached values and sub-maps.
+    this.dispatchChanges(stringPath);
 
-            if (canceller instanceof Function) {
-              canceller();
+    // Invalidate dependents.
+    for (const k in this._subMapCache) {
+      if (stringPath.indexOf(`${k}${this.pathDelimiter}`) === 0) {
+        // IMPORTANT: The path is a sub-path of the current sub-map.
+
+        const subMap = this._subMapCache[k];
+
+        if (subMap instanceof Object && !(subMap instanceof Promise)) {
+          for (const s in subMap) {
+            const subDep = subMap[s];
+
+            if (subDep instanceof Object) {
+              // Compare paths.
+              const {required = [], optional = []} = subDep;
+              const invalidPaths = [];
+
+              // Required dependencies.
+              for (const rp of required) {
+                const fullPath = this.prefixPath(rp, k);
+
+                if (stringPath === fullPath) {
+                  invalidPaths.push(this.prefixPath(s, k));
+                }
+              }
+
+              // Optional dependencies.
+              for (const op of required) {
+                const fullPath = this.prefixPath(op, k);
+
+                if (stringPath === fullPath) {
+                  const optionalPath = this.prefixPath(s, k);
+
+                  if (invalidPaths.indexOf(optionalPath) === -1) {
+                    invalidPaths.push(optionalPath);
+                  }
+                }
+              }
+
+              // Invalidate.
+              invalidPaths.forEach(::this.invalidatePath);
             }
           }
         }
       }
     }
+  }
 
-    this._nestedInvalidationCancellers = {};
+  getPathValue(path) {
+    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
 
-    // Destroy nested instances.
-    for (const k in this._nestedMap) {
-      if (this._nestedMap.hasOwnProperty(k)) {
-        const subIncarnate = this._nestedMap[k];
+    let value,
+      currentValue = this.hashMatrix,
+      finished = true;
 
-        if (subIncarnate instanceof Incarnate) {
-          subIncarnate.destroy();
-        }
+    for (const part of pathParts) {
+      // Don't fail, just return `undefined`.
+      try {
+        currentValue = currentValue[part];
+      } catch (error) {
+        finished = false;
+        break;
       }
     }
 
-    this._nestedMap = {};
-    this._hashMatrixMap = {};
-    this._factorySuppliedSubMapCache = {};
+    // TRICKY: Don't select the current value if the full path wasn't processed.
+    if (finished) {
+      value = currentValue;
+    }
+
+    return value;
+  }
+
+  getPath(path) {
+    this.updateDependency(path, this.map);
+
+    return this.getPathValue(path);
+  }
+
+  updateHashMatrix(path, value, unset) {
+    if (!unset || this.pathIsSet(path)) {
+      const newHashMatrix = {
+        ...this.hashMatrix
+      };
+      const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
+      const lastIndex = pathParts.length - 1;
+      const lastPart = pathParts[lastIndex];
+
+      let currentValue = newHashMatrix;
+
+      for (let i = 0; i < lastIndex; i++) {
+        const part = pathParts[i];
+        const nextPart = pathParts[i + 1];
+
+        // TRICKY: Build out the tree is it's not there.
+        if (!currentValue.hasOwnProperty(part)) {
+          currentValue[part] = Incarnate.keyIsNumeric(nextPart) ? [] : {};
+        } else if (currentValue[part] instanceof Array) {
+          currentValue[part] = [
+            ...currentValue[part]
+          ];
+        } else if (currentValue[part] instanceof Object) {
+          currentValue[part] = {
+            ...currentValue[part]
+          };
+        }
+
+        currentValue = currentValue[part];
+      }
+
+      if (unset) {
+        delete currentValue[lastPart];
+      } else {
+        currentValue[lastPart] = value;
+      }
+
+      this.hashMatrix = newHashMatrix;
+    }
+  }
+
+  dispatchChanges(path) {
+    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
+
+    // Notify lifecycle listeners of changes all the way up the path.
+    if (this.onPathChange instanceof Function && pathParts.length) {
+      const currentPath = [...pathParts];
+
+      // TRICKY: Start with the deepest path and move up to the most shallow.
+      while (currentPath.length) {
+        this.onPathChange(currentPath.join(this.pathDelimiter));
+        currentPath.pop();
+      }
+    }
+  }
+
+  setPath(path, value) {
+    this.updateHashMatrix(path, value);
+    this.dispatchChanges(path, value);
   }
 }

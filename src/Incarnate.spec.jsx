@@ -1,5 +1,5 @@
 import expect from 'expect.js';
-import HashMatrix from './HashMatrix';
+import Incarnate from './Incarnate';
 
 const MOCK_PATHS = {
   A: [
@@ -55,7 +55,7 @@ export default {
             }
           }
         };
-        MOCK_SERVICE = new HashMatrix({
+        MOCK_SERVICE = new Incarnate({
           hashMatrix: MOCK_HASH_MATRIX
         });
       },
@@ -81,7 +81,7 @@ export default {
             }
           }
         };
-        MOCK_SERVICE = new HashMatrix({
+        MOCK_SERVICE = new Incarnate({
           hashMatrix: MOCK_HASH_MATRIX
         });
       },

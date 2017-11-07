@@ -1,713 +1,280 @@
 import expect from 'expect.js';
-import Incarnate, {HashMatrix} from './Incarnate';
+import Incarnate from './Incarnate';
 
-const MOCK_INSTANCE = {x: 10};
-const MOCK_DEPENDENCY = {y: 100};
-const MOCK_DEPENDENCY_DEPENDENCY = {z: 1000};
-const MOCK_CTX_PROP_VALUE = 'MOCK_CTX_PROP_VALUE';
-const MOCK_CTX_PROP_VALUE_2 = 'MOCK_CTX_PROP_VALUE_2';
-const MOCK_ARG_1_VALUE = 'MOCK_ARG_1_VALUE';
-const MOCK_ARG_2_VALUE = 'MOCK_ARG_2_VALUE';
+const MOCK_PATHS = {
+  A: [
+    'some',
+    'seriously',
+    'cRazY',
+    'junk',
+    3
+  ],
+  B: [
+    'other',
+    'really',
+    'seriously',
+    4,
+    'cRazY',
+    'craziness'
+  ],
+  C: [
+    'super',
+    'amazing',
+    'hash',
+    'matrix',
+    2
+  ]
+};
+const MOCK_VALUES = {
+  A: 'AMAZING',
+  B: 'BANANAS',
+  C: 'service'
+};
 
-let CACHE_COUNT;
+let MOCK_SERVICE,
+  MOCK_HASH_MATRIX;
 
-module.exports = {
-  'Incarnate': {
-    'should be a class': () => {
-      expect(Incarnate).to.be.a(Function);
+export default {
+  Incarnate: {
+    beforeEach: () => {
+      MOCK_HASH_MATRIX = undefined;
+      MOCK_SERVICE = undefined;
     },
-    'resolvePath': {
+    static: {
+      keyIsNumeric: {
+        'should properly identify numeric keys': () => {
+          const isNum1 = Incarnate.keyIsNumeric(3);
+          const isNum2 = Incarnate.keyIsNumeric('five');
+
+          expect(isNum1).to.be(true);
+          expect(isNum2).to.be(false);
+        }
+      },
+      getPathParts: {
+        'should create path parts from a string': () => {
+          const parts = Incarnate.getPathParts('this.is.a.path', '.');
+
+          expect(parts).to.eql(['this', 'is', 'a', 'path']);
+        },
+        'should allow an array path to pass through': () => {
+          const path = ['this', 'is', 'a', 'path'];
+          const parts = Incarnate.getPathParts(path, '.');
+
+          expect(parts).to.equal(path);
+        },
+        'should throw an error when path is not a valid type': () => {
+          const invalidPathObject = {};
+
+          let pathError;
+
+          try {
+            Incarnate.getPathParts(invalidPathObject, '.');
+          } catch (error) {
+            pathError = error;
+          }
+
+          expect(pathError.message).to.equal(Incarnate.ERRORS.INVALID_PATH);
+          expect(pathError.path).to.equal(invalidPathObject);
+        }
+      },
+      getStringPath: {
+        'should convert an array path to a string path': () => {
+          const path = Incarnate.getStringPath(['this', 'is', 'a', 'path'], '.');
+
+          expect(path).to.equal('this.is.a.path');
+        },
+        'should allow a string path to pass through': () => {
+          const path = Incarnate.getStringPath('this.is.a.path', '.');
+
+          expect(path).to.equal('this.is.a.path');
+        }
+      },
+      getPathInfo: {
+        'should provide the top path and the sub-path for a path array': () => {
+          const {topPath, subPath} = Incarnate.getPathInfo(['this', 'is', 'a', 'path']);
+
+          expect(topPath).to.equal('this');
+          expect(subPath).to.eql(['is', 'a', 'path']);
+        }
+      }
+    },
+    setPath: {
       beforeEach: () => {
-        CACHE_COUNT = 0;
-      },
-      'should be a function': () => {
-        const inc = new Incarnate({
-          map: {}
-        });
-
-        expect(inc.resolvePath).to.be.a(Function);
-      },
-      'should resolve a path asynchronously': async () => {
-        const inc = new Incarnate({
-          map: {
-            'mock': {
-              args: [],
-              factory: async () => {
-                return await new Promise((res, rej) => {
-                  setTimeout(() => res(MOCK_INSTANCE), 0);
-                });
+        MOCK_HASH_MATRIX = {
+          super: {
+            amazing: {
+              hash: {
+                matrix: [
+                  undefined,
+                  undefined,
+                  'service'
+                ]
               }
             }
           }
+        };
+        MOCK_SERVICE = new Incarnate({
+          hashMatrix: MOCK_HASH_MATRIX
         });
-        const instance = await inc.resolvePath('mock');
-
-        expect(instance).to.equal(MOCK_INSTANCE);
       },
-      'should resolve an injected dependency asynchronously': async () => {
-        const inc = new Incarnate({
-          map: {
-            'mock-dep': {
-              args: [],
-              factory: async () => {
-                return await new Promise((res, rej) => {
-                  setTimeout(() => res(MOCK_DEPENDENCY), 0);
-                });
-              }
-            },
-            'mock': {
-              args: [
-                'mock-dep'
-              ],
-              factory: async (mockDep) => {
-                return mockDep;
+      'should set the value of a deeply nested path on an empty hash matrix': () => {
+        MOCK_SERVICE.setPath(MOCK_PATHS.A, MOCK_VALUES.A);
+
+        expect(MOCK_SERVICE.hashMatrix.some.seriously.cRazY.junk[3]).to.equal(MOCK_VALUES.A);
+        expect(MOCK_SERVICE.getPath(MOCK_PATHS.A)).to.equal(MOCK_VALUES.A);
+      }
+    },
+    getPath: {
+      beforeEach: () => {
+        MOCK_HASH_MATRIX = {
+          super: {
+            amazing: {
+              hash: {
+                matrix: [
+                  undefined,
+                  undefined,
+                  'service'
+                ]
               }
             }
           }
+        };
+        MOCK_SERVICE = new Incarnate({
+          hashMatrix: MOCK_HASH_MATRIX
         });
-        const instance = await inc.resolvePath('mock');
-
-        expect(instance).to.equal(MOCK_DEPENDENCY);
       },
-      'should resolve injected dependencies recursively and asynchronously': async () => {
-        const inc = new Incarnate({
-          map: {
-            'mock-dep-dep': {
-              args: [],
-              factory: async () => {
-                return await new Promise((res, rej) => {
-                  setTimeout(() => res(MOCK_DEPENDENCY_DEPENDENCY), 0);
-                });
-              }
-            },
-            'mock-dep': {
-              args: [
-                'mock-dep-dep'
-              ],
-              factory: (mockDepDep) => {
-                return mockDepDep;
-              }
-            },
-            'mock': {
-              args: [
-                'mock-dep'
-              ],
-              factory: (mockDep) => {
-                return mockDep;
-              }
-            }
+      'should not throw when accessing a value from a nonexistent branch of a hash matrix': () => {
+        const value = MOCK_SERVICE.getPath(MOCK_PATHS.B);
+
+        expect(value).to.equal(undefined);
+      },
+      'should return the value from a deeply nested path': () => {
+        const value = MOCK_SERVICE.getPath(MOCK_PATHS.C);
+
+        expect(value).to.equal(MOCK_VALUES.C);
+      }
+    },
+    prefixPath: {
+      beforeEach: () => {
+        MOCK_HASH_MATRIX = {};
+        MOCK_SERVICE = new Incarnate({
+          map: {},
+          hashMatrix: MOCK_HASH_MATRIX
+        });
+      },
+      'should combine path parts with the path delimiter as a separator': () => {
+        const prefixedPath = MOCK_SERVICE.prefixPath('path', 'test');
+
+        expect(prefixedPath).to.equal('test.path');
+      }
+    },
+    updateDependency: {
+      beforeEach: () => {
+        MOCK_HASH_MATRIX = {
+          other: {
+            dependency: 'OTHER_DEPENDENCY'
           }
-        });
-        const instance = await inc.resolvePath('mock');
-
-        expect(instance).to.equal(MOCK_DEPENDENCY_DEPENDENCY);
-      },
-      'should resolve a context specific dependency asynchronously': async () => {
-        const inc = new Incarnate({
+        };
+        MOCK_SERVICE = new Incarnate({
           map: {
-            'mock-dep-dep': {
-              args: [],
-              factory: () => {
-                return MOCK_DEPENDENCY_DEPENDENCY;
-              }
-            },
-            'mock-dep': {
-              args: [
-                'mock-dep-dep',
-                async (ctx) => {
-                  return await new Promise((res, rej) => {
-                    setTimeout(() => res(ctx.mockCtxProp), 0);
-                  });
-                }
+            test: {
+              required: [
+                'other.dependency'
               ],
-              factory: (mockDepDep, mockCtxProp) => {
+              factory: (otherDependency) => {
                 return {
-                  a: mockDepDep,
-                  b: mockCtxProp
+                  other: otherDependency
                 };
               }
             },
-            'mock': {
-              args: [
-                'mock-dep'
+            nested: {
+              subMap: true,
+              required: [
+                'other.dependency'
               ],
-              factory: (mockDep) => {
-                return mockDep;
-              }
-            }
-          },
-          context: {
-            mockCtxProp: MOCK_CTX_PROP_VALUE
-          }
-        });
-        const instance = await inc.resolvePath('mock');
-
-        expect(instance.b).to.equal(MOCK_CTX_PROP_VALUE);
-      },
-      'should resolve a context specific dependency from both instance and parameter contexts': async () => {
-        const inc = new Incarnate({
-          map: {
-            'mock-dep-dep': {
-              args: [],
-              factory: () => {
-                return MOCK_DEPENDENCY_DEPENDENCY;
-              }
-            },
-            'mock-dep': {
-              args: [
-                'mock-dep-dep',
-                async (ctx) => {
-                  return await new Promise((res, rej) => {
-                    setTimeout(() => res(ctx.mockCtxProp), 0);
-                  });
-                },
-                async (ctx) => {
-                  return await new Promise((res, rej) => {
-                    setTimeout(() => res(ctx.mockCtxProp2), 0);
-                  });
-                }
-              ],
-              factory: (mockDepDep, mockCtxProp, mockCtxProp2) => {
+              factory: (otherDependency) => {
                 return {
-                  a: mockDepDep,
-                  b: mockCtxProp,
-                  c: mockCtxProp2
-                };
-              }
-            },
-            'mock': {
-              args: [
-                'mock-dep'
-              ],
-              factory: (mockDep) => {
-                return mockDep;
-              }
-            }
-          },
-          context: {
-            mockCtxProp: MOCK_CTX_PROP_VALUE,
-            mockCtxProp2: MOCK_CTX_PROP_VALUE
-          }
-        });
-        const instance = await inc.resolvePath(
-          'mock',
-          {
-            mockCtxProp2: MOCK_CTX_PROP_VALUE_2
-          }
-        );
-
-        expect(instance.b).to.equal(MOCK_CTX_PROP_VALUE);
-        expect(instance.c).to.equal(MOCK_CTX_PROP_VALUE_2);
-      },
-      'should resolve args asynchronously and in parallel': async () => {
-        const inc = new Incarnate({
-          map: {
-            'mock': {
-              args: [
-                async () => await new Promise((res, rej) => setTimeout(() => res(MOCK_ARG_1_VALUE), 10)),
-                async () => await new Promise((res, rej) => setTimeout(() => res(MOCK_ARG_2_VALUE), 10))
-              ],
-              factory: async (arg1, arg2) => {
-                return {
-                  a: arg1,
-                  b: arg2
-                };
-              }
-            }
-          }
-        });
-        const start = new Date().getTime();
-        const instance = await inc.resolvePath('mock');
-        const diff = new Date().getTime() - start;
-
-        expect(instance).to.be.an(Object);
-        expect(instance.a).to.equal(MOCK_ARG_1_VALUE);
-        expect(instance.b).to.equal(MOCK_ARG_2_VALUE);
-        expect(diff < 20).to.equal(true);
-      },
-      'should resolve deeply nested dependencies asynchronously': async () => {
-        const inc = new Incarnate({
-          map: {
-            'nested': async ctx => {
-              return await new Promise((res, rej) => {
-                setTimeout(() => res({
-                  'mock-dep': {
-                    args: [],
-                    factory: async () => {
-                      return await new Promise((res2, rej2) => {
-                        setTimeout(() => res2(ctx.mockCtxProp), 0);
-                      });
+                  value: {
+                    factory: () => {
+                      return {
+                        nestedOther: otherDependency
+                      };
                     }
                   }
-                }), 0);
-              });
-            },
-            'mock-dep': {
-              args: [],
-              factory: () => MOCK_DEPENDENCY
-            },
-            'mock': {
-              args: [
-                'mock-dep',
-                'nested/mock-dep'
-              ],
-              factory: async (arg1, arg2) => {
-                return await new Promise((res, rej) => {
-                  setTimeout(() => res({
-                    a: arg1,
-                    b: arg2
-                  }), 0);
-                });
+                }
               }
-            }
-          },
-          context: {
-            mockCtxProp: MOCK_CTX_PROP_VALUE
-          },
-          pathDelimiter: '/'
-        });
-        const instance = await inc.resolvePath('mock');
-
-        expect(instance).to.be.an(Object);
-        expect(instance.a).to.equal(MOCK_DEPENDENCY);
-        expect(instance.b).to.equal(MOCK_CTX_PROP_VALUE);
-      },
-      'should cache dependencies': async () => {
-        const map = {
-          'mock-dep': {
-            args: [],
-            factory: async () => {
-              return await new Promise((res, rej) => {
-                const cacheCount = CACHE_COUNT;
-
-                setTimeout(() => res(cacheCount), 0);
-                CACHE_COUNT += 1;
-              });
-            }
-          },
-          'mock': {
-            args: [
-              'mock-dep'
-            ],
-            factory: async (arg1) => {
-              return {
-                a: arg1
-              };
-            }
-          }
-        };
-        const context = {};
-        const cache = {};
-        const inc = new Incarnate({
-          map,
-          context,
-          cacheMap: cache
-        });
-        const instance = await inc.resolvePath('mock');
-        const dependency = await inc.resolvePath('mock-dep');
-
-        expect(cache['mock-dep']).to.equal(dependency);
-        expect(CACHE_COUNT).to.equal(1);
-        expect(instance).to.be.an(Object);
-        expect(instance.a).to.equal(0);
-        expect(dependency).to.equal(0);
-      },
-      'should not cache dependencies marked with cache = `false`': async () => {
-        const map = {
-          'mock-dep': {
-            args: [],
-            cache: false,
-            factory: async () => {
-              return await new Promise((res, rej) => {
-                const cacheCount = CACHE_COUNT;
-
-                setTimeout(() => res(cacheCount), 0);
-                CACHE_COUNT += 1;
-              });
-            }
-          },
-          'mock': {
-            args: [
-              'mock-dep'
-            ],
-            factory: async (arg1) => {
-              return {
-                a: arg1
-              };
-            }
-          }
-        };
-        const context = {};
-        const cache = {};
-        const inc = new Incarnate({
-          map,
-          context,
-          cacheMap: cache
-        });
-        const instance = await inc.resolvePath('mock');
-        const dependency = await inc.resolvePath('mock-dep');
-
-        expect(cache['mock-dep']).to.not.equal(dependency);
-        expect(CACHE_COUNT).to.equal(2);
-        expect(instance).to.be.an(Object);
-        expect(instance.a).to.equal(0);
-        expect(dependency).to.equal(1);
-      },
-      'should enable invalidation of cached dependencies including all dependants': async () => {
-        const map = {
-          'mock-dep': {
-            args: [],
-            factory: async () => {
-              return await new Promise((res, rej) => {
-                const cacheCount = CACHE_COUNT;
-
-                setTimeout(() => res(cacheCount), 0);
-                CACHE_COUNT += 1;
-              });
-            }
-          },
-          'mock': {
-            args: [
-              'mock-dep',
-              (ctx, inc) => {
-                return () => inc.invalidate(['mock-dep']);
-              }
-            ],
-            factory: async (arg1, arg2) => {
-              return {
-                a: arg1,
-                b: arg2
-              };
-            }
-          }
-        };
-        const context = {};
-        const cache = {};
-        const inc = new Incarnate({
-          map,
-          context,
-          cacheMap: cache
-        });
-        const instance1 = await inc.resolvePath('mock');
-        instance1.b();
-        const dependency = await inc.resolvePath('mock-dep');
-        const instance2 = await inc.resolvePath('mock');
-
-        expect(instance2).to.not.equal(instance1);
-        expect(cache['mock-dep']).to.equal(dependency);
-        expect(CACHE_COUNT).to.equal(2);
-        expect(instance1).to.be.an(Object);
-        expect(instance1.a).to.equal(0);
-        expect(instance2).to.be.an(Object);
-        expect(instance2.a).to.equal(1);
-        expect(dependency).to.equal(1);
-      },
-      'should resolve an alias': async () => {
-        const value = {};
-        const map = {
-          subMap: () => {
-            return {
-              subDep: {
-                args: [
-                  ''
-                ],
-                factory: () => value
-              }
-            };
-          },
-          dep: 'subMap.subDep'
-        };
-        const context = {};
-        const cacheMap = {};
-        const inc = new Incarnate({
-          map,
-          context,
-          cacheMap
-        });
-        const resolvedValue = await inc.resolvePath('dep');
-
-        expect(resolvedValue).to.equal(value);
-      },
-      'should support factory supplied subMaps': async () => {
-        const sharedValue = {SHARED: 'SHARED'};
-        const inc = new Incarnate({
-          context: {},
-          cacheMap: {},
-          map: {
-            shared: {
-              args: [],
-              factory: () => sharedValue
             },
-            subDeps: {
+            deeply: {
               subMap: true,
-              args: [
-                'shared'
+              required: [
+                'other.dependency'
               ],
-              factory: (shared) => {
+              factory: async (otherDependency) => {
                 return {
-                  secondLevel: {
-                    args: [],
-                    factory: async () => await shared()
-                  }
-                };
-              }
-            },
-            topLevel: {
-              args: [
-                'subDeps.secondLevel'
-              ],
-              factory: (sharedFromSecondLevel) => sharedFromSecondLevel
-            }
-          }
-        });
-        const resolvedDep = await inc.resolvePath('topLevel');
-
-        expect(resolvedDep).to.equal(sharedValue);
-      },
-      'should use a HashMatrix for dependencies simply declared as `true`': async () => {
-        const inc = new Incarnate({
-          context: {},
-          cacheMap: {},
-          map: {
-            first: {
-              subMap: true,
-              args: [],
-              factory: () => ({
-                second: true
-              })
-            }
-          }
-        });
-        const secondLevelHashMatrix = await inc.resolvePath('first.second');
-
-        let fourthInvalidated = false;
-
-        inc.addInvalidationListener('first.second.third.fourth', () => fourthInvalidated = true);
-
-        // TRICKY: Initialize the Incarnate lifecycle by
-        // requesting the target value for the first time before modifying it.
-        await inc.resolvePath('first.second.third.fourth');
-
-        secondLevelHashMatrix.setPath('third.fourth', 'FOURTH');
-
-        const fourthLevelValue = await inc.resolvePath('first.second.third.fourth');
-
-        expect(fourthInvalidated).to.equal(true);
-        expect(fourthLevelValue).to.equal('FOURTH');
-      },
-      'should use a preconfigured HashMatrix for a dependency declared as a HashMatrix instance': async () => {
-        const inc = new Incarnate({
-          context: {},
-          cacheMap: {},
-          map: {
-            first: {
-              subMap: true,
-              args: [],
-              factory: () => ({
-                second: new HashMatrix({hashMatrix: {third: {fourth: 'USE THE FOURTH'}}})
-              })
-            }
-          }
-        });
-
-        const fourthLevelValue = await inc.resolvePath('first.second.third.fourth');
-
-        expect(fourthLevelValue).to.equal('USE THE FOURTH');
-      }
-    },
-    'addInvalidationListener/removeInvalidationListener': {
-      beforeEach: () => {
-        CACHE_COUNT = 0;
-      },
-      'should listen and un-listen for dependency invalidation for a specified path': async () => {
-        const map = {
-          'mock-dep': {
-            args: [],
-            factory: async () => {
-              return await new Promise((res, rej) => {
-                const cacheCount = CACHE_COUNT;
-
-                setTimeout(() => res(cacheCount), 0);
-                CACHE_COUNT += 1;
-              });
-            }
-          },
-          'mock': {
-            args: [
-              'mock-dep',
-              (ctx, inc) => {
-                return () => inc.invalidate(['mock-dep']);
-              }
-            ],
-            factory: async (arg1, arg2) => {
-              return {
-                a: arg1,
-                b: arg2
-              };
-            }
-          }
-        };
-        const context = {};
-        const cache = {};
-        const inc = new Incarnate({
-          map,
-          context,
-          cacheMap: cache
-        });
-        const instance1 = await inc.resolvePath('mock');
-        const onInvalidation = () => {
-          invalidationTriggered += 1;
-        };
-
-        let invalidationTriggered = 0;
-
-        inc.addInvalidationListener('mock-dep', onInvalidation);
-        instance1.b();
-        inc.removeInvalidationListener('mock-dep', onInvalidation);
-        await inc.resolvePath('mock-dep');
-        instance1.b();
-
-        expect(invalidationTriggered).to.equal(1);
-      },
-      'should listen and un-listen for dependency invalidation for a specified, deeply nested path': async () => {
-        const map = {
-          'mock-dep': () => ({
-            'mock-deep': {
-              args: [],
-              factory: () => true
-            }
-          }),
-          'mock': {
-            args: [
-              'mock-dep.mock-deep',
-              (ctx, inc) => {
-                return () => inc.invalidate(['mock-dep.mock-deep']);
-              }
-            ],
-            factory: async (arg1, arg2) => {
-              return {
-                a: arg1,
-                b: arg2
-              };
-            }
-          }
-        };
-        const context = {};
-        const cache = {};
-        const inc = new Incarnate({
-          map,
-          context,
-          cacheMap: cache
-        });
-        const instance1 = await inc.resolvePath('mock');
-        const onInvalidation = () => {
-          invalidationTriggered += 1;
-        };
-
-        let invalidationTriggered = 0;
-
-        inc.addInvalidationListener('mock-dep.mock-deep', onInvalidation);
-        instance1.b();
-        inc.removeInvalidationListener('mock-dep.mock-deep', onInvalidation);
-        await inc.resolvePath('mock-dep.mock-deep');
-        instance1.b();
-
-        expect(invalidationTriggered).to.equal(1);
-      }
-    },
-    'invalidate': {
-      'should trigger invalidation for all dependents of multiple, deeply nested dependencies': async () => {
-        const map = {
-          xyz: () => {
-            return {
-              opq: () => {
-                return {
-                  nop: {
-                    args: [
-                      (ctx, inc1) => inc1
-                    ],
-                    factory: inc2 => inc2
+                  otherDependency: {
+                    factory: async () => otherDependency
                   },
-                  hij: {
-                    args: [],
-                    factory: () => true
-                  },
-                  qrs: {
-                    args: [
-                      'hij',
-                      'nop'
+                  nested: {
+                    subMap: true,
+                    required: [
+                      'otherDependency'
                     ],
-                    factory: () => true
+                    factory: async (oD) => {
+                      return {
+                        asyncDependency: {
+                          factory: async () => {
+                            return {
+                              other: oD
+                            };
+                          }
+                        }
+                      };
+                    }
                   }
-                };
-              },
-              gh: {
-                args: [
-                  'opq.qrs',
-                  'opq.hij'
-                ],
-                factory: () => true
-              },
-              tuv: {
-                args: [],
-                factory: () => true
-              },
-              ijk: {
-                args: [
-                  'gh',
-                  'tuv'
-                ],
-                factory: () => true
-              },
-              lmn: {
-                args: [
-                  'ijk',
-                  (ctx, inc3) => inc3
-                ],
-                factory: (arg1, inc4) => inc4
+                }
               }
-            };
+            }
           },
-          abc: {
-            args: [
-              'xyz.lmn'
-            ],
-            factory: () => true
-          },
-          def: {
-            args: [
-              'abc',
-              'xyz.opq.nop'
-            ],
-            factory: () => true
-          }
-        };
-        const context = {};
-        const cacheMap = {};
-        const inc = new Incarnate({
-          map,
-          context,
-          cacheMap
+          hashMatrix: MOCK_HASH_MATRIX
         });
-        const deepInc = await inc.resolvePath('xyz.lmn');
-        const deepDeepInc = await inc.resolvePath('xyz.opq.nop');
+      },
+      'should use the dependency map to resolve synchronous dependencies': () => {
+        MOCK_SERVICE.updateDependency('test', MOCK_SERVICE.map);
 
-        let invalidatedPaths = [];
+        const testObject = MOCK_SERVICE.hashMatrix.test;
+        const {other} = testObject;
 
-        await inc.resolvePath('def');
+        expect(testObject).to.be.an(Object);
+        expect(other).to.equal('OTHER_DEPENDENCY');
+      },
+      'should use the dependency map to resolve nested, synchronous dependencies': () => {
+        MOCK_SERVICE.updateDependency('nested.value', MOCK_SERVICE.map);
 
-        inc.addInvalidationListener('abc', ::invalidatedPaths.push);
-        inc.addInvalidationListener('def', ::invalidatedPaths.push);
-        deepInc.addInvalidationListener('lmn', ::invalidatedPaths.push);
+        const testObject = MOCK_SERVICE.hashMatrix.nested.value;
+        const {nestedOther} = testObject;
 
-        inc.invalidate(['abc']);
+        expect(testObject).to.be.an(Object);
+        expect(nestedOther).to.equal('OTHER_DEPENDENCY');
+      },
+      'should use the dependency map to resolve deeply nested, asynchronous dependencies': async () => {
+        await new Promise((res, rej) => {
+          MOCK_SERVICE.addEventListener(Incarnate.EVENTS.PATH_CHANGE, (p) => {
+            if (p === 'deeply.nested.asyncDependency') {
+              res(true);
+            } else {
+              MOCK_SERVICE.updateDependency('deeply.nested.asyncDependency', MOCK_SERVICE.map);
+            }
+          });
+          MOCK_SERVICE.addEventListener(Incarnate.EVENTS.ERROR, (data) => rej(data));
 
-        await inc.resolvePath('def');
+          MOCK_SERVICE.updateDependency('deeply.nested.asyncDependency', MOCK_SERVICE.map);
+        });
 
-        deepDeepInc.invalidate(['nop']);
+        const testObject = MOCK_SERVICE.hashMatrix.deeply.nested.asyncDependency;
+        const {other} = testObject;
 
-        expect(invalidatedPaths.length).to.equal(5);
-        expect(invalidatedPaths).to.eql(['abc', 'def', 'abc', 'def', 'lmn']);
+        expect(testObject).to.be.an(Object);
+        expect(other).to.equal('OTHER_DEPENDENCY');
       }
     }
   }

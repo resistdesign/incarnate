@@ -141,7 +141,8 @@ export default class Incarnate {
     }
 
     if (subMap) {
-      this._subMapCache = value;
+      this._subMapCache[path] = value;
+      this.dispatchChanges(path);
     } else {
       this.setPath(path, value);
     }
@@ -258,6 +259,7 @@ export default class Incarnate {
               this.handleAsyncDependency(topPath, factoryValue, subMap);
             } else if (subMap) {
               this._subMapCache[topPath] = factoryValue;
+              this.dispatchChanges(topPath);
 
               if (subPath.length) {
                 resolved = this.updateDependency(subPath, factoryValue, topPath);
@@ -265,7 +267,7 @@ export default class Incarnate {
                 resolved = true;
               }
             } else {
-              this.updateHashMatrix(topPath, factoryValue);
+              this.setPath(topPath, factoryValue);
 
               resolved = true;
             }

@@ -203,6 +203,36 @@ export default {
                   }
                 }
               }
+            },
+            deeply: {
+              subMap: true,
+              required: [
+                'other.dependency'
+              ],
+              factory: async (otherDependency) => {
+                return {
+                  otherDependency: {
+                    factory: async () => otherDependency
+                  },
+                  nested: {
+                    subMap: true,
+                    required: [
+                      'otherDependency'
+                    ],
+                    factory: async (oD) => {
+                      return {
+                        asyncDependency: {
+                          factory: async () => {
+                            return {
+                              other: oD
+                            };
+                          }
+                        }
+                      };
+                    }
+                  }
+                }
+              }
             }
           },
           hashMatrix: MOCK_HASH_MATRIX
@@ -225,6 +255,26 @@ export default {
 
         expect(testObject).to.be.an(Object);
         expect(nestedOther).to.equal('OTHER_DEPENDENCY');
+      },
+      'should use the dependency map to resolve deeply nested, asynchronous dependencies': async () => {
+        await new Promise((res, rej) => {
+          MOCK_SERVICE.onPathChange = (p) => {
+            if (p === 'deeply.nested.asyncDependency') {
+              res(true);
+            } else {
+              MOCK_SERVICE.updateDependency('deeply.nested.asyncDependency', MOCK_SERVICE.map);
+            }
+          };
+          MOCK_SERVICE.onResolveError = (p, e) => rej(e);
+
+          MOCK_SERVICE.updateDependency('deeply.nested.asyncDependency', MOCK_SERVICE.map);
+        });
+
+        const testObject = MOCK_SERVICE.hashMatrix.deeply.nested.asyncDependency;
+        const {other} = testObject;
+
+        expect(testObject).to.be.an(Object);
+        expect(other).to.equal('OTHER_DEPENDENCY');
       }
     }
   }

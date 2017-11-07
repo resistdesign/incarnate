@@ -258,14 +258,14 @@ export default {
       },
       'should use the dependency map to resolve deeply nested, asynchronous dependencies': async () => {
         await new Promise((res, rej) => {
-          MOCK_SERVICE.onPathChange = (p) => {
+          MOCK_SERVICE.addEventListener(Incarnate.EVENTS.PATH_CHANGE, (p) => {
             if (p === 'deeply.nested.asyncDependency') {
               res(true);
             } else {
               MOCK_SERVICE.updateDependency('deeply.nested.asyncDependency', MOCK_SERVICE.map);
             }
-          };
-          MOCK_SERVICE.onResolveError = (p, e) => rej(e);
+          });
+          MOCK_SERVICE.addEventListener(Incarnate.EVENTS.ERROR, (data) => rej(data));
 
           MOCK_SERVICE.updateDependency('deeply.nested.asyncDependency', MOCK_SERVICE.map);
         });

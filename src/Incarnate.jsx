@@ -1,8 +1,15 @@
+import EventEmitter from 'event-emitter';
+
 export default class Incarnate {
   static DEFAULT_PATH_DELIMITER = '.';
   static ERRORS = {
     INVALID_PATH: 'INVALID_PATH',
     UNRESOLVED_PATH: 'UNRESOLVED_PATH'
+  };
+  static EVENTS = {
+    PATH_CHANGE: 'PATH_CHANGE',
+    PATH_INVALIDATED: 'PATH_INVALIDATED',
+    ERROR: 'ERROR'
   };
 
   static keyIsNumeric(key) {
@@ -52,46 +59,123 @@ export default class Incarnate {
     return pathInfo;
   }
 
+  _eventEmitter = new EventEmitter();
   _subMapCache = {};
 
   map;
   pathDelimiter;
   hashMatrix;
-  onPathChange;
-  onResolveError;
 
   constructor({
                 map,
                 hashMatrix = {},
-                pathDelimiter = Incarnate.DEFAULT_PATH_DELIMITER,
-                onPathChange,
-                onResolveError
+                pathDelimiter = Incarnate.DEFAULT_PATH_DELIMITER
               }) {
     this.map = map;
     this.hashMatrix = hashMatrix;
     this.pathDelimiter = pathDelimiter;
-    this.onPathChange = onPathChange;
-    this.onResolveError = onResolveError;
+  }
+
+  dispatchEvent(type, data) {
+    this._eventEmitter.emit(type, data);
+  }
+
+  addEventListener(type, handler) {
+    if (typeof type === 'string' && handler instanceof Function) {
+      this._eventEmitter.on(type, handler);
+
+      return () => this.removeEventListener(type, handler);
+    }
+  }
+
+  removeEventListener(type, handler) {
+    if (typeof type === 'string' && handler instanceof Function) {
+      return this._eventEmitter.off(type, handler);
+    }
   }
 
   dispatchChanges(path) {
     const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
 
     // Notify lifecycle listeners of changes all the way up the path.
-    if (this.onPathChange instanceof Function && pathParts.length) {
+    if (pathParts.length) {
       const currentPath = [...pathParts];
 
       // TRICKY: Start with the deepest path and move up to the most shallow.
       while (currentPath.length) {
-        this.onPathChange(currentPath.join(this.pathDelimiter));
+        this.dispatchEvent(Incarnate.EVENTS.PATH_CHANGE, currentPath.join(this.pathDelimiter));
         currentPath.pop();
       }
     }
   }
 
   handleResolveError(path, error) {
-    if (this.onResolveError instanceof Function) {
-      this.onResolveError(path, error);
+    this.dispatchEvent(Incarnate.EVENTS.ERROR, {
+      type: Incarnate.ERRORS.UNRESOLVED_PATH,
+      path: Incarnate.getStringPath(path),
+      error
+    });
+  }
+
+  invalidatePath(path = []) {
+    const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
+
+    // Invalidate sub-maps.
+    delete this._subMapCache[stringPath];
+
+    // Unset path on `hashMatrix`.
+    this.updateHashMatrix(stringPath, undefined, true);
+
+    // Dispatch the invalidation event.
+    this.dispatchEvent(Incarnate.EVENTS.PATH_INVALIDATED, stringPath);
+
+    // Dispatch changes AFTER removing cached values and sub-maps.
+    this.dispatchChanges(stringPath);
+
+    // Invalidate dependents.
+    for (const k in this._subMapCache) {
+      if (stringPath.indexOf(`${k}${this.pathDelimiter}`) === 0) {
+        // IMPORTANT: The path is a sub-path of the current sub-map.
+
+        const subMap = this._subMapCache[k];
+
+        if (subMap instanceof Object && !(subMap instanceof Promise)) {
+          for (const s in subMap) {
+            const subDep = subMap[s];
+
+            if (subDep instanceof Object) {
+              // Compare paths.
+              const {required = [], optional = []} = subDep;
+              const invalidPaths = [];
+
+              // Required dependencies.
+              for (const rp of required) {
+                const fullPath = this.prefixPath(rp, k);
+
+                if (stringPath === fullPath) {
+                  invalidPaths.push(this.prefixPath(s, k));
+                }
+              }
+
+              // Optional dependencies.
+              for (const op of required) {
+                const fullPath = this.prefixPath(op, k);
+
+                if (stringPath === fullPath) {
+                  const optionalPath = this.prefixPath(s, k);
+
+                  if (invalidPaths.indexOf(optionalPath) === -1) {
+                    invalidPaths.push(optionalPath);
+                  }
+                }
+              }
+
+              // Invalidate.
+              invalidPaths.forEach(::this.invalidatePath);
+            }
+          }
+        }
+      }
     }
   }
 
@@ -286,65 +370,6 @@ export default class Incarnate {
     }
 
     return resolved;
-  }
-
-  invalidatePath(path = []) {
-    const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
-
-    // Invalidate sub-maps.
-    delete this._subMapCache[stringPath];
-
-    // Unset path on `hashMatrix`.
-    this.updateHashMatrix(stringPath, undefined, true);
-
-    // Dispatch changes AFTER removing cached values and sub-maps.
-    this.dispatchChanges(stringPath);
-
-    // Invalidate dependents.
-    for (const k in this._subMapCache) {
-      if (stringPath.indexOf(`${k}${this.pathDelimiter}`) === 0) {
-        // IMPORTANT: The path is a sub-path of the current sub-map.
-
-        const subMap = this._subMapCache[k];
-
-        if (subMap instanceof Object && !(subMap instanceof Promise)) {
-          for (const s in subMap) {
-            const subDep = subMap[s];
-
-            if (subDep instanceof Object) {
-              // Compare paths.
-              const {required = [], optional = []} = subDep;
-              const invalidPaths = [];
-
-              // Required dependencies.
-              for (const rp of required) {
-                const fullPath = this.prefixPath(rp, k);
-
-                if (stringPath === fullPath) {
-                  invalidPaths.push(this.prefixPath(s, k));
-                }
-              }
-
-              // Optional dependencies.
-              for (const op of required) {
-                const fullPath = this.prefixPath(op, k);
-
-                if (stringPath === fullPath) {
-                  const optionalPath = this.prefixPath(s, k);
-
-                  if (invalidPaths.indexOf(optionalPath) === -1) {
-                    invalidPaths.push(optionalPath);
-                  }
-                }
-              }
-
-              // Invalidate.
-              invalidPaths.forEach(::this.invalidatePath);
-            }
-          }
-        }
-      }
-    }
   }
 
   getPathValue(path) {

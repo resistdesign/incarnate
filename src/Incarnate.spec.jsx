@@ -63,15 +63,18 @@ export default {
           expect(parts).to.equal(path);
         },
         'should throw an error when path is not a valid type': () => {
-          let message;
+          const invalidPathObject = {};
+
+          let pathError;
 
           try {
-            Incarnate.getPathParts({}, '.');
+            Incarnate.getPathParts(invalidPathObject, '.');
           } catch (error) {
-            message = error.message;
+            pathError = error;
           }
 
-          expect(message).to.equal('Invalid Path: {}');
+          expect(pathError.message).to.equal(Incarnate.ERRORS.INVALID_PATH);
+          expect(pathError.path).to.equal(invalidPathObject);
         }
       },
       getStringPath: {
@@ -149,6 +152,79 @@ export default {
         const value = MOCK_SERVICE.getPath(MOCK_PATHS.C);
 
         expect(value).to.equal(MOCK_VALUES.C);
+      }
+    },
+    prefixPath: {
+      beforeEach: () => {
+        MOCK_HASH_MATRIX = {};
+        MOCK_SERVICE = new Incarnate({
+          map: {},
+          hashMatrix: MOCK_HASH_MATRIX
+        });
+      },
+      'should combine path parts with the path delimiter as a separator': () => {
+        const prefixedPath = MOCK_SERVICE.prefixPath('path', 'test');
+
+        expect(prefixedPath).to.equal('test.path');
+      }
+    },
+    updateDependency: {
+      beforeEach: () => {
+        MOCK_HASH_MATRIX = {
+          other: {
+            dependency: 'OTHER_DEPENDENCY'
+          }
+        };
+        MOCK_SERVICE = new Incarnate({
+          map: {
+            test: {
+              required: [
+                'other.dependency'
+              ],
+              factory: (otherDependency) => {
+                return {
+                  other: otherDependency
+                };
+              }
+            },
+            nested: {
+              subMap: true,
+              required: [
+                'other.dependency'
+              ],
+              factory: (otherDependency) => {
+                return {
+                  value: {
+                    factory: () => {
+                      return {
+                        nestedOther: otherDependency
+                      };
+                    }
+                  }
+                }
+              }
+            }
+          },
+          hashMatrix: MOCK_HASH_MATRIX
+        });
+      },
+      'should use the dependency map to resolve synchronous dependencies': () => {
+        MOCK_SERVICE.updateDependency('test', MOCK_SERVICE.map);
+
+        const testObject = MOCK_SERVICE.hashMatrix.test;
+        const {other} = testObject;
+
+        expect(testObject).to.be.an(Object);
+        expect(other).to.equal('OTHER_DEPENDENCY');
+      },
+      'should use the dependency map to resolve nested, synchronous dependencies': () => {
+        MOCK_SERVICE.updateDependency('nested.value', MOCK_SERVICE.map);
+
+        const testObject = MOCK_SERVICE.hashMatrix.nested.value;
+        const {nestedOther} = testObject;
+
+        expect(testObject).to.be.an(Object);
+        expect(nestedOther).to.equal('OTHER_DEPENDENCY');
       }
     }
   }

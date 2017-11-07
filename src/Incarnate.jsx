@@ -1,5 +1,9 @@
 export default class Incarnate {
   static DEFAULT_PATH_DELIMITER = '.';
+  static ERRORS = {
+    INVALID_PATH: 'INVALID_PATH',
+    UNRESOLVED_PATH: 'UNRESOLVED_PATH'
+  };
 
   static keyIsNumeric(key) {
     let numeric = false;
@@ -19,7 +23,11 @@ export default class Incarnate {
     } else if (path instanceof Array) {
       return path;
     } else {
-      throw new Error(`Invalid Path: ${JSON.stringify(path, null, '  ')}`);
+      const error = new Error(Incarnate.ERRORS.INVALID_PATH);
+
+      error.path = path;
+
+      throw error;
     }
   }
 
@@ -64,6 +72,21 @@ export default class Incarnate {
     this.pathDelimiter = pathDelimiter;
     this.onPathChange = onPathChange;
     this.onResolveError = onResolveError;
+  }
+
+  dispatchChanges(path) {
+    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
+
+    // Notify lifecycle listeners of changes all the way up the path.
+    if (this.onPathChange instanceof Function && pathParts.length) {
+      const currentPath = [...pathParts];
+
+      // TRICKY: Start with the deepest path and move up to the most shallow.
+      while (currentPath.length) {
+        this.onPathChange(currentPath.join(this.pathDelimiter));
+        currentPath.pop();
+      }
+    }
   }
 
   handleResolveError(path, error) {
@@ -154,11 +177,14 @@ export default class Incarnate {
     };
   }
 
-  prefixPath(path, prefix = []) {
-    return Incarnate.getStringPath([
-      ...Incarnate.getPathParts(prefix),
-      path
-    ]);
+  prefixPath(path = [], prefix = []) {
+    return Incarnate.getStringPath(
+      [
+        ...Incarnate.getPathParts(prefix, this.pathDelimiter),
+        ...Incarnate.getPathParts(path, this.pathDelimiter)
+      ],
+      this.pathDelimiter
+    );
   }
 
   updateDependency(path, map, prefix = []) {
@@ -168,9 +194,9 @@ export default class Incarnate {
 
     let resolved = false;
 
-    if (map instanceof Object && map.hasOwnProperty(topPath)) {
+    if (map instanceof Object && map.hasOwnProperty(topPathBase)) {
       const {
-        [topPath]: {
+        [topPathBase]: {
           subMap,
           required = [],
           optional = [],
@@ -230,8 +256,16 @@ export default class Incarnate {
               }
 
               this.handleAsyncDependency(topPath, factoryValue, subMap);
+            } else if (subMap) {
+              this._subMapCache[topPath] = factoryValue;
+
+              if (subPath.length) {
+                resolved = this.updateDependency(subPath, factoryValue, topPath);
+              } else {
+                resolved = true;
+              }
             } else {
-              this.updateDependency(topPath, factoryValue);
+              this.updateHashMatrix(topPath, factoryValue);
 
               resolved = true;
             }
@@ -241,8 +275,12 @@ export default class Incarnate {
           const subMapValue = this._subMapCache[topPath];
 
           resolved = this.updateDependency(subPath, subMapValue, topPath);
+        } else {
+          resolved = true;
         }
       }
+    } else {
+      resolved = true;
     }
 
     return resolved;
@@ -333,7 +371,13 @@ export default class Incarnate {
   }
 
   getPath(path) {
-    this.updateDependency(path, this.map);
+    if (!this.updateDependency(path, this.map)) {
+      const error = new Error(Incarnate.ERRORS.UNRESOLVED_PATH);
+
+      error.path = path;
+
+      throw error;
+    }
 
     return this.getPathValue(path);
   }
@@ -376,21 +420,6 @@ export default class Incarnate {
       }
 
       this.hashMatrix = newHashMatrix;
-    }
-  }
-
-  dispatchChanges(path) {
-    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
-
-    // Notify lifecycle listeners of changes all the way up the path.
-    if (this.onPathChange instanceof Function && pathParts.length) {
-      const currentPath = [...pathParts];
-
-      // TRICKY: Start with the deepest path and move up to the most shallow.
-      while (currentPath.length) {
-        this.onPathChange(currentPath.join(this.pathDelimiter));
-        currentPath.pop();
-      }
     }
   }
 

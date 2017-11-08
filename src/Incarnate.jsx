@@ -77,7 +77,7 @@ export default class Incarnate {
   }
 
   dispatchEvent(type, data) {
-    this._eventEmitter.emit(type, data);
+    setTimeout(() => this._eventEmitter.emit(type, data), 0);
   }
 
   addEventListener(type, handler) {

@@ -4,7 +4,8 @@ export default class Incarnate {
   static DEFAULT_PATH_DELIMITER = '.';
   static ERRORS = {
     INVALID_PATH: 'INVALID_PATH',
-    UNRESOLVED_PATH: 'UNRESOLVED_PATH'
+    UNRESOLVED_PATH: 'UNRESOLVED_PATH',
+    FACTORY_ERROR: 'FACTORY_ERROR'
   };
   static EVENTS = {
     PATH_CHANGE: 'PATH_CHANGE',
@@ -77,7 +78,7 @@ export default class Incarnate {
   }
 
   dispatchEvent(type, data) {
-    setTimeout(() => this._eventEmitter.emit(type, data), 0);
+    this._eventEmitter.emit(type, data);
   }
 
   addEventListener(type, handler) {
@@ -94,24 +95,93 @@ export default class Incarnate {
     }
   }
 
+  getDependencyIsDependent(path, dependencyDeclaration = {}, prefix = []) {
+    const stringPath = Incarnate.getStringPath(
+      Incarnate.getPathParts(path, this.pathDelimiter),
+      this.pathDelimiter
+    );
+    const {required = [], optional = []} = dependencyDeclaration;
+    const allDepPaths = [...required, ...optional];
+
+    for (const depPath of allDepPaths) {
+      const prefixedDepPath = Incarnate.getStringPath([
+        ...Incarnate.getPathParts(prefix, this.pathDelimiter),
+        ...Incarnate.getPathParts(depPath, this.pathDelimiter)
+      ], this.pathDelimiter);
+
+      if (prefixedDepPath === stringPath) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  getDependentsFromMap(path, map = {}, prefix) {
+    return Object.keys(map).filter((depName) => this.getDependencyIsDependent(path, map[depName], prefix));
+  }
+
+  getDependents(path) {
+    // Get the dependents from `map`.
+    const topDependents = this.getDependentsFromMap(path, this.map);
+
+    // Get the dependent from each sub-map.
+    const subDependents = this.getSubMapNames().reduce((acc, subMapPath) => {
+      const subMap = this.getSubMap(subMapPath);
+
+      let dependents = acc;
+
+      if (subMap instanceof Object && !(subMap instanceof Promise)) {
+        dependents = [
+          ...dependents,
+          ...this.getDependentsFromMap(path, subMap, subMapPath)
+        ];
+      }
+
+      return dependents;
+    }, []);
+
+    return [
+      ...subDependents,
+      ...topDependents
+    ]
+      .reduce((acc, item) => {
+        if (acc.indexOf(item) === -1) {
+          acc.push(item);
+        }
+
+        return acc;
+      }, []);
+  }
+
   dispatchChanges(path) {
     const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
 
     // Notify lifecycle listeners of changes all the way up the path.
     if (pathParts.length) {
+      const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
+
+      const dependents = this.getDependents(stringPath);
       const currentPath = [...pathParts];
 
-      // TRICKY: Start with the deepest path and move up to the most shallow.
-      while (currentPath.length) {
-        this.dispatchEvent(Incarnate.EVENTS.PATH_CHANGE, currentPath.join(this.pathDelimiter));
-        currentPath.pop();
+      // Invalidate dependents.
+      dependents.forEach(::this.invalidatePath);
+
+      // Dispatch path change for this path.
+      this.dispatchEvent(Incarnate.EVENTS.PATH_CHANGE, stringPath);
+
+      // Trigger a change for the parent path.
+      currentPath.pop();
+      if (currentPath.length) {
+        // TRICKY: IMPORTANT: Do NOT dispatch changes for an empty path, it will cause an infinite loop.
+        this.dispatchChanges(Incarnate.getStringPath(currentPath, this.pathDelimiter));
       }
     }
   }
 
   handleResolveError(path, error) {
     this.dispatchEvent(Incarnate.EVENTS.ERROR, {
-      type: Incarnate.ERRORS.UNRESOLVED_PATH,
+      type: Incarnate.ERRORS.FACTORY_ERROR,
       path: Incarnate.getStringPath(path),
       error
     });
@@ -121,7 +191,7 @@ export default class Incarnate {
     const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
 
     // Invalidate sub-maps.
-    delete this._subMapCache[stringPath];
+    this.removeSubMap(stringPath);
 
     // Unset path on `hashMatrix`.
     this.updateHashMatrix(stringPath, undefined, true);
@@ -131,52 +201,6 @@ export default class Incarnate {
 
     // Dispatch changes AFTER removing cached values and sub-maps.
     this.dispatchChanges(stringPath);
-
-    // Invalidate dependents.
-    for (const k in this._subMapCache) {
-      if (stringPath.indexOf(`${k}${this.pathDelimiter}`) === 0) {
-        // IMPORTANT: The path is a sub-path of the current sub-map.
-
-        const subMap = this._subMapCache[k];
-
-        if (subMap instanceof Object && !(subMap instanceof Promise)) {
-          for (const s in subMap) {
-            const subDep = subMap[s];
-
-            if (subDep instanceof Object) {
-              // Compare paths.
-              const {required = [], optional = []} = subDep;
-              const invalidPaths = [];
-
-              // Required dependencies.
-              for (const rp of required) {
-                const fullPath = this.prefixPath(rp, k);
-
-                if (stringPath === fullPath) {
-                  invalidPaths.push(this.prefixPath(s, k));
-                }
-              }
-
-              // Optional dependencies.
-              for (const op of required) {
-                const fullPath = this.prefixPath(op, k);
-
-                if (stringPath === fullPath) {
-                  const optionalPath = this.prefixPath(s, k);
-
-                  if (invalidPaths.indexOf(optionalPath) === -1) {
-                    invalidPaths.push(optionalPath);
-                  }
-                }
-              }
-
-              // Invalidate.
-              invalidPaths.forEach(::this.invalidatePath);
-            }
-          }
-        }
-      }
-    }
   }
 
   pathIsSet(path) {
@@ -225,8 +249,7 @@ export default class Incarnate {
     }
 
     if (subMap) {
-      this._subMapCache[path] = value;
-      this.dispatchChanges(path);
+      this.setSubMap(path, value);
     } else {
       this.setPath(path, value);
     }
@@ -290,13 +313,14 @@ export default class Incarnate {
           factory
         }
       } = map;
+      const topPathSubMap = this.getSubMap(topPath);
 
       if (
         factory instanceof Function &&
         // Don't process if there is an unresolved sub-map for this path.
-        !(subMap && this._subMapCache[topPath] instanceof Promise)
+        !(subMap && topPathSubMap instanceof Promise)
       ) {
-        const topPathIsSet = subMap ? this._subMapCache.hasOwnProperty(topPath) : this.pathIsSet(topPath);
+        const topPathIsSet = subMap ? this.subMapIsSet(topPath) : this.pathIsSet(topPath);
 
         if (!topPathIsSet) {
           // The value for the current path is mapped as a dependency but
@@ -337,13 +361,12 @@ export default class Incarnate {
               if (subMap) {
                 // IMPORTANT: Cache the promise so that dependency resolution isn't repeatedly attempted while
                 // resolving a complex nested path.
-                this._subMapCache[topPath] = factoryValue;
+                this.setSubMap(topPath, factoryValue);
               }
 
               this.handleAsyncDependency(topPath, factoryValue, subMap);
             } else if (subMap) {
-              this._subMapCache[topPath] = factoryValue;
-              this.dispatchChanges(topPath);
+              this.setSubMap(topPath, factoryValue);
 
               if (subPath.length) {
                 resolved = this.updateDependency(subPath, factoryValue, topPath);
@@ -358,7 +381,7 @@ export default class Incarnate {
           }
         } else if (subMap && subPath.length) {
           // The value for the current path is set and it is a sub-map with remaining path parts to be resolved.
-          const subMapValue = this._subMapCache[topPath];
+          const subMapValue = this.getSubMap(topPath);
 
           resolved = this.updateDependency(subPath, subMapValue, topPath);
         } else {
@@ -451,7 +474,38 @@ export default class Incarnate {
   }
 
   setPath(path, value) {
-    this.updateHashMatrix(path, value);
-    this.dispatchChanges(path, value);
+    // Check for actual changes.
+    const currentValue = this.getPathValue(path);
+
+    if (value !== currentValue) {
+      this.updateHashMatrix(path, value);
+      this.dispatchChanges(path);
+    }
+  }
+
+  subMapIsSet(path) {
+    return this._subMapCache.hasOwnProperty(path);
+  }
+
+  getSubMap(path) {
+    return this._subMapCache[path];
+  }
+
+  setSubMap(path, value) {
+    // Check for actual changes.
+    const currentValue = this.getSubMap(path);
+
+    if (value !== currentValue) {
+      this._subMapCache[path] = value;
+      this.dispatchChanges(path);
+    }
+  }
+
+  removeSubMap(path) {
+    delete this._subMapCache[path];
+  }
+
+  getSubMapNames() {
+    return Object.keys(this._subMapCache);
   }
 }

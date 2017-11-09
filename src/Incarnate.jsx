@@ -278,6 +278,10 @@ export default class Incarnate {
     return fullyResolved;
   }
 
+  createGetter(path) {
+    return () => this.getPath(path);
+  }
+
   createSetter(path) {
     return (value) => {
       this.setPath(path, value);
@@ -288,6 +292,22 @@ export default class Incarnate {
     return () => {
       this.invalidatePath(path);
     };
+  }
+
+  createListener(path) {
+    return (handler) => this.addEventListener(Incarnate.EVENTS.PATH_CHANGE, (changedPath) => {
+      if (changedPath === path) {
+        let value;
+
+        try {
+          value = this.getPath(path);
+        } catch (error) {
+          // Ignore.
+        }
+
+        handler(value);
+      }
+    });
   }
 
   prefixPath(path = [], prefix = []) {
@@ -314,8 +334,10 @@ export default class Incarnate {
           subMap,
           required = [],
           optional = [],
+          getters = [],
           setters = [],
           invalidators = [],
+          listeners = [],
           factory
         }
       } = map;
@@ -341,17 +363,25 @@ export default class Incarnate {
             const optionalValues = optional
               .map(p => this.prefixPath(p, prefix))
               .map(::this.getPath);
+            const getterHandlers = getters
+              .map(p => this.prefixPath(p, prefix))
+              .map(::this.createGetter);
             const setterHandlers = setters
               .map(p => this.prefixPath(p, prefix))
               .map(::this.createSetter);
             const invalidationHandlers = invalidators
               .map(p => this.prefixPath(p, prefix))
               .map(::this.createInvalidator);
+            const listenerHandlers = listeners
+              .map(p => this.prefixPath(p, prefix))
+              .map(::this.createListener);
             const factoryArgs = [
               ...requiredValues,
               ...optionalValues,
+              ...getterHandlers,
               ...setterHandlers,
-              ...invalidationHandlers
+              ...invalidationHandlers,
+              ...listenerHandlers
             ];
             let factoryValue;
 

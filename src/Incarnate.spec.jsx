@@ -257,17 +257,18 @@ export default {
         expect(nestedOther).to.equal('OTHER_DEPENDENCY');
       },
       'should use the dependency map to resolve deeply nested, asynchronous dependencies': async () => {
+        const deeplyNestedAsyncPath = 'deeply.nested.asyncDependency';
         await new Promise((res, rej) => {
           MOCK_SERVICE.addEventListener(Incarnate.EVENTS.PATH_CHANGE, (p) => {
-            if (p === 'deeply.nested.asyncDependency') {
+            if (MOCK_SERVICE.pathIsSet(deeplyNestedAsyncPath) && p === deeplyNestedAsyncPath) {
               res(true);
             } else {
-              MOCK_SERVICE.updateDependency('deeply.nested.asyncDependency', MOCK_SERVICE.map);
+              MOCK_SERVICE.updateDependency(deeplyNestedAsyncPath, MOCK_SERVICE.map);
             }
           });
           MOCK_SERVICE.addEventListener(Incarnate.EVENTS.ERROR, (data) => rej(data));
 
-          MOCK_SERVICE.updateDependency('deeply.nested.asyncDependency', MOCK_SERVICE.map);
+          MOCK_SERVICE.updateDependency(deeplyNestedAsyncPath, MOCK_SERVICE.map);
         });
 
         const testObject = MOCK_SERVICE.hashMatrix.deeply.nested.asyncDependency;

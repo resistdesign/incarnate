@@ -160,15 +160,14 @@ export default class Incarnate {
     // Notify lifecycle listeners of changes all the way up the path.
     if (pathParts.length) {
       const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
-
       const dependents = this.getDependents(stringPath);
       const currentPath = [...pathParts];
 
-      // Invalidate dependents.
-      dependents.forEach(::this.invalidatePath);
-
       // Dispatch path change for this path.
       this.dispatchEvent(Incarnate.EVENTS.PATH_CHANGE, stringPath);
+
+      // Invalidate dependents.
+      dependents.forEach(::this.invalidatePath);
 
       // Trigger a change for the parent path.
       currentPath.pop();
@@ -237,7 +236,9 @@ export default class Incarnate {
     return isSet;
   }
 
-  async handleAsyncDependency(path, promise, subMap) {
+  async handleAsyncDependency(path, promise, subMap, fullPath = []) {
+    const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
+    const stringFullPath = Incarnate.getStringPath(fullPath, this.pathDelimiter);
     let value;
 
     try {
@@ -252,6 +253,10 @@ export default class Incarnate {
       this.setSubMap(path, value);
     } else {
       this.setPath(path, value);
+    }
+
+    if (stringFullPath !== '' && stringPath !== stringFullPath) {
+      this.invalidatePath(stringFullPath);
     }
   }
 
@@ -299,6 +304,7 @@ export default class Incarnate {
     const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
     const {topPath: topPathBase, subPath = []} = Incarnate.getPathInfo(pathParts);
     const topPath = this.prefixPath(topPathBase, prefix);
+    const prefixedFullPath = this.prefixPath(path, prefix);
 
     let resolved = false;
 
@@ -364,7 +370,7 @@ export default class Incarnate {
                 this.setSubMap(topPath, factoryValue);
               }
 
-              this.handleAsyncDependency(topPath, factoryValue, subMap);
+              this.handleAsyncDependency(topPath, factoryValue, subMap, prefixedFullPath);
             } else if (subMap) {
               this.setSubMap(topPath, factoryValue);
 

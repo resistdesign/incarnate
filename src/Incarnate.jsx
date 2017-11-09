@@ -279,12 +279,27 @@ export default class Incarnate {
   }
 
   createGetter(path) {
-    return () => this.getPath(path);
+    return (subPath) => this.getPath(Incarnate.getStringPath(
+      [
+        ...Incarnate.getPathParts(path, this.pathDelimiter),
+        ...Incarnate.getPathParts(subPath, this.pathDelimiter)
+      ],
+      this.pathDelimiter
+    ));
   }
 
   createSetter(path) {
-    return (value) => {
-      this.setPath(path, value);
+    return (value, subPath) => {
+      this.setPath(
+        Incarnate.getStringPath(
+          [
+            ...Incarnate.getPathParts(path, this.pathDelimiter),
+            ...Incarnate.getPathParts(subPath, this.pathDelimiter)
+          ],
+          this.pathDelimiter
+        ),
+        value
+      );
     };
   }
 

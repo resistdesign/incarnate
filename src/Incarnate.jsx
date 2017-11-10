@@ -236,9 +236,8 @@ export default class Incarnate {
     return isSet;
   }
 
-  async handleAsyncDependency(path, promise, subMap, fullPath = []) {
+  async handleAsyncDependency(path, promise, subMap, fullPaths = []) {
     const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
-    const stringFullPath = Incarnate.getStringPath(fullPath, this.pathDelimiter);
     let value;
 
     try {
@@ -255,18 +254,25 @@ export default class Incarnate {
       this.setPath(path, value);
     }
 
-    if (stringFullPath !== '' && stringPath !== stringFullPath) {
-      this.invalidatePath(stringFullPath);
+    // IMPORTANT: Invalidate all full paths to dependents.
+    if (fullPaths instanceof Array) {
+      for (const fp of fullPaths) {
+        const stringFullPath = Incarnate.getStringPath(fp, this.pathDelimiter);
+
+        if (stringFullPath !== '' && stringPath !== stringFullPath) {
+          this.invalidatePath(stringFullPath);
+        }
+      }
     }
   }
 
-  updateDependencyList(paths, map, prefix) {
+  updateDependencyList(paths, map, prefix, fullPaths) {
     let fullyResolved = true;
 
     if (paths instanceof Array) {
       paths.forEach(path => {
         try {
-          if (!this.updateDependency(path, map, prefix)) {
+          if (!this.updateDependency(path, map, prefix, fullPaths)) {
             fullyResolved = false;
           }
         } catch (error) {
@@ -335,11 +341,14 @@ export default class Incarnate {
     );
   }
 
-  updateDependency(path, map, prefix = []) {
+  updateDependency(path, map, prefix = [], fullPaths = []) {
     const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
     const {topPath: topPathBase, subPath = []} = Incarnate.getPathInfo(pathParts);
     const topPath = this.prefixPath(topPathBase, prefix);
     const prefixedFullPath = this.prefixPath(path, prefix);
+    // IMPORTANT: Accumulate all full paths depending on the current dependency in case of
+    // asynchronous resolution.
+    const fullPathsAccumulator = [...fullPaths, prefixedFullPath];
 
     let resolved = false;
 
@@ -368,7 +377,7 @@ export default class Incarnate {
         if (!topPathIsSet) {
           // The value for the current path is mapped as a dependency but
           // has not been added to the `hashMatrix`, so get it.
-          const requiredDependenciesResolved = this.updateDependencyList(required, map, prefix);
+          const requiredDependenciesResolved = this.updateDependencyList(required, map, prefix, fullPathsAccumulator);
 
           if (requiredDependenciesResolved) {
             // The required dependencies have been resolved and are available on the `hashMatrix`.
@@ -377,7 +386,13 @@ export default class Incarnate {
               .map(::this.getPath);
             const optionalValues = optional
               .map(p => this.prefixPath(p, prefix))
-              .map(::this.getPath);
+              .map(p => {
+                try {
+                  return this.getPath(p);
+                } catch (error) {
+                  // Ignore.
+                }
+              });
             const getterHandlers = getters
               .map(p => this.prefixPath(p, prefix))
               .map(::this.createGetter);
@@ -415,12 +430,12 @@ export default class Incarnate {
                 this.setSubMap(topPath, factoryValue);
               }
 
-              this.handleAsyncDependency(topPath, factoryValue, subMap, prefixedFullPath);
+              this.handleAsyncDependency(topPath, factoryValue, subMap, fullPathsAccumulator);
             } else if (subMap) {
               this.setSubMap(topPath, factoryValue);
 
               if (subPath.length) {
-                resolved = this.updateDependency(subPath, factoryValue, topPath);
+                resolved = this.updateDependency(subPath, factoryValue, topPath, fullPathsAccumulator);
               } else {
                 resolved = true;
               }
@@ -434,7 +449,7 @@ export default class Incarnate {
           // The value for the current path is set and it is a sub-map with remaining path parts to be resolved.
           const subMapValue = this.getSubMap(topPath);
 
-          resolved = this.updateDependency(subPath, subMapValue, topPath);
+          resolved = this.updateDependency(subPath, subMapValue, topPath, fullPathsAccumulator);
         } else {
           resolved = true;
         }

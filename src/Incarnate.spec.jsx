@@ -41,6 +41,20 @@ export default {
       MOCK_SERVICE = undefined;
     },
     static: {
+      validateDependencyDeclaration: {
+        'should require a factory function on a dependency declaration': () => {
+          Incarnate.validateDependencyDeclaration({
+            subMap: 10,
+            required: 9,
+            optional: 8,
+            getters: 7,
+            setters: 6,
+            invalidators: 5,
+            listeners: 4,
+            factory: 3
+          }, 'TEST_DEP.DECLARATION');
+        }
+      },
       keyIsNumeric: {
         'should properly identify numeric keys': () => {
           const isNum1 = Incarnate.keyIsNumeric(3);

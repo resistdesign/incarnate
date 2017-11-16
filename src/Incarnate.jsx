@@ -1,6 +1,9 @@
+import T from 'prop-types';
 import EventEmitter from 'event-emitter';
 
 export default class Incarnate {
+  static INCARNATE_LABEL = 'Incarnate';
+  static DEPENDENCY_LABEL = 'Dependency';
   static DEFAULT_PATH_DELIMITER = '.';
   static ERRORS = {
     INVALID_PATH: 'INVALID_PATH',
@@ -12,6 +15,26 @@ export default class Incarnate {
     PATH_INVALIDATED: 'PATH_INVALIDATED',
     ERROR: 'ERROR'
   };
+
+  static validateDependencyDeclaration(dependencyDeclaration, dependencyName) {
+    const validatorShape = {
+      subMap: T.bool,
+      required: T.arrayOf(T.string),
+      optional: T.arrayOf(T.string),
+      getters: T.arrayOf(T.string),
+      setters: T.arrayOf(T.string),
+      invalidators: T.arrayOf(T.string),
+      listeners: T.arrayOf(T.string),
+      factory: T.func.isRequired
+    };
+
+    T.checkPropTypes(
+      validatorShape,
+      dependencyDeclaration,
+      Incarnate.DEPENDENCY_LABEL,
+      `${Incarnate.INCARNATE_LABEL}: ${dependencyName}`
+    );
+  }
 
   static keyIsNumeric(key) {
     let numeric = false;
@@ -353,6 +376,8 @@ export default class Incarnate {
     let resolved = false;
 
     if (map instanceof Object && map.hasOwnProperty(topPathBase)) {
+      Incarnate.validateDependencyDeclaration(map[topPathBase], prefixedFullPath);
+
       const {
         [topPathBase]: {
           subMap,

@@ -3,7 +3,8 @@ import EventEmitter from 'event-emitter';
 
 export default class Incarnate {
   static INCARNATE_LABEL = 'Incarnate';
-  static DEPENDENCY_LABEL = 'Dependency';
+  static DEPENDENCY_DECLARATION_LABEL = 'Dependency Declaration';
+  static DEPENDENCY_DECLARATION_PROPERTY_LABEL = 'Dependency Declaration Property';
   static DEFAULT_PATH_DELIMITER = '.';
   static ERRORS = {
     INVALID_PATH: 'INVALID_PATH',
@@ -16,24 +17,38 @@ export default class Incarnate {
     ERROR: 'ERROR'
   };
 
-  static validateDependencyDeclaration(dependencyDeclaration, dependencyName) {
-    const validatorShape = {
-      subMap: T.bool,
-      required: T.arrayOf(T.string),
-      optional: T.arrayOf(T.string),
-      getters: T.arrayOf(T.string),
-      setters: T.arrayOf(T.string),
-      invalidators: T.arrayOf(T.string),
-      listeners: T.arrayOf(T.string),
-      factory: T.func.isRequired
-    };
+  static validateDependencyDeclaration(dependencyDeclaration, dependencyName = Incarnate.DEPENDENCY_DECLARATION_LABEL) {
+    if (dependencyDeclaration instanceof Object) {
+      const validatorShape = {
+        subMap: T.bool,
+        required: T.arrayOf(T.string),
+        optional: T.arrayOf(T.string),
+        getters: T.arrayOf(T.string),
+        setters: T.arrayOf(T.string),
+        invalidators: T.arrayOf(T.string),
+        listeners: T.arrayOf(T.string),
+        factory: T.func.isRequired
+      };
+      const validPropList = Object.keys(validatorShape);
+      const dependencyPropList = Object.keys(dependencyDeclaration);
 
-    T.checkPropTypes(
-      validatorShape,
-      dependencyDeclaration,
-      Incarnate.DEPENDENCY_LABEL,
-      `${Incarnate.INCARNATE_LABEL}: ${dependencyName}`
-    );
+      dependencyPropList.forEach(key => {
+        if (validPropList.indexOf(key) === -1) {
+          console.warn(
+            `Warning: Invalid ${Incarnate.DEPENDENCY_DECLARATION_PROPERTY_LABEL} \`${key}\` in \`${Incarnate.INCARNATE_LABEL}: ${dependencyName}\`.`
+          );
+        }
+      });
+
+      T.checkPropTypes(
+        validatorShape,
+        dependencyDeclaration,
+        Incarnate.DEPENDENCY_DECLARATION_PROPERTY_LABEL,
+        `${Incarnate.INCARNATE_LABEL}: ${dependencyName}`
+      );
+    } else {
+      console.warn(`Warning: Invalid ${Incarnate.DEPENDENCY_DECLARATION_LABEL} \`${dependencyName}\`.`);
+    }
   }
 
   static keyIsNumeric(key) {

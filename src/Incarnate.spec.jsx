@@ -44,6 +44,7 @@ export default {
       validateDependencyDeclaration: {
         'should require a factory function on a dependency declaration': () => {
           Incarnate.validateDependencyDeclaration({
+            junk: true,
             subMap: 10,
             required: 9,
             optional: 8,

@@ -553,7 +553,7 @@ export default class Incarnate {
         const part = pathParts[i];
         const nextPart = pathParts[i + 1];
 
-        // TRICKY: Build out the tree is it's not there.
+        // TRICKY: Build out the tree if it's not there.
         if (!currentValue.hasOwnProperty(part)) {
           currentValue[part] = Incarnate.keyIsNumeric(nextPart) ? [] : {};
         } else if (currentValue[part] instanceof Array) {
@@ -583,7 +583,10 @@ export default class Incarnate {
     // Check for actual changes.
     const currentValue = this.getPathValue(path);
 
-    if (value !== currentValue) {
+    if (
+      !this.pathIsSet(path) ||
+      value !== currentValue
+    ) {
       this.updateHashMatrix(path, value);
       this.dispatchChanges(path);
     }

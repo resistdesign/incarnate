@@ -611,16 +611,7 @@ export default class Incarnate {
   }
 
   removeSubMap(path) {
-    const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
-    const prefix = `${stringPath}${this.pathDelimiter}`;
-
     delete this._subMapCache[path];
-
-    for (const k in this._subMapCache) {
-      if (k.indexOf(prefix) === 0) {
-        this.invalidatePath(k);
-      }
-    }
   }
 
   getSubMapNames() {

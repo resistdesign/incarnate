@@ -1,5 +1,7 @@
 import T from 'prop-types';
-import EventEmitter from 'event-emitter';
+import InternalHashMatrix from './HashMatrix';
+
+export const HashMatrix = InternalHashMatrix;
 
 export default class Incarnate {
   static INCARNATE_LABEL = 'Incarnate';
@@ -64,17 +66,7 @@ export default class Incarnate {
   }
 
   static getPathParts(path, pathDelimiter) {
-    if (typeof path === 'string') {
-      return path.split(pathDelimiter);
-    } else if (path instanceof Array) {
-      return path;
-    } else {
-      const error = new Error(Incarnate.ERRORS.INVALID_PATH);
-
-      error.path = path;
-
-      throw error;
-    }
+    return HashMatrix.getPathParts(path, pathDelimiter);
   }
 
   static getStringPath(pathParts, pathDelimiter) {
@@ -98,12 +90,21 @@ export default class Incarnate {
     return pathInfo;
   }
 
-  _eventEmitter = new EventEmitter();
+  static prefixPath(path = [], prefix = [], pathDelimiter) {
+    return Incarnate.getStringPath(
+      [
+        ...Incarnate.getPathParts(prefix, pathDelimiter),
+        ...Incarnate.getPathParts(path, pathDelimiter)
+      ],
+      pathDelimiter
+    );
+  }
+
   _subMapCache = {};
 
   map;
   pathDelimiter;
-  hashMatrix;
+  cache;
 
   constructor({
                 map,
@@ -111,26 +112,21 @@ export default class Incarnate {
                 pathDelimiter = Incarnate.DEFAULT_PATH_DELIMITER
               }) {
     this.map = map;
-    this.hashMatrix = hashMatrix;
+    this.cache = new HashMatrix({
+      hashMatrix,
+      pathDelimiter,
+      onPathChange: this.onPathChange
+    });
     this.pathDelimiter = pathDelimiter;
   }
 
-  dispatchEvent(type, data) {
-    this._eventEmitter.emit(type, data);
+  onPathChange() {
+    // TODO: Implement.
   }
 
-  addEventListener(type, handler) {
-    if (typeof type === 'string' && handler instanceof Function) {
-      this._eventEmitter.on(type, handler);
-
-      return () => this.removeEventListener(type, handler);
-    }
-  }
-
-  removeEventListener(type, handler) {
-    if (typeof type === 'string' && handler instanceof Function) {
-      return this._eventEmitter.off(type, handler);
-    }
+  listen(path, handler) {
+    // TODO: Build listener tree for path and all dependencies of path.
+    // TODO: Trigger resolve for path???
   }
 
   getDependencyIsDependent(path, dependencyDeclaration = {}, prefix = []) {
@@ -192,39 +188,12 @@ export default class Incarnate {
       }, []);
   }
 
-  dispatchChanges(path) {
-    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
-
-    // Notify lifecycle listeners of changes all the way up the path.
-    if (pathParts.length) {
-      const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
-      const dependents = this.getDependents(stringPath);
-      const currentPath = [...pathParts];
-
-      // Dispatch path change for this path.
-      this.dispatchEvent(Incarnate.EVENTS.PATH_CHANGE, stringPath);
-
-      // Invalidate dependents.
-      dependents.forEach(::this.invalidatePath);
-
-      // Trigger a change for the parent path.
-      currentPath.pop();
-      if (currentPath.length) {
-        // TRICKY: IMPORTANT: Do NOT dispatch changes for an empty path, it will cause an infinite loop.
-        this.dispatchChanges(Incarnate.getStringPath(currentPath, this.pathDelimiter));
-      }
-    }
-  }
-
   handleResolveError(path, error) {
-    this.dispatchEvent(Incarnate.EVENTS.ERROR, {
-      type: Incarnate.ERRORS.FACTORY_ERROR,
-      path: Incarnate.getStringPath(path),
-      error
-    });
+    // TODO: How do errors work? Keep them on a HashMatrix???
   }
 
   invalidatePath(path = []) {
+    // TODO: Is this method needed???
     const stringPath = Incarnate.getStringPath(path, this.pathDelimiter);
 
     // Invalidate sub-maps.
@@ -238,40 +207,6 @@ export default class Incarnate {
 
     // Dispatch changes AFTER removing cached values and sub-maps.
     this.dispatchChanges(stringPath);
-  }
-
-  pathIsSet(path) {
-    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
-
-    let isSet = true,
-      currentValue = this.hashMatrix;
-
-    for (const part of pathParts) {
-      if (currentValue instanceof Array && Incarnate.keyIsNumeric(part)) {
-        if (currentValue.length < (parseInt(part, 10) + 1)) {
-          isSet = false;
-          break;
-        }
-      } else if (currentValue instanceof Object) {
-        if (!currentValue.hasOwnProperty(part)) {
-          isSet = false;
-          break;
-        }
-      } else {
-        isSet = false;
-        break;
-      }
-
-      // Don't fail, just return `false`.
-      try {
-        currentValue = currentValue[part];
-      } catch (error) {
-        isSet = false;
-        break;
-      }
-    }
-
-    return isSet;
   }
 
   async handleAsyncDependency(path, promise, subMap, fullPaths = []) {
@@ -367,16 +302,6 @@ export default class Incarnate {
         handler(value);
       }
     });
-  }
-
-  prefixPath(path = [], prefix = []) {
-    return Incarnate.getStringPath(
-      [
-        ...Incarnate.getPathParts(prefix, this.pathDelimiter),
-        ...Incarnate.getPathParts(path, this.pathDelimiter)
-      ],
-      this.pathDelimiter
-    );
   }
 
   updateDependency(path, map, prefix = [], fullPaths = []) {
@@ -501,95 +426,12 @@ export default class Incarnate {
     return resolved;
   }
 
-  getPathValue(path) {
-    const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
-
-    let value,
-      currentValue = this.hashMatrix,
-      finished = true;
-
-    for (const part of pathParts) {
-      // Don't fail, just return `undefined`.
-      try {
-        currentValue = currentValue[part];
-      } catch (error) {
-        finished = false;
-        break;
-      }
-    }
-
-    // TRICKY: Don't select the current value if the full path wasn't processed.
-    if (finished) {
-      value = currentValue;
-    }
-
-    return value;
-  }
-
   getPath(path) {
-    if (!this.updateDependency(path, this.map)) {
-      const error = new Error(Incarnate.ERRORS.UNRESOLVED_PATH);
-
-      error.path = path;
-
-      throw error;
-    }
-
-    return this.getPathValue(path);
+    return this.cache.getPath(path);
   }
 
-  updateHashMatrix(path, value, unset) {
-    if (!unset || this.pathIsSet(path)) {
-      const newHashMatrix = {
-        ...this.hashMatrix
-      };
-      const pathParts = Incarnate.getPathParts(path, this.pathDelimiter);
-      const lastIndex = pathParts.length - 1;
-      const lastPart = pathParts[lastIndex];
-
-      let currentValue = newHashMatrix;
-
-      for (let i = 0; i < lastIndex; i++) {
-        const part = pathParts[i];
-        const nextPart = pathParts[i + 1];
-
-        // TRICKY: Build out the tree if it's not there.
-        if (!currentValue.hasOwnProperty(part)) {
-          currentValue[part] = Incarnate.keyIsNumeric(nextPart) ? [] : {};
-        } else if (currentValue[part] instanceof Array) {
-          currentValue[part] = [
-            ...currentValue[part]
-          ];
-        } else if (currentValue[part] instanceof Object) {
-          currentValue[part] = {
-            ...currentValue[part]
-          };
-        }
-
-        currentValue = currentValue[part];
-      }
-
-      if (unset) {
-        delete currentValue[lastPart];
-      } else {
-        currentValue[lastPart] = value;
-      }
-
-      this.hashMatrix = newHashMatrix;
-    }
-  }
-
-  setPath(path, value) {
-    // Check for actual changes.
-    const currentValue = this.getPathValue(path);
-
-    if (
-      !this.pathIsSet(path) ||
-      value !== currentValue
-    ) {
-      this.updateHashMatrix(path, value);
-      this.dispatchChanges(path);
-    }
+  setPath(path, value, unset) {
+    return this.cache.setPath(path, value, unset);
   }
 
   subMapIsSet(path) {
@@ -601,6 +443,7 @@ export default class Incarnate {
   }
 
   setSubMap(path, value) {
+    // TODO: Should a HashMatrix with change events be used???
     // Check for actual changes.
     const currentValue = this.getSubMap(path);
 

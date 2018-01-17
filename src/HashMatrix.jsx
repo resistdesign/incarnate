@@ -13,20 +13,6 @@ export default class HashMatrix {
     return numeric;
   }
 
-  static getPathParts(path, pathDelimiter) {
-    if (typeof path === 'string') {
-      return path.split(pathDelimiter);
-    } else if (path instanceof Array) {
-      return path;
-    } else {
-      const error = new Error(Incarnate.ERRORS.INVALID_PATH);
-
-      error.path = path;
-
-      throw error;
-    }
-  }
-
   pathDelimiter;
   hashMatrix;
   onPathChange;
@@ -69,47 +55,12 @@ export default class HashMatrix {
     return value;
   }
 
-  pathIsSet(path) {
-    const pathParts = HashMatrix.getPathParts(path, this.pathDelimiter);
-
-    let isSet = true,
-      currentValue = this.hashMatrix;
-
-    for (const part of pathParts) {
-      if (currentValue instanceof Array && HashMatrix.keyIsNumeric(part)) {
-        if (currentValue.length < (parseInt(part, 10) + 1)) {
-          isSet = false;
-          break;
-        }
-      } else if (currentValue instanceof Object) {
-        if (!currentValue.hasOwnProperty(part)) {
-          isSet = false;
-          break;
-        }
-      } else {
-        isSet = false;
-        break;
-      }
-
-      // Don't fail, just return `false`.
-      try {
-        currentValue = currentValue[part];
-      } catch (error) {
-        isSet = false;
-        break;
-      }
-    }
-
-    return isSet;
-  }
-
-  setPath(path, value, unset) {
-    // TODO: Compare before setting and don't set or dispatch change if the values match.
-    if (!unset || this.pathIsSet(path)) {
+  setPath(path, value) {
+    if (typeof path === 'string' || path instanceof Array) {
       const newHashMatrix = {
         ...this.hashMatrix
       };
-      const pathParts = HashMatrix.getPathParts(path, this.pathDelimiter);
+      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
       const lastIndex = pathParts.length - 1;
       const lastPart = pathParts[lastIndex];
 
@@ -119,7 +70,7 @@ export default class HashMatrix {
         const part = pathParts[i];
         const nextPart = pathParts[i + 1];
 
-        // TRICKY: Build out the tree if it's not there.
+        // TRICKY: Build out the tree is it's not there.
         if (!currentValue.hasOwnProperty(part)) {
           currentValue[part] = HashMatrix.keyIsNumeric(nextPart) ? [] : {};
         } else if (currentValue[part] instanceof Array) {
@@ -135,14 +86,20 @@ export default class HashMatrix {
         currentValue = currentValue[part];
       }
 
-      if (unset) {
-        delete currentValue[lastPart];
-      } else {
-        currentValue[lastPart] = value;
-      }
+      currentValue[lastPart] = value;
 
       this.hashMatrix = newHashMatrix;
-      // TODO: Dispatch changes!!!
+
+      // Notify lifecycle listeners of changes all the way up the path.
+      if (this.onPathChange instanceof Function && pathParts.length) {
+        const currentPath = [...pathParts];
+
+        // TRICKY: Start with the deepest path and move up to the most shallow.
+        while (currentPath.length) {
+          this.onPathChange(currentPath.join(this.pathDelimiter));
+          currentPath.pop();
+        }
+      }
     }
   }
 }

@@ -1,4 +1,6 @@
-import HashMatrix from './HashMatrix';
+import InternalHashMatrix from './HashMatrix';
+
+export const HashMatrix = InternalHashMatrix;
 
 export default class Incarnate {
   static DEFAULT_INSTANCE_NAME = 'INCARNATE';
@@ -52,6 +54,7 @@ export default class Incarnate {
   }
 
   onPathChange = (path) => {
+    // TODO: Implement.
   };
 
   validateDependencyDeclaration(name, dependencyDeclaration = {}) {

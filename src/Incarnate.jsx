@@ -230,10 +230,24 @@ export default class Incarnate {
           };
         }
 
-        // TODO: Submaps, call factory, shared, etc...
-        // TODO: Factory error handling.
+        if (subMap) {
+          if (resolvedValue instanceof Object && shared instanceof Object) {
+            resolvedValue = {
+              ...resolvedValue,
+              ...Object.keys(shared).reduce((acc, subDepName) => {
+                acc[subDepName] = {
+                  factory: () => this.resolvePath(this.getPathParts(shared[subDepName]))
+                };
 
-        // TODO: Set resolved value on HashMatrix unless it is a sub-map.
+                return acc;
+              }, {})
+            };
+          }
+        } else {
+          this.setPath(path, resolvedValue);
+        }
+
+        return resolvedValue;
       }
     }
   }

@@ -10,7 +10,9 @@ export default class Incarnate {
     INVALID_PATH_DELIMITER: 'INVALID_PATH_DELIMITER',
     INVALID_MAP: 'INVALID_MAP',
     INVALID_PATH: 'INVALID_PATH',
-    INVALID_SUB_MAP: 'INVALID_SUB_MAP'
+    INVALID_SUB_MAP: 'INVALID_SUB_MAP',
+    INVALID_FACTORY: 'INVALID_FACTORY',
+    FACTORY_RESOLUTION_FAILED: 'FACTORY_RESOLUTION_FAILED'
   };
 
   static validatePath(path) {
@@ -52,7 +54,7 @@ export default class Incarnate {
   onPathChange = (path) => {
   };
 
-  checkDependencyDeclaration(name, dependencyDeclaration = {}) {
+  validateDependencyDeclaration(name, dependencyDeclaration = {}) {
     const propertyNames = [
       'subMap',
       'shared',
@@ -65,15 +67,24 @@ export default class Incarnate {
       'factory'
     ];
     const depDecPropertyNames = Object.keys(dependencyDeclaration);
+    const {factory} = dependencyDeclaration;
+    const path = [
+      this.instanceName,
+      name
+    ];
+
+    if (!(factory instanceof Function)) {
+      throw {
+        message: Incarnate.ERRORS.INVALID_FACTORY,
+        path
+      };
+    }
 
     depDecPropertyNames.forEach(ddpn => {
       if (propertyNames.indexOf(ddpn) === -1) {
         console.warn({
           message: Incarnate.WARNINGS.INVALID_DEPENDENCY_DECLARATION_PROPERTY_NAME,
-          path: this.getStringPath([
-            this.instanceName,
-            name
-          ])
+          path
         });
       }
     });
@@ -130,11 +141,13 @@ export default class Incarnate {
   }
 
   getDependencyDeclaration(name) {
-    const depDec = this.map[name];
+    if (this.map.hasOwnProperty(name)) {
+      const depDec = this.map[name];
 
-    this.checkDependencyDeclaration(name, depDec);
+      this.validateDependencyDeclaration(name, depDec);
 
-    return depDec;
+      return depDec;
+    }
   }
 
   createGetter(path) {
@@ -172,42 +185,56 @@ export default class Incarnate {
 
       return await subInstance.resolvePath([name]);
     } else {
-      const depDec = this.map[name];
-      const {
-        subMap = false,
-        shared = {},
-        required = [],
-        optional = [],
-        getters = [],
-        setters = [],
-        invalidators = [],
-        listeners = [],
-        factory
-      } = depDec;
-      const resolvedDependencies = [
-        ...await Promise.all(required.map((depPath) => {
-          return this.resolvePath(this.getPathParts(depPath));
-        })),
-        ...await Promise.all(optional.map((depPath) => {
-          return async () => {
-            try {
-              return await this.resolvePath(this.getPathParts(depPath));
-            } catch (error) {
-              // Ignore.
-            }
+      const depDec = this.getDependencyDeclaration(name);
+
+      if (depDec instanceof Object) {
+        const {
+          subMap = false,
+          shared = {},
+          required = [],
+          optional = [],
+          getters = [],
+          setters = [],
+          invalidators = [],
+          listeners = [],
+          factory
+        } = depDec;
+        const resolvedDependencies = [
+          ...await Promise.all(required.map((depPath) => {
+            return this.resolvePath(this.getPathParts(depPath));
+          })),
+          ...await Promise.all(optional.map((depPath) => {
+            return async () => {
+              try {
+                return await this.resolvePath(this.getPathParts(depPath));
+              } catch (error) {
+                // Ignore.
+              }
+            };
+          })),
+          ...getters.map((getterPath) => this.createGetter(this.getPathParts(getterPath))),
+          ...setters.map((setterPath) => this.createSetter(this.getPathParts(setterPath))),
+          ...invalidators.map((invalidatorPath) => this.createInvalidator(this.getPathParts(invalidatorPath))),
+          ...listeners.map((listenerPath) => this.createListener(this.getPathParts(listenerPath)))
+        ];
+
+        let resolvedValue;
+
+        try {
+          resolvedValue = await factory(...resolvedDependencies);
+        } catch (error) {
+          throw {
+            message: Incarnate.ERRORS.FACTORY_RESOLUTION_FAILED,
+            path,
+            error
           };
-        })),
-        ...getters.map((getterPath) => this.createGetter(this.getPathParts(getterPath))),
-        ...setters.map((setterPath) => this.createSetter(this.getPathParts(setterPath))),
-        ...invalidators.map((invalidatorPath) => this.createInvalidator(this.getPathParts(invalidatorPath))),
-        ...listeners.map((listenerPath) => this.createListener(this.getPathParts(listenerPath)))
-      ];
+        }
 
-      this.checkDependencyDeclaration(name, depDec);
+        // TODO: Submaps, call factory, shared, etc...
+        // TODO: Factory error handling.
 
-      // TODO: Submaps, call factory, shared, etc...
-
-      // TODO: Set resolved value on HashMatrix unless it is a sub-map.
+        // TODO: Set resolved value on HashMatrix unless it is a sub-map.
+      }
     }
   }
 

@@ -27,6 +27,37 @@ export default class HashMatrix {
     this.onPathChange = onPathChange;
   }
 
+  getPathInfo(path) {
+    if (typeof path === 'string' || path instanceof Array) {
+      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
+      const name = pathParts.pop();
+
+      return {
+        parentPath: pathParts,
+        name
+      };
+    }
+  }
+
+  pathIsSet(path) {
+    if (typeof path === 'string' || path instanceof Array) {
+      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
+      const {parentPath, name} = this.getPathInfo(pathParts) || {};
+
+      if (parentPath instanceof Array && parentPath.length) {
+        const parentObject = this.getPath(parentPath);
+
+        if (parentObject instanceof Object && parentObject.hasOwnProperty(name)) {
+          return true;
+        }
+      } else if (typeof name === 'string' && this.hashMatrix.hasOwnProperty(name)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   getPath(path) {
     let value;
 
@@ -98,6 +129,39 @@ export default class HashMatrix {
         while (currentPath.length) {
           this.onPathChange(currentPath.join(this.pathDelimiter));
           currentPath.pop();
+        }
+      }
+    }
+  }
+
+  unsetPath(path) {
+    if (typeof path === 'string' || path instanceof Array) {
+      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
+      const {parentPath, name} = this.getPathInfo(pathParts) || {};
+
+      if (parentPath instanceof Array && parentPath.length) {
+        const parentObject = this.getPath(parentPath);
+
+        if (parentObject instanceof Object && parentObject.hasOwnProperty(name)) {
+          const newParentObject = {
+            ...parentObject
+          };
+
+          delete newParentObject[name];
+
+          this.setPath(parentPath, newParentObject);
+        }
+      } else if (typeof name === 'string' && this.hashMatrix.hasOwnProperty(name)) {
+        const newHashMatrix = {
+          ...this.hashMatrix
+        };
+
+        delete newHashMatrix[name];
+
+        this.hashMatrix = newHashMatrix;
+
+        if (this.onPathChange instanceof Function) {
+          this.onPathChange(name);
         }
       }
     }

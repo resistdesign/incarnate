@@ -38,10 +38,6 @@ export default class Incarnate {
                 map = {},
                 hashMatrix
               }) {
-    this.instanceName = instanceName;
-    this.pathDelimiter = pathDelimiter;
-    this.map = map;
-
     if (typeof pathDelimiter !== 'string') {
       throw new Error(Incarnate.ERRORS.INVALID_PATH_DELIMITER);
     }
@@ -50,6 +46,9 @@ export default class Incarnate {
       throw new Error(Incarnate.ERRORS.INVALID_MAP);
     }
 
+    this.instanceName = instanceName;
+    this.pathDelimiter = pathDelimiter;
+    this.map = map;
     this.hashMatrix = hashMatrix || new HashMatrix({pathDelimiter, onPathChange: this.onPathChange});
   }
 
@@ -93,11 +92,19 @@ export default class Incarnate {
     });
   }
 
-  getPathParts(stringPath) {
-    return String(stringPath).split(this.pathDelimiter);
+  getPathParts(path) {
+    if (path instanceof Array) {
+      return path;
+    }
+
+    return String(path).split(this.pathDelimiter);
   }
 
   getStringPath(path) {
+    if (typeof path === 'string') {
+      return path;
+    }
+
     Incarnate.validatePath(path);
 
     return path.join(this.pathDelimiter);
@@ -134,8 +141,10 @@ export default class Incarnate {
         pathDelimiter: this.pathDelimiter,
         map: subMap,
         hashMatrix: {
+          pathIsSet: this.createPathChecker(path),
           getPath: this.createGetter(path),
-          setPath: this.createSetter(path)
+          setPath: (subPath, value) => this.createSetter(path)(value, subPath),
+          unsetPath: this.createUnsetter(path)
         }
       });
     }
@@ -153,19 +162,42 @@ export default class Incarnate {
     }
   }
 
-  createGetter(path) {
-    // TODO: Implement.
+  createPathChecker(path = []) {
+    return (subPath = []) => this.pathIsSet([
+      ...path,
+      ...subPath
+    ]);
   }
 
-  createSetter(path) {
-    // TODO: Implement.
+  createGetter(path = []) {
+    return (subPath = []) => this.getPath([
+      ...path,
+      ...subPath
+    ]);
   }
 
-  createInvalidator(path) {
-    // TODO: Implement.
+  createSetter(path = []) {
+    return (value, subPath = []) => this.setPath([
+      ...path,
+      ...subPath
+    ], value);
   }
 
-  createListener(path) {
+  createUnsetter(path = []) {
+    return (subPath = []) => this.unsetPath([
+      ...path,
+      ...subPath
+    ]);
+  }
+
+  createInvalidator(path = []) {
+    return (subPath = []) => this.invalidate([
+      ...path,
+      ...subPath
+    ]);
+  }
+
+  createListener(path = []) {
     Incarnate.validatePath(path);
 
     return (handler) => this.listen(path, handler);
@@ -174,12 +206,20 @@ export default class Incarnate {
   listen(path, handler) {
     // TODO: Implement.
     Incarnate.validatePath(path);
+
+    return this.unlisten(path, handler);
+  }
+
+  unlisten(path, handler) {
+    // TODO: Implement.
+  }
+
+  invalidate(path) {
+    // TODO: Implement.
   }
 
   async resolvePath(path) {
     Incarnate.validatePath(path);
-
-    // TODO: Check if `path` is set on HashMatrix.
 
     const {name, subPath} = this.getPathInfo(path);
 
@@ -187,6 +227,9 @@ export default class Incarnate {
       const subInstance = await this.getSubInstance(name);
 
       return await subInstance.resolvePath([name]);
+    } else if (this.pathIsSet(name)) {
+      // Check if `path` is set.
+      return this.getPath(name);
     } else {
       const depDec = this.getDependencyDeclaration(name);
 
@@ -255,6 +298,10 @@ export default class Incarnate {
     }
   }
 
+  pathIsSet(path) {
+    return this.hashMatrix.pathIsSet(path);
+  }
+
   getPath(path) {
     return this.hashMatrix.getPath(path);
   }
@@ -262,5 +309,9 @@ export default class Incarnate {
   setPath(path, value) {
     // TODO: Optimize changes. Only set values if they are not `===` to the existing value.
     return this.hashMatrix.setPath(path, value);
+  }
+
+  unsetPath(path) {
+    return this.hashMatrix.unsetPath(path);
   }
 }

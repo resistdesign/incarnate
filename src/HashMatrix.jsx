@@ -1,6 +1,9 @@
 export default class HashMatrix {
   static DEFAULT_PATH_DELIMITER = '.';
   static ERRORS = {
+    INVALID_HASH_MATRIX: 'INVALID_HASH_MATRIX',
+    INVALID_PATH_DELIMITER: 'INVALID_PATH_DELIMITER',
+    INVALID_PATH_CHANGE_HANDLER: 'INVALID_PATH_CHANGE_HANDLER',
     INVALID_PATH: 'INVALID_PATH'
   };
 
@@ -31,6 +34,18 @@ export default class HashMatrix {
                 pathDelimiter = HashMatrix.DEFAULT_PATH_DELIMITER,
                 onPathChange
               }) {
+    if (!(hashMatrix instanceof Object)) {
+      throw new Error(HashMatrix.ERRORS.INVALID_HASH_MATRIX);
+    }
+
+    if (typeof pathDelimiter !== 'string') {
+      throw new Error(HashMatrix.ERRORS.INVALID_PATH_DELIMITER);
+    }
+
+    if (typeof onPathChange !== 'undefined' && !(onPathChange instanceof Function)) {
+      throw new Error(HashMatrix.ERRORS.INVALID_PATH_CHANGE_HANDLER);
+    }
+
     this.hashMatrix = hashMatrix;
     this.pathDelimiter = pathDelimiter;
     this.onPathChange = onPathChange;
@@ -58,6 +73,23 @@ export default class HashMatrix {
       parentPath: pathArray,
       name
     };
+  }
+
+  dispatchChanges(path) {
+    if (this.onPathChange instanceof Function) {
+      const pathArray = this.getPathArray(path);
+
+      // Notify lifecycle listeners of changes all the way up the path.
+      if (pathArray.length) {
+        const currentPath = [...pathArray];
+
+        // TRICKY: Start with the deepest path and move up to the most shallow.
+        while (currentPath.length) {
+          this.onPathChange(this.getPathString(currentPath));
+          currentPath.pop();
+        }
+      }
+    }
   }
 
   pathIsSet(path) {
@@ -140,16 +172,7 @@ export default class HashMatrix {
 
       this.hashMatrix = newHashMatrix;
 
-      // Notify lifecycle listeners of changes all the way up the path.
-      if (this.onPathChange instanceof Function && pathArray.length) {
-        const currentPath = [...pathArray];
-
-        // TRICKY: Start with the deepest path and move up to the most shallow.
-        while (currentPath.length) {
-          this.onPathChange(this.getPathString(currentPath));
-          currentPath.pop();
-        }
-      }
+      this.dispatchChanges(pathArray);
     }
   }
 
@@ -180,9 +203,7 @@ export default class HashMatrix {
 
         this.hashMatrix = newHashMatrix;
 
-        if (this.onPathChange instanceof Function) {
-          this.onPathChange(name);
-        }
+        this.dispatchChanges(name);
       }
     }
   }

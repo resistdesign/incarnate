@@ -214,86 +214,95 @@ export default class Incarnate {
     // TODO: Implement.
   }
 
-  invalidate(path) {
+  async invalidate(path) {
     // TODO: Implement.
+    Incarnate.validatePath(path);
+    this.unsetPath(path);
+
+    // TODO: Delegate to sub-maps and bubble invalidation back up??????
+
+    // TODO: IMPORTANT: Get only the dependents that are in the tree of dependencies with listeners.
+    // TODO: Invalidate with named sub-map.
+    // TODO: Invalidate with sub-maps where `path` is in the `shared` map.
   }
 
   async resolvePath(path) {
     Incarnate.validatePath(path);
 
-    const {name, subPath} = this.getPathInfo(path);
-
-    if (subPath.length) {
-      const subInstance = await this.getSubInstance(name);
-
-      return await subInstance.resolvePath([name]);
-    } else if (this.pathIsSet(name)) {
-      // Check if `path` is set.
-      return this.getPath(name);
+    if (this.pathIsSet(path)) {
+      return this.getPath(path);
     } else {
-      const depDec = this.getDependencyDeclaration(name);
+      const {name, subPath} = this.getPathInfo(path);
 
-      if (depDec instanceof Object) {
-        const {
-          subMap = false,
-          shared = {},
-          required = [],
-          optional = [],
-          getters = [],
-          setters = [],
-          invalidators = [],
-          listeners = [],
-          factory
-        } = depDec;
-        const resolvedDependencies = [
-          ...await Promise.all(required.map((depPath) => {
-            return this.resolvePath(this.getPathParts(depPath));
-          })),
-          ...await Promise.all(optional.map((depPath) => {
-            return async () => {
-              try {
-                return await this.resolvePath(this.getPathParts(depPath));
-              } catch (error) {
-                // Ignore.
-              }
-            };
-          })),
-          ...getters.map((getterPath) => this.createGetter(this.getPathParts(getterPath))),
-          ...setters.map((setterPath) => this.createSetter(this.getPathParts(setterPath))),
-          ...invalidators.map((invalidatorPath) => this.createInvalidator(this.getPathParts(invalidatorPath))),
-          ...listeners.map((listenerPath) => this.createListener(this.getPathParts(listenerPath)))
-        ];
+      if (subPath.length) {
+        const subInstance = await this.getSubInstance(name);
 
-        let resolvedValue;
+        return await subInstance.resolvePath([name]);
+      } else {
+        const depDec = this.getDependencyDeclaration(name);
 
-        try {
-          resolvedValue = await factory(...resolvedDependencies);
-        } catch (error) {
-          throw {
-            message: Incarnate.ERRORS.FACTORY_RESOLUTION_FAILED,
-            path,
-            error
-          };
-        }
+        if (depDec instanceof Object) {
+          const {
+            subMap = false,
+            shared = {},
+            required = [],
+            optional = [],
+            getters = [],
+            setters = [],
+            invalidators = [],
+            listeners = [],
+            factory
+          } = depDec;
+          const resolvedDependencies = [
+            ...await Promise.all(required.map((depPath) => {
+              return this.resolvePath(this.getPathParts(depPath));
+            })),
+            ...await Promise.all(optional.map((depPath) => {
+              return async () => {
+                try {
+                  return await this.resolvePath(this.getPathParts(depPath));
+                } catch (error) {
+                  // Ignore.
+                }
+              };
+            })),
+            ...getters.map((getterPath) => this.createGetter(this.getPathParts(getterPath))),
+            ...setters.map((setterPath) => this.createSetter(this.getPathParts(setterPath))),
+            ...invalidators.map((invalidatorPath) => this.createInvalidator(this.getPathParts(invalidatorPath))),
+            ...listeners.map((listenerPath) => this.createListener(this.getPathParts(listenerPath)))
+          ];
 
-        if (subMap) {
-          if (resolvedValue instanceof Object && shared instanceof Object) {
-            resolvedValue = {
-              ...resolvedValue,
-              ...Object.keys(shared).reduce((acc, subDepName) => {
-                acc[subDepName] = {
-                  factory: () => this.resolvePath(this.getPathParts(shared[subDepName]))
-                };
+          let resolvedValue;
 
-                return acc;
-              }, {})
+          try {
+            resolvedValue = await factory(...resolvedDependencies);
+          } catch (error) {
+            throw {
+              message: Incarnate.ERRORS.FACTORY_RESOLUTION_FAILED,
+              path,
+              error
             };
           }
-        } else {
-          this.setPath(path, resolvedValue);
-        }
 
-        return resolvedValue;
+          if (subMap) {
+            if (resolvedValue instanceof Object && shared instanceof Object) {
+              resolvedValue = {
+                ...resolvedValue,
+                ...Object.keys(shared).reduce((acc, subDepName) => {
+                  acc[subDepName] = {
+                    factory: () => this.resolvePath(this.getPathParts(shared[subDepName]))
+                  };
+
+                  return acc;
+                }, {})
+              };
+            }
+          } else {
+            this.setPath(path, resolvedValue);
+          }
+
+          return resolvedValue;
+        }
       }
     }
   }

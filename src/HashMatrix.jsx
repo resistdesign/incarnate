@@ -1,5 +1,8 @@
 export default class HashMatrix {
   static DEFAULT_PATH_DELIMITER = '.';
+  static ERRORS = {
+    INVALID_PATH: 'INVALID_PATH'
+  };
 
   static keyIsNumeric(key) {
     let numeric = false;
@@ -11,6 +14,12 @@ export default class HashMatrix {
     }
 
     return numeric;
+  }
+
+  static validatePath(path) {
+    if (!(path instanceof Array) || !path.length || path[0] === '') {
+      throw new Error(HashMatrix.ERRORS.INVALID_PATH);
+    }
   }
 
   pathDelimiter;
@@ -27,142 +36,147 @@ export default class HashMatrix {
     this.onPathChange = onPathChange;
   }
 
-  getPathInfo(path) {
-    if (typeof path === 'string' || path instanceof Array) {
-      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
-      const name = pathParts.pop();
+  getPathArray(path = '') {
+    const pathArray = path instanceof Array ?
+      path :
+      `${path}`.split(this.pathDelimiter);
 
-      return {
-        parentPath: pathParts,
-        name
-      };
-    }
+    HashMatrix.validatePath(path);
+
+    return pathArray;
+  }
+
+  getPathString(path) {
+    return this.getPathArray(path).join(this.pathDelimiter);
+  }
+
+  getPathInfo(path) {
+    const pathArray = this.getPathArray(path);
+    const name = pathArray.pop();
+
+    return {
+      parentPath: pathArray,
+      name
+    };
   }
 
   pathIsSet(path) {
-    if (typeof path === 'string' || path instanceof Array) {
-      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
-      const {parentPath, name} = this.getPathInfo(pathParts) || {};
+    const pathArray = this.getPathArray(path);
+    const {parentPath, name} = this.getPathInfo(pathArray) || {};
 
-      if (parentPath instanceof Array && parentPath.length) {
-        const parentObject = this.getPath(parentPath);
+    if (parentPath instanceof Array && parentPath.length) {
+      const parentObject = this.getPath(parentPath);
 
-        if (parentObject instanceof Object && parentObject.hasOwnProperty(name)) {
-          return true;
-        }
-      } else if (typeof name === 'string' && this.hashMatrix.hasOwnProperty(name)) {
+      if (parentObject instanceof Object && parentObject.hasOwnProperty(name)) {
         return true;
       }
+    } else if (typeof name === 'string' && this.hashMatrix.hasOwnProperty(name)) {
+      return true;
     }
 
     return false;
   }
 
   getPath(path) {
-    let value;
+    const pathArray = this.getPathArray(path);
 
-    if (typeof path === 'string' || path instanceof Array) {
-      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
+    let value,
+      currentValue = this.hashMatrix,
+      finished = true;
 
-      let currentValue = this.hashMatrix,
-        finished = true;
-
-      for (const part of pathParts) {
-        // Don't fail, just return `undefined`.
-        try {
-          currentValue = currentValue[part];
-        } catch (error) {
-          finished = false;
-          break;
-        }
+    for (const part of pathArray) {
+      // Don't fail, just return `undefined`.
+      try {
+        currentValue = currentValue[part];
+      } catch (error) {
+        finished = false;
+        break;
       }
+    }
 
-      // TRICKY: Don't select the current value if the full path wasn't processed.
-      if (finished) {
-        value = currentValue;
-      }
+    // TRICKY: Don't select the current value if the full path wasn't processed.
+    if (finished) {
+      value = currentValue;
     }
 
     return value;
   }
 
   setPath(path, value) {
-    if (typeof path === 'string' || path instanceof Array) {
-      const newHashMatrix = {
-        ...this.hashMatrix
-      };
-      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
-      const lastIndex = pathParts.length - 1;
-      const lastPart = pathParts[lastIndex];
+    // TODO: DO NOT set if the value is exactly equal UNLESS the path WAS NOT set.
+    const newHashMatrix = {
+      ...this.hashMatrix
+    };
+    const pathArray = this.getPathArray(path);
+    const lastIndex = pathArray.length - 1;
+    const lastPart = pathArray[lastIndex];
 
-      let currentValue = newHashMatrix;
+    let currentValue = newHashMatrix;
 
-      for (let i = 0; i < lastIndex; i++) {
-        const part = pathParts[i];
-        const nextPart = pathParts[i + 1];
+    for (let i = 0; i < lastIndex; i++) {
+      const part = pathArray[i];
+      const nextPart = pathArray[i + 1];
 
-        // TRICKY: Build out the tree is it's not there.
-        if (!currentValue.hasOwnProperty(part)) {
-          currentValue[part] = HashMatrix.keyIsNumeric(nextPart) ? [] : {};
-        } else if (currentValue[part] instanceof Array) {
-          currentValue[part] = [
-            ...currentValue[part]
-          ];
-        } else if (currentValue[part] instanceof Object) {
-          currentValue[part] = {
-            ...currentValue[part]
-          };
-        }
-
-        currentValue = currentValue[part];
+      // TRICKY: Build out the tree is it's not there.
+      if (!currentValue.hasOwnProperty(part)) {
+        currentValue[part] = HashMatrix.keyIsNumeric(nextPart) ? [] : {};
+      } else if (currentValue[part] instanceof Array) {
+        currentValue[part] = [
+          ...currentValue[part]
+        ];
+      } else if (currentValue[part] instanceof Object) {
+        currentValue[part] = {
+          ...currentValue[part]
+        };
       }
 
-      currentValue[lastPart] = value;
+      currentValue = currentValue[part];
+    }
 
-      this.hashMatrix = newHashMatrix;
+    currentValue[lastPart] = value;
 
-      // Notify lifecycle listeners of changes all the way up the path.
-      if (this.onPathChange instanceof Function && pathParts.length) {
-        const currentPath = [...pathParts];
+    this.hashMatrix = newHashMatrix;
 
-        // TRICKY: Start with the deepest path and move up to the most shallow.
-        while (currentPath.length) {
-          this.onPathChange(currentPath.join(this.pathDelimiter));
-          currentPath.pop();
-        }
+    // Notify lifecycle listeners of changes all the way up the path.
+    if (this.onPathChange instanceof Function && pathArray.length) {
+      const currentPath = [...pathArray];
+
+      // TRICKY: Start with the deepest path and move up to the most shallow.
+      while (currentPath.length) {
+        this.onPathChange(this.getPathString(currentPath));
+        currentPath.pop();
       }
     }
   }
 
   unsetPath(path) {
-    if (typeof path === 'string' || path instanceof Array) {
-      const pathParts = path instanceof Array ? [...path] : path.split(this.pathDelimiter);
-      const {parentPath, name} = this.getPathInfo(pathParts) || {};
+    // TODO: DO NOT unset if the path WAS NOT set.
+    const pathArray = this.getPathArray(path);
+    const {parentPath, name} = this.getPathInfo(pathArray) || {};
 
-      if (parentPath instanceof Array && parentPath.length) {
-        const parentObject = this.getPath(parentPath);
+    if (parentPath instanceof Array && parentPath.length) {
+      const parentObject = this.getPath(parentPath);
 
-        if (parentObject instanceof Object && parentObject.hasOwnProperty(name)) {
-          const newParentObject = {
-            ...parentObject
-          };
-
-          delete newParentObject[name];
-
-          this.setPath(parentPath, newParentObject);
-        }
-      } else if (typeof name === 'string' && this.hashMatrix.hasOwnProperty(name)) {
-        const newHashMatrix = {
-          ...this.hashMatrix
+      if (parentObject instanceof Object && parentObject.hasOwnProperty(name)) {
+        const newParentObject = {
+          ...parentObject
         };
 
-        delete newHashMatrix[name];
+        delete newParentObject[name];
 
-        this.hashMatrix = newHashMatrix;
+        this.setPath(parentPath, newParentObject);
+      }
+    } else if (typeof name === 'string' && this.hashMatrix.hasOwnProperty(name)) {
+      const newHashMatrix = {
+        ...this.hashMatrix
+      };
 
-        if (this.onPathChange instanceof Function) {
-          this.onPathChange(name);
-        }
+      delete newHashMatrix[name];
+
+      this.hashMatrix = newHashMatrix;
+
+      if (this.onPathChange instanceof Function) {
+        this.onPathChange(name);
       }
     }
   }

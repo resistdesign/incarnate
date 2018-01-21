@@ -164,7 +164,7 @@ export default class Incarnate extends HashMatrix {
   async resolvePath(path) {
     if (!this.pathIsSet(path)) {
       const pathArray = this.getPathArray(path);
-      const {parentPath, name} = this.getPathInfo(pathArray);
+      const {parentPath} = this.getPathInfo(pathArray);
       const dependencyDeclaration = this.getDependencyDeclaration(path);
 
       if (dependencyDeclaration instanceof Object) {

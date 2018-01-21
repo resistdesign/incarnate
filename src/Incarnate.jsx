@@ -39,7 +39,7 @@ export default class Incarnate extends HashMatrix {
     }
 
     this.map = map;
-
+    this.onPathChange = this.handlePathChange;
     this.cacheDependencyMap(this.map);
   }
 
@@ -174,7 +174,10 @@ export default class Incarnate extends HashMatrix {
   }
 
   createInvalidator(path) {
-    // TODO: Implement.
+    return (subPath = []) => this.invalidate([
+      ...this.getPathArray(path),
+      ...this.getPathArray(subPath)
+    ]);
   }
 
   createListener(path) {
@@ -182,6 +185,24 @@ export default class Incarnate extends HashMatrix {
       ...this.getPathArray(path),
       ...this.getPathArray(subPath)
     ], handler);
+  }
+
+  handlePathChange(path) {
+    const pathArray = this.getPathArray(path);
+    const pathString = this.getPathString(pathArray);
+    const listenerList = this._listenerMap[pathString] || [];
+
+    // Call registered handlers.
+    for (let i = 0; i < listenerList.length; i++) {
+      const handler = listenerList[i];
+
+      if (handler instanceof Function) {
+        handler(pathString, this.getPath(pathArray));
+      }
+    }
+
+    // Invalidate dependents.
+    this.invalidateDependents(pathArray);
   }
 
   unlisten(path, handler) {
@@ -213,6 +234,25 @@ export default class Incarnate extends HashMatrix {
     this._listenerMap[pathString] = listenerList;
 
     return this.unlisten(path, handler);
+  }
+
+  invalidateDependents(path) {
+    const pathString = this.getPathString(path);
+    const dependentList = this._dependentPathMap[pathString] || [];
+
+    // Invalidate each path.
+    // TRICKY: DO NOT invalidate `path` directly.
+    dependentList.forEach((depPathString) => this.invalidate(depPathString));
+  }
+
+  invalidate(path) {
+    const pathArray = this.getPathArray(path);
+
+    // Unset path.
+    this.unsetPath(path);
+
+    // Invalidate dependents.
+    this.invalidateDependents(pathArray);
   }
 
   async resolvePath(path) {

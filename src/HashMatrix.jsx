@@ -3,8 +3,7 @@ export default class HashMatrix {
   static ERRORS = {
     INVALID_HASH_MATRIX: 'INVALID_HASH_MATRIX',
     INVALID_PATH_DELIMITER: 'INVALID_PATH_DELIMITER',
-    INVALID_PATH_CHANGE_HANDLER: 'INVALID_PATH_CHANGE_HANDLER',
-    INVALID_PATH: 'INVALID_PATH'
+    INVALID_PATH_CHANGE_HANDLER: 'INVALID_PATH_CHANGE_HANDLER'
   };
 
   static keyIsNumeric(key) {
@@ -17,12 +16,6 @@ export default class HashMatrix {
     }
 
     return numeric;
-  }
-
-  static validatePath(path) {
-    if (!(path instanceof Array) || !path.length || path[0] === '') {
-      throw new Error(HashMatrix.ERRORS.INVALID_PATH);
-    }
   }
 
   pathDelimiter;
@@ -53,10 +46,8 @@ export default class HashMatrix {
 
   getPathArray(path = '') {
     const pathArray = path instanceof Array ?
-      path :
+      [...path] :
       `${path}`.split(this.pathDelimiter);
-
-    HashMatrix.validatePath(path);
 
     return pathArray;
   }

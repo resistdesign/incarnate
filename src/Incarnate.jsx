@@ -279,7 +279,7 @@ export default class Incarnate extends HashMatrix {
         } else if (factory instanceof Function) {
           const args = [
             // required
-            ...Promise.all(required.map((depPathString) => {
+            ...(await Promise.all(required.map((depPathString) => {
               const depPathArray = this.getPathArray(depPathString);
               const fullPathArray = [
                 ...parentPath,
@@ -287,7 +287,7 @@ export default class Incarnate extends HashMatrix {
               ];
 
               return this.resolvePath(fullPathArray);
-            })),
+            }))),
             // optional
             // TRICKY: Process async w/o await.
             ...optional.map((depPathString) => {

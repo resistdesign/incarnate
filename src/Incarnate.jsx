@@ -178,7 +178,10 @@ export default class Incarnate extends HashMatrix {
   }
 
   createListener(path) {
-    // TODO: Implement.
+    return (handler, subPath = []) => this.listen([
+      ...this.getPathArray(path),
+      ...this.getPathArray(subPath)
+    ], handler);
   }
 
   unlisten(path, handler) {

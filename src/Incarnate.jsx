@@ -181,6 +181,37 @@ export default class Incarnate extends HashMatrix {
     // TODO: Implement.
   }
 
+  unlisten(path, handler) {
+    const pathString = this.getPathString(path);
+    const listenerList = this._listenerMap[pathString] || [];
+    const newListenerList = [];
+
+    for (let i = 0; i < listenerList.length; i++) {
+      const currentHandler = listenerList[i];
+
+      if (currentHandler !== handler) {
+        newListenerList.push(currentHandler);
+      }
+    }
+
+    this._listenerMap[pathString] = newListenerList;
+
+    return this.unlisten(path, handler);
+  }
+
+  listen(path, handler) {
+    const pathString = this.getPathString(path);
+    const listenerList = this._listenerMap[pathString] || [];
+
+    if (listenerList.indexOf(handler) === -1) {
+      listenerList.push(handler);
+    }
+
+    this._listenerMap[pathString] = listenerList;
+
+    return this.unlisten(path, handler);
+  }
+
   async resolvePath(path) {
     if (!this.pathIsSet(path)) {
       const pathArray = this.getPathArray(path);

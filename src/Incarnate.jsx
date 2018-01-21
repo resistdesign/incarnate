@@ -56,6 +56,18 @@ export default class Incarnate extends HashMatrix {
     }
   }
 
+  cacheDependent(dependencyPath, requiredByPath) {
+    const dependencyPathString = this.getPathString(dependencyPath);
+    const requiredByPathString = this.getPathString(requiredByPath);
+    const dependentsArray = this._dependentPathMap[dependencyPathString] || [];
+
+    if (dependentsArray.indexOf(requiredByPathString) === -1) {
+      dependentsArray.push(requiredByPathString);
+    }
+
+    this._dependentPathMap[dependencyPathString] = dependentsArray;
+  }
+
   getSubMapWithSharedDependencies(subMap = {}, shared = {}, pathPrefix = []) {
     const pathPrefixArray = this.getPathArray(pathPrefix);
 
@@ -68,8 +80,15 @@ export default class Incarnate extends HashMatrix {
           ...pathPrefixArray,
           ...targetPathArray
         ];
+        const fullMappedPathArray = [
+          ...pathPrefixArray,
+          key
+        ];
 
-        // TODO: IMPORTANT: Shared dependencies need to invalidate dependents from the sub-map.
+        // Cache shared dependency dependents.
+        // IMPORTANT: Shared dependencies need to invalidate dependents from the sub-map.
+        this.cacheDependent(fullPathArray, fullMappedPathArray);
+
         acc[key] = {
           factory: () => this.resolvePath(fullPathArray)
         };
@@ -83,25 +102,32 @@ export default class Incarnate extends HashMatrix {
     const pathArray = this.getPathArray(path);
 
     let currentPathArray = [],
+      currentPathString,
       currentMap = this.map;
 
     for (let i = 0; i < pathArray.length; i++) {
       const name = pathArray[i];
       const declaration = currentMap[name];
-      const currentPathString = this.getPathString(currentPathArray);
 
       currentPathArray = [
         ...currentPathArray,
         name
       ];
+      currentPathString = this.getPathString(currentPathArray);
 
-      // TRICKY: Cache anything, even `undefined` to denote that the path has been processed.
+      // TRICKY: IMPORTANT: Cache anything, even `undefined` to denote that the path has been processed.
       this._declarationCache[currentPathString] = declaration;
 
       if (declaration instanceof Object) {
-        const {subMap, shared} = declaration;
+        const {
+          subMap,
+          shared,
+          required = [],
+          optional = []
+        } = declaration;
 
         if (subMap instanceof Object) {
+          // Sub-Map
           const subMapWithSharedDependencies = this.getSubMapWithSharedDependencies(subMap, shared, currentPathArray);
 
           // Replace the cached value with a sub-map with shared dependencies mapped.
@@ -111,22 +137,16 @@ export default class Incarnate extends HashMatrix {
           };
 
           this.cacheDependencyMap(subMapWithSharedDependencies, currentPathArray);
+        } else {
+          // Factory
+          // Cache dependents.
+          required.forEach((dependencyPathString) => this.cacheDependent(dependencyPathString, currentPathArray));
+          optional.forEach((dependencyPathString) => this.cacheDependent(dependencyPathString, currentPathArray));
         }
       } else {
         break;
       }
     }
-  }
-
-  getSubPathInfo(path) {
-    const pathArray = this.getPathArray(path);
-    const newPathArray = [...pathArray];
-    const name = [newPathArray.pop()];
-
-    return {
-      name,
-      subPath: newPathArray
-    };
   }
 
   getDependencyDeclaration(path) {

@@ -87,6 +87,7 @@ export default class Incarnate extends HashMatrix {
 
         // Cache shared dependency dependents.
         // IMPORTANT: Shared dependencies need to invalidate dependents from the sub-map.
+        // TODO: There needs to be some way to copy changes to a source path in the cache when the target path is set.
         this.cacheDependent(fullPathArray, fullMappedPathArray);
 
         acc[key] = {
@@ -275,6 +276,7 @@ export default class Incarnate extends HashMatrix {
         } = dependencyDeclaration;
 
         if (subMap instanceof Object) {
+          // TODO: Don't do this. Just return the cached value for sub-mapped paths.
           return dependencyDeclaration;
         } else if (factory instanceof Function) {
           const args = [

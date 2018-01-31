@@ -554,7 +554,7 @@ export default class Incarnate {
         const nextPart = pathParts[i + 1];
 
         // TRICKY: Build out the tree if it's not there.
-        if (!currentValue.hasOwnProperty(part)) {
+        if (!currentValue.hasOwnProperty(part) || typeof currentValue[part] === 'undefined') {
           currentValue[part] = Incarnate.keyIsNumeric(nextPart) ? [] : {};
         } else if (currentValue[part] instanceof Array) {
           currentValue[part] = [

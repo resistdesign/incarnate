@@ -217,36 +217,42 @@ export default class Incarnate extends HashMatrix {
     ], handler);
   }
 
+  processHandlers(path) {
+    const pathArray = this.getPathArray(path);
+    const pathString = this.getPathString(path);
+    const listenerList = this._listenerMap[pathString] || [];
+
+    // Call registered handlers.
+    for (let i = 0; i < listenerList.length; i++) {
+      const handler = listenerList[i];
+
+      if (handler instanceof Function) {
+        handler(pathString, this.getPath(pathArray), pathArray);
+      }
+    }
+
+    // Invalidate dependents.
+    this.invalidateDependents(path);
+  }
+
   handlePathChange(path, pathDelta) {
-    // TRICKY: Only respond to direct change events, not parent path event caused by changes below them.
+    const pathArray = this.getPathArray(path);
+
+    // Process handlers for each path change.
+    this.processHandlers(pathArray);
+
+    // TRICKY: Process handlers for parent paths, BUT ONLY for **direct** path changes to avoid noise.
     if (pathDelta === 0) {
-      const pathArray = this.getPathArray(path);
       const changedPathString = this.getPathString(pathArray);
 
-      for (const listenedOnPath in this._listenerMap) {
-        if (this._listenerMap.hasOwnProperty(listenedOnPath)) {
-          const listenedOnPathAsPrefix = `${listenedOnPath}${this.pathDelimiter}`;
-          const hasActiveDependents = (
-            // Paths matches exactly.
-            listenedOnPath === changedPathString ||
-            // Or the dependency path, with an active listener, is a parent path of the changed path.
-            changedPathString.indexOf(listenedOnPathAsPrefix) === 0
-          );
+      for (const listenedOnPathString in this._listenerMap) {
+        if (this._listenerMap.hasOwnProperty(listenedOnPathString)) {
+          const listenedOnPathArray = this.getPathArray(listenedOnPathString);
+          const listenedOnPathAsPrefix = `${listenedOnPathString}${this.pathDelimiter}`;
 
-          if (hasActiveDependents) {
-            const listenerList = this._listenerMap[listenedOnPath] || [];
-
-            // Call registered handlers.
-            for (let i = 0; i < listenerList.length; i++) {
-              const handler = listenerList[i];
-
-              if (handler instanceof Function) {
-                handler(listenedOnPath, this.getPath(pathArray), pathArray);
-              }
-            }
-
-            // Invalidate dependents.
-            this.invalidateDependents(pathArray);
+          if (changedPathString.indexOf(listenedOnPathAsPrefix) === 0) {
+            // The listened path a parent of the changed path.
+            this.processHandlers(listenedOnPathArray);
           }
         }
       }

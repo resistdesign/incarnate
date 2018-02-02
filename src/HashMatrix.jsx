@@ -74,10 +74,15 @@ export default class HashMatrix {
       if (pathArray.length) {
         const currentPath = [...pathArray];
 
+        // Track a path delta to signify whether or not the change is direct or not.
+        let pathDelta = 0;
+
         // TRICKY: Start with the deepest path and move up to the most shallow.
         while (currentPath.length) {
-          this.onPathChange(this.getPathString(currentPath));
+          this.onPathChange(this.getPathString(currentPath), pathDelta);
           currentPath.pop();
+          // Denote that the next path is a parent path.
+          pathDelta = pathDelta - 1;
         }
       }
     }

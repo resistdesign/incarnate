@@ -87,11 +87,40 @@ export default class Incarnate extends HashMatrix {
 
         // Cache shared dependency dependents.
         // IMPORTANT: Shared dependencies need to invalidate dependents from the sub-map.
-        // TODO: There needs to be some way to copy changes to a source path in the cache when the target path is set.
         this.cacheDependent(fullPathArray, fullMappedPathArray);
 
         acc[key] = {
-          factory: () => this.resolvePath(fullPathArray)
+          factory: () => this.resolvePath(fullPathArray),
+          // TRICKY: Copy changes to a source path in the cache (and trigger events) when the target path is set.
+          unlisten: this.listen(
+            fullMappedPathArray,
+            (p, v, specificPath) => {
+              const specificPathString = this.getPathString(specificPath);
+              const fullMappedPathString = this.getPathString(fullMappedPathArray);
+              const fullMappedPathArrayAsPrefix = `${fullMappedPathString}${this.pathDelimiter}`;
+
+              if (specificPathString === fullMappedPathString) {
+                // Update the path directly.
+                return this.setPath(fullPathArray, this.getPath(fullMappedPathArray));
+              } else if (specificPathString.indexOf(fullMappedPathArrayAsPrefix) === 0) {
+                // Update the specific sub-path.
+
+                // TRICKY: The sub path from the changing, mapped path **must**
+                // be transposed to the source path being updated.
+                const specificSubPathString = specificPathString.substring(
+                  fullMappedPathArrayAsPrefix.length,
+                  specificPathString.length
+                );
+                const specificSubPathArray = this.getPathArray(specificSubPathString);
+                const pathToUpdateArray = [
+                  ...fullPathArray,
+                  ...specificSubPathArray
+                ];
+
+                return this.setPath(pathToUpdateArray, this.getPath(specificPath));
+              }
+            }
+          )
         };
 
         return acc;
@@ -188,22 +217,40 @@ export default class Incarnate extends HashMatrix {
     ], handler);
   }
 
-  handlePathChange(path) {
-    const pathArray = this.getPathArray(path);
-    const pathString = this.getPathString(pathArray);
-    const listenerList = this._listenerMap[pathString] || [];
+  handlePathChange(path, pathDelta) {
+    // TRICKY: Only respond to direct change events, not parent path event caused by changes below them.
+    if (pathDelta === 0) {
+      const pathArray = this.getPathArray(path);
+      const changedPathString = this.getPathString(pathArray);
 
-    // Call registered handlers.
-    for (let i = 0; i < listenerList.length; i++) {
-      const handler = listenerList[i];
+      for (const listenedOnPath in this._listenerMap) {
+        if (this._listenerMap.hasOwnProperty(listenedOnPath)) {
+          const listenedOnPathAsPrefix = `${listenedOnPath}${this.pathDelimiter}`;
+          const hasActiveDependents = (
+            // Paths matches exactly.
+            listenedOnPath === changedPathString ||
+            // Or the dependency path, with an active listener, is a parent path of the changed path.
+            changedPathString.indexOf(listenedOnPathAsPrefix) === 0
+          );
 
-      if (handler instanceof Function) {
-        handler(pathString, this.getPath(pathArray));
+          if (hasActiveDependents) {
+            const listenerList = this._listenerMap[listenedOnPath] || [];
+
+            // Call registered handlers.
+            for (let i = 0; i < listenerList.length; i++) {
+              const handler = listenerList[i];
+
+              if (handler instanceof Function) {
+                handler(listenedOnPath, this.getPath(pathArray), pathArray);
+              }
+            }
+
+            // Invalidate dependents.
+            this.invalidateDependents(pathArray);
+          }
+        }
       }
     }
-
-    // Invalidate dependents.
-    this.invalidateDependents(pathArray);
   }
 
   unlisten(path, handler) {
@@ -276,8 +323,8 @@ export default class Incarnate extends HashMatrix {
         } = dependencyDeclaration;
 
         if (subMap instanceof Object) {
-          // TODO: Don't do this. Just return the cached value for sub-mapped paths.
-          return dependencyDeclaration;
+          // Just return the cached value for sub-mapped paths.
+          return this.getPath(path);
         } else if (factory instanceof Function) {
           const args = [
             // required

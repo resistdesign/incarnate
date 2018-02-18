@@ -1,16 +1,61 @@
-/**
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/HashMatrix.jsx | incarnate</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Dependency Injection (DI) with Lifecycle features for JavaScript."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="incarnate"><meta property="twitter:description" content="Dependency Injection (DI) with Lifecycle features for JavaScript."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/resistdesign/incarnate"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DependencyDeclaration">DependencyDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-HashMatrix">HashMatrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/HashMatrix.jsx</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
  * Easily manage a data structure that can be dynamically built
  * from paths with out throwing errors for accessing undefined
  * portions of the structure.
  * */
 export default class HashMatrix {
-  static DEFAULT_NAME = 'HashMatrix';
-  static DEFAULT_PATH_DELIMITER = '.';
+  static DEFAULT_NAME = &apos;HashMatrix&apos;;
+  static DEFAULT_PATH_DELIMITER = &apos;.&apos;;
   static ERRORS = {
-    INVALID_HASH_MATRIX: 'INVALID_HASH_MATRIX',
-    INVALID_PATH_DELIMITER: 'INVALID_PATH_DELIMITER',
-    INVALID_PATH_CHANGE_HANDLER: 'INVALID_PATH_CHANGE_HANDLER',
-    PROTECTED_HASH_MATRIX: 'PROTECTED_HASH_MATRIX'
+    INVALID_HASH_MATRIX: &apos;INVALID_HASH_MATRIX&apos;,
+    INVALID_PATH_DELIMITER: &apos;INVALID_PATH_DELIMITER&apos;,
+    INVALID_PATH_CHANGE_HANDLER: &apos;INVALID_PATH_CHANGE_HANDLER&apos;,
+    PROTECTED_HASH_MATRIX: &apos;PROTECTED_HASH_MATRIX&apos;
   };
 
   static keyIsNumeric(key) {
@@ -42,7 +87,7 @@ export default class HashMatrix {
   /**
    * An automatically maintained structure that acts as the source of all values.
    * If set a to a `HashMatrix`, it will be proxied.
-   * @type {Object.<*>|HashMatrix}
+   * @type {Object.&lt;*&gt;|HashMatrix}
    * */
   hashMatrix;
 
@@ -55,11 +100,11 @@ export default class HashMatrix {
   constructor(config = {}) {
     Object.assign(this, config);
 
-    if (!this.hasOwnProperty('pathDelimiter')) {
+    if (!this.hasOwnProperty(&apos;pathDelimiter&apos;)) {
       this.pathDelimiter = HashMatrix.DEFAULT_PATH_DELIMITER;
     }
 
-    if (typeof this.pathDelimiter !== 'string') {
+    if (typeof this.pathDelimiter !== &apos;string&apos;) {
       throw {
         message: HashMatrix.ERRORS.INVALID_PATH_DELIMITER,
         data: this
@@ -70,8 +115,8 @@ export default class HashMatrix {
   }
 
   _setDefaultName() {
-    if (!this.hasOwnProperty('name')) {
-      if (typeof this.constructor.DEFAULT_NAME === 'string') {
+    if (!this.hasOwnProperty(&apos;name&apos;)) {
+      if (typeof this.constructor.DEFAULT_NAME === &apos;string&apos;) {
         this.name = this.constructor.DEFAULT_NAME;
       } else {
         this.name = HashMatrix.DEFAULT_NAME;
@@ -91,7 +136,7 @@ export default class HashMatrix {
     this._changeHandlerMap[pathString] = handlerList;
   }
 
-  addChangeHandler(path = '', handler) {
+  addChangeHandler(path = &apos;&apos;, handler) {
     if (this.hashMatrix instanceof HashMatrix) {
       return this.hashMatrix.addChangeHandler(
         this.getPathArray(path, this.targetPath),
@@ -107,12 +152,12 @@ export default class HashMatrix {
 
         this.setChangeHandlerList(path, handlerList);
 
-        return () => this.removeChangeHandler(handler);
+        return () =&gt; this.removeChangeHandler(handler);
       }
     }
   }
 
-  removeChangeHandler(path = '', handler) {
+  removeChangeHandler(path = &apos;&apos;, handler) {
     if (this.hashMatrix instanceof HashMatrix) {
       return this.hashMatrix.removeChangeHandler(
         this.getPathArray(path, this.targetPath),
@@ -125,7 +170,7 @@ export default class HashMatrix {
     if (handlerList.indexOf(handler) !== -1) {
       const newHandlerList = [];
 
-      handlerList.forEach((h) => {
+      handlerList.forEach((h) =&gt; {
         if (h !== handler) {
           newHandlerList.push(h);
         }
@@ -138,16 +183,16 @@ export default class HashMatrix {
   onChange(path, causePath) {
     const handlerList = this.getChangeHandlerList(path);
 
-    handlerList.forEach((h) => h(path, causePath, this));
+    handlerList.forEach((h) =&gt; h(path, causePath, this));
   }
 
-  getBasePathArray(path = '') {
+  getBasePathArray(path = &apos;&apos;) {
     return path instanceof Array ?
       [...path] :
-      (path === '' ? [] : `${path}`.split(this.pathDelimiter));
+      (path === &apos;&apos; ? [] : `${path}`.split(this.pathDelimiter));
   }
 
-  getPathArray(path = '', prefixPath = '') {
+  getPathArray(path = &apos;&apos;, prefixPath = &apos;&apos;) {
     const prefixPathArray = this.getBasePathArray(prefixPath);
     const pathArray = this.getBasePathArray(path);
 
@@ -183,7 +228,7 @@ export default class HashMatrix {
       }
     }
 
-    this.onChange('', pathString);
+    this.onChange(&apos;&apos;, pathString);
   }
 
   getPath(path) {
@@ -201,7 +246,7 @@ export default class HashMatrix {
         finished = true;
 
       for (const part of pathArray) {
-        // Don't fail, just return `undefined`.
+        // Don&apos;t fail, just return `undefined`.
         try {
           currentValue = currentValue[part];
         } catch (error) {
@@ -210,7 +255,7 @@ export default class HashMatrix {
         }
       }
 
-      // TRICKY: Don't select the current value if the full path wasn't processed.
+      // TRICKY: Don&apos;t select the current value if the full path wasn&apos;t processed.
       if (finished) {
         value = currentValue;
       }
@@ -242,12 +287,12 @@ export default class HashMatrix {
 
         let currentValue = newHashMatrix;
 
-        for (let i = 0; i < lastIndex; i++) {
+        for (let i = 0; i &lt; lastIndex; i++) {
           const part = pathArray[i];
           const nextPart = pathArray[i + 1];
 
-          // TRICKY: Build out the tree is it's not there.
-          if (typeof currentValue[part] === 'undefined') {
+          // TRICKY: Build out the tree is it&apos;s not there.
+          if (typeof currentValue[part] === &apos;undefined&apos;) {
             currentValue[part] = HashMatrix.keyIsNumeric(nextPart) ? [] : {};
           } else if (currentValue[part] instanceof Array) {
             currentValue[part] = [
@@ -273,3 +318,20 @@ export default class HashMatrix {
     }
   }
 }
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

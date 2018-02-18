@@ -1,0 +1,87 @@
+{
+  "coverage": "45.16%",
+  "expectCount": 93,
+  "actualCount": 42,
+  "files": {
+    "src/DependencyDeclaration.jsx": {
+      "expectCount": 10,
+      "actualCount": 10,
+      "undocumentLines": []
+    },
+    "src/HashMatrix.jsx": {
+      "expectCount": 23,
+      "actualCount": 5,
+      "undocumentLines": [
+        7,
+        8,
+        9,
+        16,
+        28,
+        55,
+        72,
+        82,
+        88,
+        94,
+        115,
+        138,
+        144,
+        150,
+        160,
+        165,
+        189,
+        224
+      ]
+    },
+    "src/Incarnate.jsx": {
+      "expectCount": 21,
+      "actualCount": 5,
+      "undocumentLines": [
+        6,
+        7,
+        8,
+        9,
+        16,
+        17,
+        35,
+        43,
+        58,
+        93,
+        129,
+        198,
+        207,
+        216,
+        222,
+        231
+      ]
+    },
+    "src/LifePod.jsx": {
+      "expectCount": 34,
+      "actualCount": 18,
+      "undocumentLines": [
+        9,
+        10,
+        18,
+        19,
+        139,
+        141,
+        166,
+        170,
+        176,
+        182,
+        186,
+        190,
+        218,
+        250,
+        366,
+        370
+      ]
+    },
+    "src/SubMapDeclaration.jsx": {
+      "expectCount": 5,
+      "actualCount": 4,
+      "undocumentLines": [
+        27
+      ]
+    }
+  }
+}

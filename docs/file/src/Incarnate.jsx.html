@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/Incarnate.jsx | incarnate</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Dependency Injection (DI) with Lifecycle features for JavaScript."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="incarnate"><meta property="twitter:description" content="Dependency Injection (DI) with Lifecycle features for JavaScript."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/resistdesign/incarnate"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DependencyDeclaration">DependencyDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-HashMatrix">HashMatrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/Incarnate.jsx</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import HashMatrixInternal from &apos;./HashMatrix&apos;;
+import LifePodInternal from &apos;./LifePod&apos;;
+import DependencyDeclarationInternal from &apos;./DependencyDeclaration&apos;;
+import SubMapDeclarationInternal from &apos;./SubMapDeclaration&apos;;
+
+export const DependencyDeclaration = DependencyDeclarationInternal;
+export const SubMapDeclaration = SubMapDeclarationInternal;
+export const HashMatrix = HashMatrixInternal;
+export const LifePod = LifePodInternal;
+
+/**
+ * Manage the lifecycle of application dependencies.
+ * Use dependencies as application entry-points and keep track of live changes.
+ * */
+export default class Incarnate extends HashMatrix {
+  static DEFAULT_NAME = &apos;Incarnate&apos;;
+  static ERRORS = {
+    INVALID_MAP: &apos;INVALID_MAP&apos;,
+    UNSATISFIED_SHARED_DEPENDENCY: &apos;UNSATISFIED_SHARED_DEPENDENCY&apos;
+  };
+
+  /**
+   * The map of dependency and subMap declarations.
+   * @type {Object.&lt;DependencyDeclaration|SubMapDeclaration|Incarnate|LifePod|HashMatrix&gt;}
+   * */
+  map;
+
+  /**
+   * A function used to transform the arguments for a `LifePod` factory.
+   * @type {Function}
+   * @see LifePod::transformArgs
+   * */
+  transformArgs;
+
+  _parsedMap = {};
+
+  /**
+   * When `true`, `LifePod` objects will throw an error when dependencies resolve to `undefined`.
+   * Default: `false`.
+   * */
+  strictRequired;
+
+  constructor(config = {}) {
+    super(config);
+
+    if (!(this.map instanceof Object)) {
+      throw {
+        message: Incarnate.ERRORS.INVALID_MAP,
+        data: this
+      };
+    }
+
+    if (!this.hasOwnProperty(&apos;strictRequired&apos;)) {
+      this.strictRequired = false;
+    }
+  }
+
+  createLifePod(name, dependencyDeclaration = {}) {
+    const {
+      required = [],
+      optional = [],
+      getters = [],
+      setters = [],
+      invalidators = [],
+      listeners = [],
+      targets = [],
+      transformArgs,
+      strictRequired
+    } = dependencyDeclaration;
+    const config = {
+      ...dependencyDeclaration,
+      name: this.getPathString(name, this.name),
+      targetPath: name,
+      hashMatrix: this,
+      required: required.map(this.getDependency),
+      optional: optional.map(this.getDependency),
+      getters: getters.map(this.createGetter),
+      setters: setters.map(this.createSetter),
+      invalidators: invalidators.map(this.createInvalidator),
+      listeners: listeners.map(this.createListener),
+      targets: targets.map(this.createTarget),
+      transformArgs: typeof transformArgs !== &apos;undefined&apos; ?
+        transformArgs :
+        this.transformArgs,
+      strictRequired: typeof strictRequired !== &apos;undefined&apos; ?
+        strictRequired :
+        this.strictRequired
+    };
+
+    return new LifePod(config);
+  }
+
+  createIncarnate(name, subMapDeclaration = {}) {
+    const {
+      subMap = {},
+      shared = {},
+      transformArgs,
+      strictRequired
+    } = subMapDeclaration;
+    const parsedSharedMap = Object.keys(shared)
+      .reduce((acc, k) =&gt; {
+        const p = shared[k];
+
+        acc[k] = this.getDependency(p);
+
+        return acc;
+      }, {});
+    const subMapWithShared = {
+      ...subMap,
+      ...parsedSharedMap
+    };
+    const config = {
+      ...subMapDeclaration,
+      name: this.getPathString(name, this.name),
+      targetPath: name,
+      hashMatrix: this,
+      map: subMapWithShared,
+      transformArgs: typeof transformArgs !== &apos;undefined&apos; ?
+        transformArgs :
+        this.transformArgs,
+      strictRequired: typeof strictRequired !== &apos;undefined&apos; ?
+        strictRequired :
+        this.strictRequired
+    };
+
+    return new Incarnate(config);
+  }
+
+  convertDeclaration(name, declaration = {}) {
+    if (declaration instanceof HashMatrix) {
+      return declaration;
+    }
+
+    const {subMap} = declaration;
+
+    if (subMap instanceof Object) {
+      return this.createIncarnate(name, declaration);
+    } else {
+      return this.createLifePod(name, declaration);
+    }
+  }
+
+  /**
+   * Get a dependency by path.
+   * @param {Array|string} path The path to the dependency.
+   * @returns {Incarnate|LifePod|HashMatrix} The dependency.
+   * */
+  getDependency = (path = &apos;&apos;) =&gt; {
+    const pathArray = this.getPathArray(path);
+    const pathString = this.getPathString(pathArray);
+
+    if (!pathArray.length) {
+      return this;
+    }
+
+    const name = pathArray.shift();
+    const subPath = [...pathArray];
+
+    if (!this._parsedMap.hasOwnProperty(name) &amp;&amp; this.map.hasOwnProperty(name)) {
+      this._parsedMap[name] = this.convertDeclaration(name, this.map[name]);
+    }
+
+    const dep = this._parsedMap[name];
+
+    if (dep instanceof Incarnate) {
+      return dep.getDependency(subPath);
+    } else if (dep instanceof HashMatrix) {
+      if (subPath.length) {
+        if (dep instanceof LifePod) {
+          return new LifePod({
+            name: pathString,
+            targetPath: subPath,
+            hashMatrix: dep,
+            strictRequired: this.strictRequired
+          });
+        } else {
+          return new HashMatrix({
+            name: pathString,
+            targetPath: subPath,
+            hashMatrix: dep
+          });
+        }
+      } else {
+        return dep;
+      }
+    } else {
+      return new HashMatrix({
+        name: pathString,
+        targetPath: [
+          name,
+          ...subPath
+        ],
+        hashMatrix: this
+      });
+    }
+  };
+
+  createGetter = (path) =&gt; {
+    return (subPath = []) =&gt; {
+      // TRICKY: Get the `dep` &quot;just in time&quot; to avoid recursion.
+      const dep = this.getDependency(path);
+
+      return dep.getPath(subPath);
+    }
+  };
+
+  createSetter = (path) =&gt; {
+    return (value, subPath = []) =&gt; {
+      // TRICKY: Get the `dep` &quot;just in time&quot; to avoid recursion.
+      const dep = this.getDependency(path);
+
+      return dep.setPath(subPath, value);
+    }
+  };
+
+  createInvalidator = (path) =&gt; {
+    const setter = this.createSetter(path);
+
+    return () =&gt; setter(undefined);
+  };
+
+  createListener = (path) =&gt; {
+    return (handler, subPath = []) =&gt; {
+      // TRICKY: Get the `dep` &quot;just in time&quot; to avoid recursion.
+      const dep = this.getDependency(path);
+
+      return dep.addChangeHandler(subPath, handler);
+    }
+  };
+
+  createTarget = (path) =&gt; {
+    return this.getDependency(path);
+  };
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

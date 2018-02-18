@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "mocha --require resistdesign-babel-register --ui exports **/*.spec.jsx",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+    "doc": "esdoc"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,10 @@
   },
   "homepage": "https://github.com/resistdesign/incarnate#readme",
   "devDependencies": {
+    "esdoc": "^1.0.4",
+    "esdoc-ecmascript-proposal-plugin": "^1.0.0",
+    "esdoc-jsx-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "expect.js": "^0.3.1",
     "mocha": "^3.5.3",
     "npm-watch": "^0.1.6",

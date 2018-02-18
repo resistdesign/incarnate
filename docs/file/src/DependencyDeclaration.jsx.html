@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/DependencyDeclaration.jsx | incarnate</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Dependency Injection (DI) with Lifecycle features for JavaScript."><meta property="twitter:card" content="summary"><meta property="twitter:title" content="incarnate"><meta property="twitter:description" content="Dependency Injection (DI) with Lifecycle features for JavaScript."></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/resistdesign/incarnate"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DependencyDeclaration">DependencyDeclaration</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-HashMatrix">HashMatrix</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/DependencyDeclaration.jsx</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Declare an available dependency with various types of requirements.
+ * */
+export default class DependencyDeclaration {
+  /**
+   * A list of required dependencies.
+   * @type {Array.&lt;string&gt;}
+   * */
+  required;
+
+  /**
+   * A list of optional dependencies.
+   * @type {Array.&lt;string&gt;}
+   * */
+  optional;
+
+  /**
+   * A list of getters.
+   * @type {Array.&lt;string&gt;}
+   * */
+  getters;
+
+  /**
+   * A list of setters.
+   * @type {Array.&lt;string&gt;}
+   * */
+  setters;
+
+  /**
+   * A list of invalidators.
+   * @type {Array.&lt;string&gt;}
+   * */
+  invalidators;
+
+  /**
+   * A list of change handler receivers.
+   * @type {Array.&lt;string&gt;}
+   * */
+  listeners;
+
+  /**
+   * A list of paths that will resolve to dependency controllers rather than values directly.
+   * @type {Array.&lt;string&gt;}
+   * */
+  targets;
+
+  /**
+   * An optional function used to transform factory arguments from an `Array`
+   * to another `Array` containing a different structure. Used when the factory
+   * might require a different configuration of arguments.
+   * `transformArgs(args = []):Array (newArgs)`
+   * @type {Function}
+   * */
+  transformArgs;
+
+  /**
+   * The factory function used to **resolve** the value of the dependency.
+   * @type {Function}
+   * @param {Array.&lt;*&gt;} ...args The various required dependencies in the order:
+   * `required`, `optional`, `getters`, `setters`, `invalidators`, `listeners`
+   * @returns {*|Promise} The value of the dependency.
+   * */
+  factory;
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -155,12 +155,12 @@ export default class Incarnate extends HashMatrix {
     } else if (dep instanceof HashMatrix) {
       if (subPath.length) {
         if (dep instanceof LifePod) {
-          return new LifePod({
+          return new LifePod(new DependencyDeclaration({
             name: pathString,
             targetPath: subPath,
             hashMatrix: dep,
-            strictRequired: this.strictRequired
-          });
+            strict: this.strict
+          }));
         } else {
           return new HashMatrix({
             name: pathString,

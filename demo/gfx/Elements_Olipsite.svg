@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 166.91058 179.54143" enable-background="new 0 0 166.91058 179.54143" xml:space="preserve">
+<g opacity="0.75">
+	
+		<radialGradient id="SVGID_1_" cx="-420.25433" cy="-303.98535" r="224.65953" fx="-346.27557" fy="-304.43631" gradientTransform="matrix(-0.23606 0.76438 -1.05146 -0.32472 -223.54898 295.14172)" gradientUnits="userSpaceOnUse">
+		<stop  offset="0.22899" style="stop-color:#F1F1EA"/>
+		<stop  offset="0.58051" style="stop-color:#F3D37D"/>
+		<stop  offset="0.78684" style="stop-color:#FFFF5C"/>
+		<stop  offset="0.99367" style="stop-color:#EBEBD5"/>
+	</radialGradient>
+	<path fill="url(#SVGID_1_)" d="M57.05582,175.412C13.79142,162.0507-9.43973,112.87573,5.1676,65.57661
+		S66.68923-9.23454,109.95364,4.12676s66.49555,62.53627,51.88822,109.83539
+		C147.23454,161.26126,100.32023,188.7733,57.05582,175.412z"/>
+	
+		<radialGradient id="SVGID_2_" cx="-283.07819" cy="-249.23015" r="179.17706" gradientTransform="matrix(0.23606 -0.76438 -1.05146 -0.32472 -84.32451 -155.67268)" gradientUnits="userSpaceOnUse">
+		<stop  offset="0.22899" style="stop-color:#EBEBD5"/>
+		<stop  offset="0.49237" style="stop-color:#FFFFFF"/>
+		<stop  offset="0.68908" style="stop-color:#FFFF00"/>
+		<stop  offset="0.99367" style="stop-color:#EBEBD5"/>
+	</radialGradient>
+	<path opacity="0.17" fill="url(#SVGID_2_)" d="M109.95364,4.12676C66.68923-9.23454,19.77493,18.2775,5.1676,65.57661
+		S13.79142,162.0507,57.05582,175.412s90.17872-14.15074,104.78603-61.44986
+		C176.44919,66.66302,153.21805,17.48805,109.95364,4.12676z"/>
+	<path opacity="0.11" d="M59.12067,51.21974c-29.49685-4.24642-53.6341,16.5739-53.91207,46.50348
+		s23.40861,57.6347,52.90546,61.88112c29.49685,4.24643,53.6341-16.57388,53.91207-46.50347S88.61752,55.46616,59.12067,51.21974z"
+		/>
+	<path opacity="0.47" fill="#FFFFFF" d="M76.38181,39.55066c38.0014,11.73593,58.40656,54.92884,45.57619,96.47409
+		c-3.14034,10.16852-7.98401,19.29228-14.06118,27.10695c21.62402-8.27368,39.85677-27.08,47.64164-52.28773
+		c12.8304-41.54532-7.57474-84.73831-45.57614-96.47424c-28.70025-8.86346-59.22569,2.75442-77.97779,26.86769
+		C45.99931,35.8752,61.43793,34.93557,76.38181,39.55066z"/>
+	
+		<ellipse transform="matrix(0.29508 -0.95547 0.95547 0.29508 18.49591 166.99872)" fill="#FFFFFF" cx="122.42554" cy="70.9644" rx="12.39061" ry="16.65237"/>
+</g>
+</svg>

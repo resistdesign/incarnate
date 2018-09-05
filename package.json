@@ -11,6 +11,12 @@
     "watch": "npm-watch",
     "doc": "esdoc"
   },
+  "rdx": {
+    "serve": {
+      "a": "demo/index.html",
+      "c": "./demo"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/resistdesign/incarnate.git"
@@ -54,6 +60,10 @@
     "expect.js": "^0.3.1",
     "mocha": "^3.5.3",
     "npm-watch": "^0.1.6",
-    "resistdesign-babel-register": "^2.0.0"
-  }
+    "resistdesign-babel-register": "^2.0.0",
+    "prop-types": "^15.5.10",
+    "react": "^15.4.0",
+    "react-dom": "^15.4.0"
+  },
+  "dependencies": {}
 }

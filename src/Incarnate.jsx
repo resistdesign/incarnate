@@ -72,8 +72,8 @@ export default class Incarnate extends HashMatrix {
     const {
       subMap = {},
       shared = {},
-      transformArgs,
-      strictRequired
+      strict,
+      ...otherConfig
     } = subMapDeclaration;
     const parsedSharedMap = Object.keys(shared)
       .reduce((acc, k) => {
@@ -87,21 +87,31 @@ export default class Incarnate extends HashMatrix {
       ...subMap,
       ...parsedSharedMap
     };
-    const config = {
-      ...subMapDeclaration,
+    const newSubMapDeclaration = new SubMapDeclaration({
+      ...otherConfig,
       name: this.getPathString(name, this.name),
       targetPath: name,
       hashMatrix: this,
       map: subMapWithShared,
-      transformArgs: typeof transformArgs !== 'undefined' ?
-        transformArgs :
-        this.transformArgs,
-      strictRequired: typeof strictRequired !== 'undefined' ?
-        strictRequired :
-        this.strictRequired
-    };
+      strict: typeof strict !== 'undefined' ?
+        strict :
+        this.strict
+    });
 
-    return new Incarnate(config);
+    for (const k in subMap) {
+      const depDec = subMap[k];
+
+      if (depDec === true && !shared.hasOwnProperty(k)) {
+        throw {
+          message: Incarnate.ERRORS.UNSATISFIED_SHARED_DEPENDENCY,
+          data: k,
+          subject: subMapDeclaration,
+          context: this
+        };
+      }
+    }
+
+    return new Incarnate(newSubMapDeclaration);
   }
 
   convertDeclaration(name, declaration = {}) {

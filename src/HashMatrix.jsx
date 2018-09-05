@@ -272,4 +272,12 @@ export default class HashMatrix {
       this.dispatchChanges(pathArray);
     }
   }
+
+  getValue() {
+    return this.getPath([]);
+  }
+
+  setValue(value) {
+    return this.setPath([], value);
+  }
 }

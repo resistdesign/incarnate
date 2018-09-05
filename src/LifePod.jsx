@@ -7,160 +7,85 @@ import HashMatrix from './HashMatrix';
  * */
 export default class LifePod extends HashMatrix {
   static DEFAULT_NAME = 'LifePod';
-  static ERRORS = {
-    INVALID_FACTORY: 'INVALID_FACTORY',
-    ASYNCHRONOUS_FACTORY_ERROR: 'ASYNCHRONOUS_FACTORY_ERROR',
-    UNRESOLVED_ASYNCHRONOUS_DEPENDENCY: 'UNRESOLVED_ASYNCHRONOUS_DEPENDENCY',
-    DEPENDENCY_RESOLUTION_RECURSION: 'DEPENDENCY_RESOLUTION_RECURSION',
-    MISSING_REQUIRED_DEPENDENCY: 'MISSING_REQUIRED_DEPENDENCY'
-  };
 
-  _required;
-  _optional;
+  _dependencies;
 
   /**
-   * @returns {Array.<LifePod>} A list of required dependencies.
+   * @returns {Object.<HashMatrix>} A map of named dependencies.
    * */
-  get required() {
-    return this._required;
+  get dependencies() {
+    return this._dependencies;
   }
 
   /**
-   * @param {Array.<LifePod>} value A list of required dependencies.
+   * @param {Object.<HashMatrix>} value A map of named dependencies.
    * */
-  set required(value) {
-    if (this._required instanceof Array) {
-      this.removeDependencyListChangeHandlers(this._required);
+  set dependencies(value) {
+    if (this._dependencies instanceof Object) {
+      this.removeDependencyMapChangeHandlers(this._dependencies);
     }
 
-    this._required = value;
+    this._dependencies = value;
 
-    if (this._required instanceof Array) {
-      this.addDependencyListChangeHandlers(this._required);
+    if (this._dependencies instanceof Object) {
+      this.addDependencyMapChangeHandlers(this._dependencies);
     }
   }
 
   /**
-   * @returns {Array.<LifePod>} A list of optional dependencies.
-   * */
-  get optional() {
-    return this._optional;
-  }
-
-  /**
-   * @param {Array.<LifePod>} value A list of optional dependencies.
-   * */
-  set optional(value) {
-    if (this._optional instanceof Array) {
-      this.removeDependencyListChangeHandlers(this._optional);
-    }
-
-    this._optional = value;
-
-    if (this._optional instanceof Array) {
-      this.addDependencyListChangeHandlers(this._optional);
-    }
-  }
-
-  /**
-   * A list of getters.
+   * A map of named getters.
    * `getter(path = ''):*`
-   * @type {Array.<Function>}
+   * @type {Object.<Function>}
    * */
   getters;
 
   /**
-   * A list of setters.
+   * A map of named setters.
    * `setter(value = *, subPath = '')`
-   * @type {Array.<Function>}
+   * @type {Object.<Function>}
    * */
   setters;
 
   /**
-   * A list of invalidators.
+   * A map of named invalidators.
    * `invalidator(subPath = '')`
-   * @type {Array.<Function>}
+   * @type {Object.<Function>}
    * */
   invalidators;
 
   /**
-   * A list of change handler receivers.
+   * A map of named change handler receivers.
    * `listen(handler):Function (unlisten)`
-   * @type {Array.<Function>}
+   * @type {Object.<Function>}
    * */
   listeners;
 
   /**
-   * A list of `HashMatrix` objects that will be passed directly to the `factory`.
-   * @type {Array.<HashMatrix>}
-   * */
-  targets;
-
-  /**
-   * An optional function used to transform factory arguments from an argument map (Object)
-   * (keys are the types of dependencies, values are arrays of resolved dependencies)
-   * to an `Array` containing a different structure. Used when the factory
-   * might require a different configuration of arguments.
-   * `transformArgs(argMap = {required, optional, getters, setters, invalidators, listeners, targets}):Array (newArgs)`
-   * If explicitly set to `false`, the factory is simply passed the arguments map directly.
-   * The **default behavior** is to combine all dependencies, in order, into an array.
-   * @type {Function|false}
-   * */
-  transformArgs;
-
-  /**
-   * The factory function used to **resolve** the value of the dependency.
+   * The factory function used to create the value of the dependency.
    * @type {Function}
-   * @param {Array.<*>} ...args The various required dependencies in the order:
-   * `required`, `optional`, `getters`, `setters`, `invalidators`, `listeners`, `targets`
+   * @param {DependencyDeclaration} dependencyValues A `DependencyDeclaration` with resolved values rather than paths.
    * @returns {*|Promise} The value of the dependency.
    * */
   factory;
 
   /**
-   * A function used to handle errors from an asynchronous factory.
-   * @param {Object} errorInformation The error information.
-   * `{message, error, data}`
-   * */
-  handlerAsyncFactoryError;
-
-  /**
-   * A flag designating whether or not this dependency is currently being resolved.
+   * If `true`, the `factory` is NOT called until **none** of the `dependencies` are `undefined`.
    * @type {boolean}
    * */
-  resolving = false;
+  strict;
 
   /**
-   * The current `Promise` responsible for resolving this dependency.
-   * @type {Promise}
+   * @param {DependencyDeclaration} dependencyDeclaration The `DependencyDeclaration` to be resolved.
    * */
-  resolver;
-
-  strictRequired;
-
-  constructor(config = {}) {
+  constructor(dependencyDeclaration = new DependencyDeclaration()) {
     const {
-      required = [],
-      optional = []
-    } = config;
-    const cleanConfig = {
-      ...config
-    };
+      dependencies = [],
+      ...cleanDependencyDeclaration
+    } = dependencyDeclaration;
 
-    delete cleanConfig.required;
-    delete cleanConfig.optional;
+    super(cleanDependencyDeclaration);
 
-    super(cleanConfig);
-
-    this.required = required;
-    this.optional = optional;
-
-    if (!(this.factory instanceof Function) && !(this.hashMatrix instanceof LifePod)) {
-      throw {
-        message: LifePod.ERRORS.INVALID_FACTORY,
-        data: this
-      };
-    }
+    this.dependencies = dependencies;
   }
 
   handleDependencyChange = () => {
@@ -179,195 +104,102 @@ export default class LifePod extends HashMatrix {
     }
   };
 
-  addDependencyListChangeHandlers = (dependencyList = []) => {
-    dependencyList.forEach(this.addDependencyChangeHandler);
+  addDependencyMapChangeHandlers = (dependencyMap = {}) => {
+    Object
+      .keys(dependencyMap)
+      .forEach(k => this.addDependencyChangeHandler(dependencyMap[k]));
   };
 
-  removeDependencyListChangeHandlers = (dependencyList = []) => {
-    dependencyList.forEach(this.removeDependencyChangeHandler);
+  removeDependencyMapChangeHandlers = (dependencyMap = {}) => {
+    Object
+      .keys(dependencyMap)
+      .forEach(k => this.removeDependencyChangeHandler(dependencyMap[k]));
   };
 
-  transFormFactoryArgs(argMap = {}) {
-    if (this.transformArgs === false) {
-      return [argMap];
-    } else if (this.transformArgs instanceof Function) {
-      return this.transformArgs(argMap);
-    } else {
-      const {
-        required = [],
-        optional = [],
-        getters = [],
-        setters = [],
-        invalidators = [],
-        listeners = [],
-        targets = []
-      } = argMap;
-
-      return [
-        ...required,
-        ...optional,
-        ...getters,
-        ...setters,
-        ...invalidators,
-        ...listeners,
-        ...targets
-      ];
-    }
-  }
-
-  resolveDependency = (dependency, optional) => {
-    let resolvedValue;
-
-    if (dependency instanceof LifePod) {
-      resolvedValue = dependency.resolve();
-    } else if (dependency instanceof HashMatrix) {
-      resolvedValue = dependency.getPath([]);
-    } else {
-      resolvedValue = dependency;
-    }
-
-    if (!optional) {
-      if (resolvedValue instanceof Promise) {
-        throw {
-          message: LifePod.ERRORS.UNRESOLVED_ASYNCHRONOUS_DEPENDENCY,
-          data: this,
-          subject: dependency
-        };
-      }
-
-      if (this.strictRequired && typeof resolvedValue === 'undefined') {
-        throw {
-          message: LifePod.ERRORS.MISSING_REQUIRED_DEPENDENCY,
-          data: this,
-          subject: dependency
-        };
-      }
-    }
-
-    return resolvedValue;
-  };
-
-  resolveDependencyList(dependencyList = [], optional) {
-    return dependencyList.map((d) => this.resolveDependency(d, optional));
-  }
-
-  /**
-   * @returns {*}
-   * */
-  async resolveAsyncFactoryPromise(promise) {
-    this.resolving = true;
-    this.resolver = promise;
-
-    try {
-      const value = await promise;
-
-      this.resolving = false;
-      this.resolver = undefined;
-
-      this.setValue(value);
-    } catch (error) {
-      if (this.handlerAsyncFactoryError instanceof Function) {
-        this.handlerAsyncFactoryError({
-          message: LifePod.ERRORS.ASYNCHRONOUS_FACTORY_ERROR,
-          error,
-          data: this
-        });
-      }
-    }
-  }
-
-  /**
-   * Invalidate this dependency.
-   * */
   invalidate() {
     this.setValue(undefined);
   }
 
-  /**
-   * Resolve the value of this dependency using the provided factory and various requirements.
-   * If the value of this dependency is *valid* (not `undefined`), the current value is simply
-   * returned in order to avoid recursive resolution.
-   * @returns {*|Promise} The value of the dependency.
-   * */
+  resolveDependency(dependency) {
+    if (dependency instanceof HashMatrix) {
+      return dependency.getValue();
+    }
+  }
+
+  resolveDependencyMap(dependencyMap = {}) {
+    const resolvedDependencyDeclaration = new DependencyDeclaration();
+    const dependencyValueMap = {};
+
+    resolvedDependencyDeclaration.dependencies = dependencyValueMap;
+    resolvedDependencyDeclaration.getters = this.getters;
+    resolvedDependencyDeclaration.setters = this.setters;
+    resolvedDependencyDeclaration.invalidators = this.invalidators;
+    resolvedDependencyDeclaration.listeners = this.listeners;
+
+    for (const k in dependencyMap) {
+      const dep = dependencyMap[k];
+      const depValue = this.resolveDependency(dep);
+
+      if (this.strict && typeof depValue === 'undefined') {
+        return undefined;
+      } else {
+        dependencyValueMap[k] = depValue;
+      }
+    }
+
+    return resolvedDependencyDeclaration;
+  }
+
+  resolving = false;
+
   resolve() {
-    if (this.hashMatrix instanceof LifePod) {
-      // TRICKY: If a `LifePod` is proxied it must be resolved.
-      const proxiedValue = this.hashMatrix.resolve();
+    let resolvedValue;
 
-      if (proxiedValue instanceof Promise) {
-        return new Promise(async (res, rej) => {
-          try {
-            await proxiedValue;
-
-            res(this.getValue());
-          } catch (error) {
-            rej(error);
-          }
-        });
-      } else {
-        return this.getValue();
-      }
-    }
-
-    if (this.resolving) {
-      if (this.resolver instanceof Promise) {
-        return this.resolver;
-      } else {
-        throw {
-          message: LifePod.ERRORS.DEPENDENCY_RESOLUTION_RECURSION,
-          data: this,
-          subject: this
-        };
-      }
-    }
-
-    if (typeof this.getValue() === 'undefined') {
+    if (!this.resolving) {
       this.resolving = true;
 
-      try {
-        const required = this.resolveDependencyList(this.required);
-        const optional = this.resolveDependencyList(this.optional, true);
-        const argMap = {
-          required,
-          optional,
-          getters: this.getters,
-          setters: this.setters,
-          invalidators: this.invalidators,
-          listeners: this.listeners,
-          targets: this.targets
-        };
-        const args = this.transFormFactoryArgs(argMap);
-        const value = this.factory(...args);
+      // TRICKY: If a `HashMatrix` is *proxied*, it must have a value.
+      if (
+        !(this.hashMatrix instanceof HashMatrix) ||
+        typeof this.hashMatrix.getValue() !== 'undefined'
+      ) {
+        if (this.factory instanceof Function) {
+          const resolvedDependencyDeclaration = this.resolveDependencyMap(this.dependencies);
 
-        if (value instanceof Promise) {
-          this.resolveAsyncFactoryPromise(value);
-
-          // TRICKY: Return the value but don't store it.
-          // And do not cancel resolution.
-          return value;
+          if (typeof resolvedDependencyDeclaration !== 'undefined') {
+            resolvedValue = this.factory(resolvedDependencyDeclaration);
+          }
         } else {
-          this.resolving = false;
-          this.resolver = undefined;
-
-          this.setValue(value);
+          resolvedValue = this.getPath([]);
         }
-      } catch (error) {
-        // IMPORTANT: If anything throws, cancel resolution.
-        this.resolving = false;
-        this.resolver = undefined;
-
-        throw error;
       }
     }
 
-    return this.getValue();
+    this.resolving = false;
+
+    return resolvedValue;
   }
 
-  getValue() {
-    return this.getPath([]);
-  }
+  /**
+   * @override
+   * */
+  getPath(path) {
+    const directValue = super.getPath([]);
 
-  setValue(value) {
-    return this.setPath([], value);
+    let value;
+
+    if (typeof directValue === 'undefined') {
+      const resolvedDirectValue = this.resolve();
+
+      if (resolvedDirectValue instanceof Promise) {
+        value = undefined;
+      } else {
+        value = super.getPath(path);
+      }
+    } else {
+      value = super.getPath(path);
+    }
+
+    return value;
   }
 }

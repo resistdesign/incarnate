@@ -3,7 +3,9 @@
  * from paths with out throwing errors for accessing undefined
  * portions of the structure.
  * */
-export default class HashMatrix {
+import ConfigurableInstance from './ConfigurableInstance';
+
+export default class HashMatrix extends ConfigurableInstance {
   static DEFAULT_NAME = 'HashMatrix';
   static DEFAULT_PATH_DELIMITER = '.';
   static ERRORS = {
@@ -53,7 +55,7 @@ export default class HashMatrix {
   pathDelimiter;
 
   constructor(config = {}) {
-    Object.assign(this, config);
+    super(config);
 
     if (!this.hasOwnProperty('pathDelimiter')) {
       this.pathDelimiter = HashMatrix.DEFAULT_PATH_DELIMITER;

@@ -15,7 +15,6 @@ export const LifePod = LifePodInternal;
 export default class Incarnate extends HashMatrix {
   static DEFAULT_NAME = 'Incarnate';
   static ERRORS = {
-    INVALID_MAP: 'INVALID_MAP',
     UNSATISFIED_SHARED_DEPENDENCY: 'UNSATISFIED_SHARED_DEPENDENCY'
   };
 
@@ -25,69 +24,48 @@ export default class Incarnate extends HashMatrix {
    * */
   map;
 
-  /**
-   * A function used to transform the arguments for a `LifePod` factory.
-   * @type {Function}
-   * @see LifePod::transformArgs
-   * */
-  transformArgs;
-
   _parsedMap = {};
 
   /**
-   * When `true`, `LifePod` objects will throw an error when dependencies resolve to `undefined`.
-   * Default: `false`.
+   * If `true`, `LifePod` factories will NOT be called until **none** of the `dependencies` are `undefined`.
+   * @type {boolean}
    * */
-  strictRequired;
+  strict;
 
   constructor(config = {}) {
     super(config);
 
     if (!(this.map instanceof Object)) {
-      throw {
-        message: Incarnate.ERRORS.INVALID_MAP,
-        data: this
-      };
-    }
-
-    if (!this.hasOwnProperty('strictRequired')) {
-      this.strictRequired = false;
+      this.map = {};
     }
   }
 
   createLifePod(name, dependencyDeclaration = {}) {
     const {
-      required = [],
-      optional = [],
-      getters = [],
-      setters = [],
-      invalidators = [],
-      listeners = [],
-      targets = [],
-      transformArgs,
-      strictRequired
+      dependencies = {},
+      getters = {},
+      setters = {},
+      invalidators = {},
+      listeners = {},
+      strict,
+      ...otherConfig
     } = dependencyDeclaration;
-    const config = {
-      ...dependencyDeclaration,
+    const newDependencyDeclaration = new DependencyDeclaration({
+      ...otherConfig,
       name: this.getPathString(name, this.name),
       targetPath: name,
       hashMatrix: this,
-      required: required.map(this.getDependency),
-      optional: optional.map(this.getDependency),
-      getters: getters.map(this.createGetter),
-      setters: setters.map(this.createSetter),
-      invalidators: invalidators.map(this.createInvalidator),
-      listeners: listeners.map(this.createListener),
-      targets: targets.map(this.createTarget),
-      transformArgs: typeof transformArgs !== 'undefined' ?
-        transformArgs :
-        this.transformArgs,
-      strictRequired: typeof strictRequired !== 'undefined' ?
-        strictRequired :
-        this.strictRequired
-    };
+      dependencies: this.getDependenciesFromMap(dependencies),
+      getters: this.createFromMap(getters, this.createGetter),
+      setters: this.createFromMap(setters, this.createSetter),
+      invalidators: this.createFromMap(invalidators, this.createInvalidator),
+      listeners: this.createFromMap(listeners, this.createListener),
+      strict: typeof strict !== 'undefined' ?
+        strict :
+        this.strict
+    });
 
-    return new LifePod(config);
+    return new LifePod(newDependencyDeclaration);
   }
 
   createIncarnate(name, subMapDeclaration = {}) {
@@ -195,6 +173,28 @@ export default class Incarnate extends HashMatrix {
     }
   };
 
+  getDependenciesFromMap(dependencyMap = {}) {
+    return Object
+      .keys(dependencyMap)
+      .reduce((acc, k) => {
+        const depPath = dependencyMap[k];
+        acc[k] = this.getDependency(depPath);
+
+        return acc;
+      }, {});
+  }
+
+  createFromMap(map = {}, creator) {
+    return Object
+      .keys(map)
+      .reduce((acc, k) => {
+        const path = map[k];
+        acc[k] = creator(path);
+
+        return acc;
+      }, {});
+  }
+
   createGetter = (path) => {
     return (subPath = []) => {
       // TRICKY: Get the `dep` "just in time" to avoid recursion.
@@ -226,9 +226,5 @@ export default class Incarnate extends HashMatrix {
 
       return dep.addChangeHandler(subPath, handler);
     }
-  };
-
-  createTarget = (path) => {
-    return this.getDependency(path);
   };
 }

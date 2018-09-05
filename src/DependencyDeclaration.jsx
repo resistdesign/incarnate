@@ -1,7 +1,9 @@
 /**
  * Declare an available dependency with various types of requirements.
  * */
-export default class DependencyDeclaration {
+import ConfigurableInstance from './ConfigurableInstance';
+
+export default class DependencyDeclaration extends ConfigurableInstance {
   /**
    * A map of named dependencies.
    * @type {Object.<string|*>}

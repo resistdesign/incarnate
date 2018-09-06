@@ -1,12 +1,7 @@
-import HashMatrixInternal from './HashMatrix';
-import LifePodInternal from './LifePod';
-import DependencyDeclarationInternal from './DependencyDeclaration';
-import SubMapDeclarationInternal from './SubMapDeclaration';
-
-export const DependencyDeclaration = DependencyDeclarationInternal;
-export const SubMapDeclaration = SubMapDeclarationInternal;
-export const HashMatrix = HashMatrixInternal;
-export const LifePod = LifePodInternal;
+import HashMatrix from './HashMatrix';
+import LifePod from './LifePod';
+import DependencyDeclaration from './DependencyDeclaration';
+import SubMapDeclaration from './SubMapDeclaration';
 
 /**
  * Manage the lifecycle of application dependencies.

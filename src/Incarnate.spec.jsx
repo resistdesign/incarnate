@@ -1,8 +1,9 @@
 import expect from 'expect.js';
-import Incarnate from './Incarnate';
-import LifePod from './LifePod';
-import HashMatrix from './HashMatrix';
-import SubMapDeclaration from './SubMapDeclaration';
+import Incarnate, {
+  HashMatrix,
+  SubMapDeclaration,
+  LifePod
+} from './index';
 
 export default {
   Incarnate: {

@@ -1,18 +1,3 @@
-# Incarnate [![Build Status](https://travis-ci.org/resistdesign/incarnate.svg?branch=master)](https://travis-ci.org/resistdesign/incarnate)
-
-Runtime Dependency Lifecycle Management for JavaScript.
-
-## Install
-
-`npm i -S incarnate`
-
-## API Docs
-
-http://incarnate.resist.design
-
-## Usage Example
-
-```jsx
 import Incarnate from 'incarnate';
 
 // Declare your application.
@@ -41,11 +26,11 @@ const inc = new Incarnate({
             return async (username, password) => {
               // Make a login request, get the `authToken`.
               const fakeToken = `${username}:${password}`;
-              
+
               // For demo purposes we'll use the `Buffer` API in node.js to base64 encode the credentials.
               return Buffer.from(fakeToken).toString('base64');
             };
-          } 
+          }
         },
         accounts: {
           dependencies: {
@@ -56,15 +41,15 @@ const inc = new Incarnate({
               // NOTE: IF we call this service method AFTER `login`,
               // the `authToken` will have been automatically updated,
               // in this service, by Incarnate.
-              if(!authToken){
+              if (!authToken) {
                 throw new Error('The accounts service requires an authentication token but none was supplied.');
               }
-              
+
               // Get a list of accounts with the `authToken` in the headers.
               console.log('Getting accounts with headers:', {
                 Authorization: `Bearer: ${authToken}`
               });
-              
+
               return [
                 {name: 'Account 1'},
                 {name: 'Account 2'},
@@ -96,12 +81,12 @@ const inc = new Incarnate({
             return async ({username, password} = {}) => {
               // Login
               const authToken = await loginService(username, password);
-              
+
               // Store the `authToken`.
               setUser({
                 authToken
               });
-              
+
               return true;
             };
           }
@@ -112,7 +97,7 @@ const inc = new Incarnate({
 });
 
 // Here's your app.
-async function app(){
+async function app() {
   // Get the Login Action.
   const loginAction = inc.getPath('actions.login');
   // Do the login.
@@ -126,15 +111,10 @@ async function app(){
   const accountsService = inc.getPath('services.accounts');
   // Get those accounts you've been dying to see...
   const accounts = await accountsService();
-  
+
   // Here they are!
   console.log('These are the accounts:', accounts);
 }
 
 // You need to run your app.
 app();
-```
-
-## License
-
-[MIT](LICENSE.txt)

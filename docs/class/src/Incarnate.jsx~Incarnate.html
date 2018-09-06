@@ -29,27 +29,24 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ConfigurableInstance.jsx~ConfigurableInstance.html">ConfigurableInstance</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DependencyDeclaration">DependencyDeclaration</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-HashMatrix">HashMatrix</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Incarnate from &apos;<span><a href="file/src/Incarnate.jsx.html#lineNumber15">incarnate</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Incarnate from &apos;<span><a href="file/src/Incarnate.jsx.html#lineNumber10">incarnate/src/Incarnate.jsx</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/Incarnate.jsx.html#lineNumber15">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/Incarnate.jsx.html#lineNumber10">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -59,7 +56,7 @@
 
   
   
-  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span> &#x2192; Incarnate</div></div>
+  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span>src/HashMatrix.js~HashMatrix</span> &#x2192; Incarnate</div></div>
   
   
   
@@ -165,7 +162,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-constructor-constructor">constructor</a></span></span><span class="code" data-ice="signature">()</span>
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-constructor-constructor">constructor</a></span></span><span class="code" data-ice="signature">(subMapDeclaration: <span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span>)</span>
         </p>
       </div>
       <div>
@@ -312,35 +309,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-createTarget">createTarget</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-getDependency">getDependency</a></span></span><span class="code" data-ice="signature">(path: <span>Array</span> | <span>string</span>): <span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span> | <span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span> | <span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>: <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-getDependency">getDependency</a></span></span><span class="code" data-ice="signature">(path: <span>Array</span> | <span>string</span>): <span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span> | <span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span> | <span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -369,71 +338,70 @@ Use dependencies as application entry-points and keep track of live changes.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-map">map</a></span></span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span>|<span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span>|<span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span>|<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>|<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;</span>
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-hashMatrix">hashMatrix</a></span></span><span class="code" data-ice="signature">: {}</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-strict">strict</a></span></span><span class="code" data-ice="signature">: <span>boolean</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>If <code>true</code>, <code>LifePod</code> factories will NOT be called until <strong>none</strong> of the <code>dependencies</code> are <code>undefined</code>.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-subMap">subMap</a></span></span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span>|<span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span>|<span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span>|<span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span>|<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;</span>
         </p>
       </div>
       <div>
         
         
         <div data-ice="description"><p>The map of dependency and subMap declarations.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-strictRequired">strictRequired</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>When <code>true</code>, <code>LifePod</code> objects will throw an error when dependencies resolve to <code>undefined</code>.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-transformArgs">transformArgs</a></span></span><span class="code" data-ice="signature">: <span>Function</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>A function used to transform the arguments for a <code>LifePod</code> factory.</p>
 </div>
       </div>
     </td>
@@ -462,7 +430,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-_parsedMap">_parsedMap</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-member-_parsedSubMap">_parsedSubMap</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -498,6 +466,34 @@ Use dependencies as application entry-points and keep track of live changes.</p>
           
           
           <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-method-convertDeclaration">convertDeclaration</a></span></span><span class="code" data-ice="signature">(name: <span>*</span>, declaration: {}): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-method-createFromMap">createFromMap</a></span></span><span class="code" data-ice="signature">(map: {}, creator: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -567,609 +563,97 @@ Use dependencies as application entry-points and keep track of live changes.</p>
       
     </td>
   </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-method-getDependenciesFromMap">getDependenciesFromMap</a></span></span><span class="code" data-ice="signature">(dependencyMap: {}): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-method-getResolvedPath">getResolvedPath</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>The same as <code>getPath</code> but triggers <code>LifePod</code> dependency resolution.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          <span data-ice="async">async</span>
+          
+          <span class="code" data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html#instance-method-getResolvedPathAsync">getResolvedPathAsync</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>The same as <code>getPath</code> but triggers <code>LifePod</code> dependency resolution and waits for a value.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
 </tbody>
 </table>
 </div>
+
 
-<div class="inherited-summary" data-ice="inheritedSummary"><h2>Inherited Summary</h2><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3"><span class="toggle closed"></span> From class <span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#static-member-DEFAULT_NAME">DEFAULT_NAME</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#static-member-DEFAULT_PATH_DELIMITER">DEFAULT_PATH_DELIMITER</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#static-member-ERRORS">ERRORS</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#static-method-keyIsNumeric">keyIsNumeric</a></span></span><span class="code" data-ice="signature">(key: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-member-hashMatrix">hashMatrix</a></span></span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>*</span>&gt; | <span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>An automatically maintained structure that acts as the source of all values.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-member-name">name</a></span></span><span class="code" data-ice="signature">: <span>string</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>The name of this <code>HashMatrix</code>.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-member-pathDelimiter">pathDelimiter</a></span></span><span class="code" data-ice="signature">: <span>string</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>The <code>string</code> used to delimit all paths.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-member-targetPath">targetPath</a></span></span><span class="code" data-ice="signature">: <span>Array</span> | <span>string</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>The target path for a proxied <code>HashMatrix</code>.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-member-_changeHandlerMap">_changeHandlerMap</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-addChangeHandler">addChangeHandler</a></span></span><span class="code" data-ice="signature">(path: <span>string</span>, handler: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-dispatchChanges">dispatchChanges</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>)</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getBasePathArray">getBasePathArray</a></span></span><span class="code" data-ice="signature">(path: <span>string</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getChangeHandlerList">getChangeHandlerList</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getPath">getPath</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getPathArray">getPathArray</a></span></span><span class="code" data-ice="signature">(path: <span>string</span>, prefixPath: <span>string</span>): <span><span>undefined</span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getPathString">getPathString</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>, prefixPath: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-onChange">onChange</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>, causePath: <span>*</span>)</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-removeChangeHandler">removeChangeHandler</a></span></span><span class="code" data-ice="signature">(path: <span>string</span>, handler: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-setChangeHandlerList">setChangeHandlerList</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>, handlerList: <span><span>*</span><span>[]</span></span>)</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-setPath">setPath</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>, value: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-method-_setDefaultName">_setDefaultName</a></span></span><span class="code" data-ice="signature">()</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
 
 <div data-ice="staticMemberDetails"><h2 data-ice="title">Static Public Members</h2>
 
@@ -1185,7 +669,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber16">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber11">source</a></span></span>
     </span>
   </h3>
 
@@ -1194,7 +678,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
   
   
 
-  <div data-ice="override"><h4>Override:</h4><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#static-member-DEFAULT_NAME">HashMatrix#DEFAULT_NAME</a></span></div>
+  
 
   <div data-ice="properties">
 </div>
@@ -1228,7 +712,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber17">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber12">source</a></span></span>
     </span>
   </h3>
 
@@ -1237,7 +721,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
   
   
 
-  <div data-ice="override"><h4>Override:</h4><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#static-member-ERRORS">HashMatrix#ERRORS</a></span></div>
+  
 
   <div data-ice="properties">
 </div>
@@ -1271,11 +755,11 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     
     
     
-    <span class="code" data-ice="name">constructor</span><span class="code" data-ice="signature">()</span>
+    <span class="code" data-ice="name">constructor</span><span class="code" data-ice="signature">(subMapDeclaration: <span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber43">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber33">source</a></span></span>
     </span>
   </h3>
 
@@ -1284,9 +768,26 @@ Use dependencies as application entry-points and keep track of live changes.</p>
   
   
 
-  <div data-ice="override"><h4>Override:</h4><span><a href="class/src/HashMatrix.jsx~HashMatrix.html#instance-constructor-constructor">HashMatrix#constructor</a></span></div>
+  
 
-  <div data-ice="properties">
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">subMapDeclaration</td>
+      <td data-ice="type" class="code"><span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The <code>SubMapDeclaration</code> to be managed.</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
 </div>
 
   
@@ -1321,7 +822,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber198">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber210">source</a></span></span>
     </span>
   </h3>
 
@@ -1364,7 +865,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber216">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber228">source</a></span></span>
     </span>
   </h3>
 
@@ -1407,7 +908,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber222">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber234">source</a></span></span>
     </span>
   </h3>
 
@@ -1450,50 +951,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber207">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-createTarget">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">createTarget</span><span class="code" data-ice="signature">: <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber231">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber219">source</a></span></span>
     </span>
   </h3>
 
@@ -1532,11 +990,11 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     
     
     
-    <span class="code" data-ice="name">getDependency</span><span class="code" data-ice="signature">(path: <span>Array</span> | <span>string</span>): <span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span> | <span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span> | <span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>: <span>*</span></span>
+    <span class="code" data-ice="name">getDependency</span><span class="code" data-ice="signature">(path: <span>Array</span> | <span>string</span>): <span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span> | <span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span> | <span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>: <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber148">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber138">source</a></span></span>
     </span>
   </h3>
 
@@ -1556,7 +1014,7 @@ Use dependencies as application entry-points and keep track of live changes.</p>
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span> | <span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span> | <span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></td>
+          <td class="return-type code" data-ice="returnType"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span> | <span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span> | <span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></td>
           <td class="return-desc" data-ice="returnDescription"><p>The dependency.</p>
 </td>
         </tr>
@@ -1582,18 +1040,105 @@ Use dependencies as application entry-points and keep track of live changes.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-map">
+  <h3 data-ice="anchor" id="instance-member-hashMatrix">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">map</span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span>|<span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span>|<span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span>|<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>|<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;</span>
+    <span class="code" data-ice="name">hashMatrix</span><span class="code" data-ice="signature">: {}</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber26">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber41">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-strict">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">strict</span><span class="code" data-ice="signature">: <span>boolean</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber28">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>If <code>true</code>, <code>LifePod</code> factories will NOT be called until <strong>none</strong> of the <code>dependencies</code> are <code>undefined</code>.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-subMap">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">subMap</span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span>|<span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span>|<span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span>|<span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span>|<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber20">source</a></span></span>
     </span>
   </h3>
 
@@ -1625,110 +1170,21 @@ Use dependencies as application entry-points and keep track of live changes.</p>
   
   
 </div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-strictRequired">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">strictRequired</span><span class="code" data-ice="signature">: <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber41">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>When <code>true</code>, <code>LifePod</code> objects will throw an error when dependencies resolve to <code>undefined</code>.
-Default: <code>false</code>.</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-transformArgs">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">transformArgs</span><span class="code" data-ice="signature">: <span>Function</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber33">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>A function used to transform the arguments for a <code>LifePod</code> factory.</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  <div data-ice="see"><h4>See:</h4><ul><li><span><a href="LifePod::transformArgs">LifePod::transformArgs</a></span></li></ul></div>
-  
-</div>
 <h2 data-ice="title">Private Members</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-_parsedMap">
+  <h3 data-ice="anchor" id="instance-member-_parsedSubMap">
     <span class="access" data-ice="access">private</span>
     
     
     
     
     
-    <span class="code" data-ice="name">_parsedMap</span><span class="code" data-ice="signature">: <span>*</span></span>
+    <span class="code" data-ice="name">_parsedSubMap</span><span class="code" data-ice="signature">: <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber35">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber22">source</a></span></span>
     </span>
   </h3>
 
@@ -1774,7 +1230,7 @@ Default: <code>false</code>.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber129">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber119">source</a></span></span>
     </span>
   </h3>
 
@@ -1841,6 +1297,84 @@ Default: <code>false</code>.</p>
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-createFromMap">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">createFromMap</span><span class="code" data-ice="signature">(map: {}, creator: <span>*</span>): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber199">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">map</td>
+      <td data-ice="type" class="code">{}</td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: {}</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">creator</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-createIncarnate">
     <span class="access" data-ice="access">public</span>
     
@@ -1852,7 +1386,7 @@ Default: <code>false</code>.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber93">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber73">source</a></span></span>
     </span>
   </h3>
 
@@ -1930,7 +1464,7 @@ Default: <code>false</code>.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber58">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber45">source</a></span></span>
     </span>
   </h3>
 
@@ -1960,6 +1494,222 @@ Default: <code>false</code>.</p>
       <td data-ice="type" class="code">{}</td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: {}</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getDependenciesFromMap">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">getDependenciesFromMap</span><span class="code" data-ice="signature">(dependencyMap: {}): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber188">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">dependencyMap</td>
+      <td data-ice="type" class="code">{}</td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: {}</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getResolvedPath">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">getResolvedPath</span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber246">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>The same as <code>getPath</code> but triggers <code>LifePod</code> dependency resolution.</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">path</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getResolvedPathAsync">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    <span data-ice="async">async</span>
+    
+    <span class="code" data-ice="name">getResolvedPathAsync</span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/Incarnate.jsx.html#lineNumber259">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>The same as <code>getPath</code> but triggers <code>LifePod</code> dependency resolution and waits for a value.</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">path</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
 </tbody>

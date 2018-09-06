@@ -2,8 +2,49 @@
   {
     "__docId__": 0,
     "kind": "file",
+    "name": "src/ConfigurableInstance.jsx",
+    "content": "export default class ConfigurableInstance {\n  constructor(config = {}) {\n    Object.assign(this, config);\n  }\n}\n",
+    "static": true,
+    "longname": "/Users/ryangraff/projects/incarnate/src/ConfigurableInstance.jsx",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 1,
+    "kind": "class",
+    "name": "ConfigurableInstance",
+    "memberof": "src/ConfigurableInstance.jsx",
+    "static": true,
+    "longname": "src/ConfigurableInstance.jsx~ConfigurableInstance",
+    "access": "public",
+    "export": true,
+    "importPath": "incarnate/src/ConfigurableInstance.jsx",
+    "importStyle": "ConfigurableInstance",
+    "description": null,
+    "lineNumber": 1,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 2,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/ConfigurableInstance.jsx~ConfigurableInstance",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/ConfigurableInstance.jsx~ConfigurableInstance#constructor",
+    "access": "public",
+    "description": null,
+    "lineNumber": 2,
+    "undocument": true
+  },
+  {
+    "__docId__": 3,
+    "kind": "file",
     "name": "src/DependencyDeclaration.jsx",
-    "content": "/**\n * Declare an available dependency with various types of requirements.\n * */\nexport default class DependencyDeclaration {\n  /**\n   * A list of required dependencies.\n   * @type {Array.<string>}\n   * */\n  required;\n\n  /**\n   * A list of optional dependencies.\n   * @type {Array.<string>}\n   * */\n  optional;\n\n  /**\n   * A list of getters.\n   * @type {Array.<string>}\n   * */\n  getters;\n\n  /**\n   * A list of setters.\n   * @type {Array.<string>}\n   * */\n  setters;\n\n  /**\n   * A list of invalidators.\n   * @type {Array.<string>}\n   * */\n  invalidators;\n\n  /**\n   * A list of change handler receivers.\n   * @type {Array.<string>}\n   * */\n  listeners;\n\n  /**\n   * A list of paths that will resolve to dependency controllers rather than values directly.\n   * @type {Array.<string>}\n   * */\n  targets;\n\n  /**\n   * An optional function used to transform factory arguments from an `Array`\n   * to another `Array` containing a different structure. Used when the factory\n   * might require a different configuration of arguments.\n   * `transformArgs(args = []):Array (newArgs)`\n   * @type {Function}\n   * */\n  transformArgs;\n\n  /**\n   * The factory function used to **resolve** the value of the dependency.\n   * @type {Function}\n   * @param {Array.<*>} ...args The various required dependencies in the order:\n   * `required`, `optional`, `getters`, `setters`, `invalidators`, `listeners`\n   * @returns {*|Promise} The value of the dependency.\n   * */\n  factory;\n}\n",
+    "content": "/**\n * Declare an available dependency with various types of requirements.\n * */\nimport ConfigurableInstance from './ConfigurableInstance';\n\nexport default class DependencyDeclaration extends ConfigurableInstance {\n  /**\n   * A map of named dependencies.\n   * @type {Object.<string|*>}\n   * */\n  dependencies;\n\n  /**\n   * A map of named getters.\n   * @type {Object.<string|Function>}\n   * */\n  getters;\n\n  /**\n   * A map of named setters.\n   * @type {Object.<string|Function>}\n   * */\n  setters;\n\n  /**\n   * A map of named invalidators.\n   * @type {Object.<string|Function>}\n   * */\n  invalidators;\n\n  /**\n   * A map of named change handler receivers.\n   * @type {Object.<string|Function>}\n   * */\n  listeners;\n\n  /**\n   * The factory function used to create the value of the dependency.\n   * @type {Function}\n   * @param {DependencyDeclaration} dependencyValues A `DependencyDeclaration` with resolved values rather than paths.\n   * @returns {*|Promise} The value of the dependency.\n   * */\n  factory;\n\n  /**\n   * If `true`, the `factory` is NOT called until **none** of the `dependencies` are `undefined`.\n   * @type {boolean}\n   * */\n  strict;\n}\n",
     "static": true,
     "longname": "/Users/ryangraff/projects/incarnate/src/DependencyDeclaration.jsx",
     "access": "public",
@@ -11,7 +52,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 1,
+    "__docId__": 4,
     "kind": "class",
     "name": "DependencyDeclaration",
     "memberof": "src/DependencyDeclaration.jsx",
@@ -21,81 +62,28 @@
     "export": true,
     "importPath": "incarnate/src/DependencyDeclaration.jsx",
     "importStyle": "DependencyDeclaration",
-    "description": "Declare an available dependency with various types of requirements.",
-    "lineNumber": 4,
-    "interface": false
-  },
-  {
-    "__docId__": 2,
-    "kind": "member",
-    "name": "required",
-    "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
-    "static": false,
-    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#required",
-    "access": "public",
-    "description": "A list of required dependencies.",
-    "lineNumber": 9,
-    "type": {
-      "nullable": null,
-      "types": [
-        "Array.<string>"
-      ],
-      "spread": false,
-      "description": null
-    }
-  },
-  {
-    "__docId__": 3,
-    "kind": "member",
-    "name": "optional",
-    "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
-    "static": false,
-    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#optional",
-    "access": "public",
-    "description": "A list of optional dependencies.",
-    "lineNumber": 15,
-    "type": {
-      "nullable": null,
-      "types": [
-        "Array.<string>"
-      ],
-      "spread": false,
-      "description": null
-    }
-  },
-  {
-    "__docId__": 4,
-    "kind": "member",
-    "name": "getters",
-    "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
-    "static": false,
-    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#getters",
-    "access": "public",
-    "description": "A list of getters.",
-    "lineNumber": 21,
-    "type": {
-      "nullable": null,
-      "types": [
-        "Array.<string>"
-      ],
-      "spread": false,
-      "description": null
-    }
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/ConfigurableInstance.js~ConfigurableInstance"
+    ]
   },
   {
     "__docId__": 5,
     "kind": "member",
-    "name": "setters",
+    "name": "dependencies",
     "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
     "static": false,
-    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#setters",
+    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#dependencies",
     "access": "public",
-    "description": "A list of setters.",
-    "lineNumber": 27,
+    "description": "A map of named dependencies.",
+    "lineNumber": 11,
     "type": {
       "nullable": null,
       "types": [
-        "Array.<string>"
+        "Object.<string|*>"
       ],
       "spread": false,
       "description": null
@@ -104,17 +92,17 @@
   {
     "__docId__": 6,
     "kind": "member",
-    "name": "invalidators",
+    "name": "getters",
     "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
     "static": false,
-    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#invalidators",
+    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#getters",
     "access": "public",
-    "description": "A list of invalidators.",
-    "lineNumber": 33,
+    "description": "A map of named getters.",
+    "lineNumber": 17,
     "type": {
       "nullable": null,
       "types": [
-        "Array.<string>"
+        "Object.<string|Function>"
       ],
       "spread": false,
       "description": null
@@ -123,17 +111,17 @@
   {
     "__docId__": 7,
     "kind": "member",
-    "name": "listeners",
+    "name": "setters",
     "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
     "static": false,
-    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#listeners",
+    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#setters",
     "access": "public",
-    "description": "A list of change handler receivers.",
-    "lineNumber": 39,
+    "description": "A map of named setters.",
+    "lineNumber": 23,
     "type": {
       "nullable": null,
       "types": [
-        "Array.<string>"
+        "Object.<string|Function>"
       ],
       "spread": false,
       "description": null
@@ -142,17 +130,17 @@
   {
     "__docId__": 8,
     "kind": "member",
-    "name": "targets",
+    "name": "invalidators",
     "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
     "static": false,
-    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#targets",
+    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#invalidators",
     "access": "public",
-    "description": "A list of paths that will resolve to dependency controllers rather than values directly.",
-    "lineNumber": 45,
+    "description": "A map of named invalidators.",
+    "lineNumber": 29,
     "type": {
       "nullable": null,
       "types": [
-        "Array.<string>"
+        "Object.<string|Function>"
       ],
       "spread": false,
       "description": null
@@ -161,17 +149,17 @@
   {
     "__docId__": 9,
     "kind": "member",
-    "name": "transformArgs",
+    "name": "listeners",
     "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
     "static": false,
-    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#transformArgs",
+    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#listeners",
     "access": "public",
-    "description": "An optional function used to transform factory arguments from an `Array`\nto another `Array` containing a different structure. Used when the factory\nmight require a different configuration of arguments.\n`transformArgs(args = []):Array (newArgs)`",
-    "lineNumber": 54,
+    "description": "A map of named change handler receivers.",
+    "lineNumber": 35,
     "type": {
       "nullable": null,
       "types": [
-        "Function"
+        "Object.<string|Function>"
       ],
       "spread": false,
       "description": null
@@ -185,8 +173,8 @@
     "static": false,
     "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#factory",
     "access": "public",
-    "description": "The factory function used to **resolve** the value of the dependency.",
-    "lineNumber": 63,
+    "description": "The factory function used to create the value of the dependency.",
+    "lineNumber": 43,
     "unknown": [
       {
         "tagName": "@returns",
@@ -197,12 +185,12 @@
       {
         "nullable": null,
         "types": [
-          "Array.<*>"
+          "DependencyDeclaration"
         ],
         "spread": false,
         "optional": false,
-        "name": "...args",
-        "description": "The various required dependencies in the order:\n`required`, `optional`, `getters`, `setters`, `invalidators`, `listeners`"
+        "name": "dependencyValues",
+        "description": "A `DependencyDeclaration` with resolved values rather than paths."
       }
     ],
     "return": {
@@ -225,9 +213,28 @@
   },
   {
     "__docId__": 11,
+    "kind": "member",
+    "name": "strict",
+    "memberof": "src/DependencyDeclaration.jsx~DependencyDeclaration",
+    "static": false,
+    "longname": "src/DependencyDeclaration.jsx~DependencyDeclaration#strict",
+    "access": "public",
+    "description": "If `true`, the `factory` is NOT called until **none** of the `dependencies` are `undefined`.",
+    "lineNumber": 49,
+    "type": {
+      "nullable": null,
+      "types": [
+        "boolean"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 12,
     "kind": "file",
     "name": "src/HashMatrix.jsx",
-    "content": "/**\n * Easily manage a data structure that can be dynamically built\n * from paths with out throwing errors for accessing undefined\n * portions of the structure.\n * */\nexport default class HashMatrix {\n  static DEFAULT_NAME = 'HashMatrix';\n  static DEFAULT_PATH_DELIMITER = '.';\n  static ERRORS = {\n    INVALID_HASH_MATRIX: 'INVALID_HASH_MATRIX',\n    INVALID_PATH_DELIMITER: 'INVALID_PATH_DELIMITER',\n    INVALID_PATH_CHANGE_HANDLER: 'INVALID_PATH_CHANGE_HANDLER',\n    PROTECTED_HASH_MATRIX: 'PROTECTED_HASH_MATRIX'\n  };\n\n  static keyIsNumeric(key) {\n    let numeric = false;\n\n    try {\n      numeric = Number.isInteger(parseInt(key, 10));\n    } catch (error) {\n      // Ignore.\n    }\n\n    return numeric;\n  }\n\n  _changeHandlerMap = {};\n\n  /**\n   * The name of this `HashMatrix`.\n   * @type {string}\n   * */\n  name;\n\n  /**\n   * The target path for a proxied `HashMatrix`.\n   * @type {Array|string}\n   * */\n  targetPath;\n\n  /**\n   * An automatically maintained structure that acts as the source of all values.\n   * If set a to a `HashMatrix`, it will be proxied.\n   * @type {Object.<*>|HashMatrix}\n   * */\n  hashMatrix;\n\n  /**\n   * The `string` used to delimit all paths.\n   * @type {string}\n   * */\n  pathDelimiter;\n\n  constructor(config = {}) {\n    Object.assign(this, config);\n\n    if (!this.hasOwnProperty('pathDelimiter')) {\n      this.pathDelimiter = HashMatrix.DEFAULT_PATH_DELIMITER;\n    }\n\n    if (typeof this.pathDelimiter !== 'string') {\n      throw {\n        message: HashMatrix.ERRORS.INVALID_PATH_DELIMITER,\n        data: this\n      };\n    }\n\n    this._setDefaultName();\n  }\n\n  _setDefaultName() {\n    if (!this.hasOwnProperty('name')) {\n      if (typeof this.constructor.DEFAULT_NAME === 'string') {\n        this.name = this.constructor.DEFAULT_NAME;\n      } else {\n        this.name = HashMatrix.DEFAULT_NAME;\n      }\n    }\n  }\n\n  getChangeHandlerList(path) {\n    const pathString = this.getPathString(path);\n\n    return this._changeHandlerMap[pathString] || [];\n  }\n\n  setChangeHandlerList(path, handlerList = []) {\n    const pathString = this.getPathString(path);\n\n    this._changeHandlerMap[pathString] = handlerList;\n  }\n\n  addChangeHandler(path = '', handler) {\n    if (this.hashMatrix instanceof HashMatrix) {\n      return this.hashMatrix.addChangeHandler(\n        this.getPathArray(path, this.targetPath),\n        handler\n      );\n    }\n\n    if (handler instanceof Function) {\n      const handlerList = this.getChangeHandlerList(path);\n\n      if (handlerList.indexOf(handler) === -1) {\n        handlerList.push(handler);\n\n        this.setChangeHandlerList(path, handlerList);\n\n        return () => this.removeChangeHandler(handler);\n      }\n    }\n  }\n\n  removeChangeHandler(path = '', handler) {\n    if (this.hashMatrix instanceof HashMatrix) {\n      return this.hashMatrix.removeChangeHandler(\n        this.getPathArray(path, this.targetPath),\n        handler\n      );\n    }\n\n    const handlerList = this.getChangeHandlerList(path);\n\n    if (handlerList.indexOf(handler) !== -1) {\n      const newHandlerList = [];\n\n      handlerList.forEach((h) => {\n        if (h !== handler) {\n          newHandlerList.push(h);\n        }\n      });\n\n      this.setChangeHandlerList(path, newHandlerList);\n    }\n  }\n\n  onChange(path, causePath) {\n    const handlerList = this.getChangeHandlerList(path);\n\n    handlerList.forEach((h) => h(path, causePath, this));\n  }\n\n  getBasePathArray(path = '') {\n    return path instanceof Array ?\n      [...path] :\n      (path === '' ? [] : `${path}`.split(this.pathDelimiter));\n  }\n\n  getPathArray(path = '', prefixPath = '') {\n    const prefixPathArray = this.getBasePathArray(prefixPath);\n    const pathArray = this.getBasePathArray(path);\n\n    return [\n      ...prefixPathArray,\n      ...pathArray\n    ];\n  }\n\n  getPathString(path, prefixPath) {\n    return this.getPathArray(path, prefixPath)\n      .join(this.pathDelimiter);\n  }\n\n  dispatchChanges(path) {\n    const pathArray = this.getPathArray(path);\n    const pathString = this.getPathString(pathArray);\n\n    // Notify lifecycle listeners of changes all the way up the path.\n\n    if (pathArray.length) {\n      const currentPath = [...pathArray];\n\n      // TRICKY: Start with the deepest path and move up to the most shallow.\n      while (currentPath.length) {\n        this.onChange(\n          // Path as a string.\n          this.getPathString(currentPath),\n          // The cause path.\n          pathString\n        );\n        currentPath.pop();\n      }\n    }\n\n    this.onChange('', pathString);\n  }\n\n  getPath(path) {\n    if (this.hashMatrix instanceof HashMatrix) {\n      return this.hashMatrix.getPath(\n        this.getPathArray(path, this.targetPath)\n      );\n    }\n\n    const pathArray = this.getPathArray(path);\n\n    if (pathArray.length) {\n      let value,\n        currentValue = this.hashMatrix,\n        finished = true;\n\n      for (const part of pathArray) {\n        // Don't fail, just return `undefined`.\n        try {\n          currentValue = currentValue[part];\n        } catch (error) {\n          finished = false;\n          break;\n        }\n      }\n\n      // TRICKY: Don't select the current value if the full path wasn't processed.\n      if (finished) {\n        value = currentValue;\n      }\n\n      return value;\n    } else {\n      return this.hashMatrix;\n    }\n  }\n\n  setPath(path, value) {\n    if (this.hashMatrix instanceof HashMatrix) {\n      return this.hashMatrix.setPath(\n        this.getPathArray(path, this.targetPath),\n        value\n      );\n    }\n\n    // TRICKY: DO NOT set if the value is exactly equal.\n    if (value !== this.getPath(path)) {\n      const newHashMatrix = {\n        ...this.hashMatrix\n      };\n      const pathArray = this.getPathArray(path);\n\n      if (pathArray.length) {\n        const lastIndex = pathArray.length - 1;\n        const lastPart = pathArray[lastIndex];\n\n        let currentValue = newHashMatrix;\n\n        for (let i = 0; i < lastIndex; i++) {\n          const part = pathArray[i];\n          const nextPart = pathArray[i + 1];\n\n          // TRICKY: Build out the tree is it's not there.\n          if (typeof currentValue[part] === 'undefined') {\n            currentValue[part] = HashMatrix.keyIsNumeric(nextPart) ? [] : {};\n          } else if (currentValue[part] instanceof Array) {\n            currentValue[part] = [\n              ...currentValue[part]\n            ];\n          } else if (currentValue[part] instanceof Object) {\n            currentValue[part] = {\n              ...currentValue[part]\n            };\n          }\n\n          currentValue = currentValue[part];\n        }\n\n        currentValue[lastPart] = value;\n\n        this.hashMatrix = newHashMatrix;\n      } else {\n        this.hashMatrix = value;\n      }\n\n      this.dispatchChanges(pathArray);\n    }\n  }\n}\n",
+    "content": "/**\n * Easily manage a data structure that can be dynamically built\n * from paths with out throwing errors for accessing undefined\n * portions of the structure.\n * */\nimport ConfigurableInstance from './ConfigurableInstance';\n\nexport default class HashMatrix extends ConfigurableInstance {\n  static DEFAULT_NAME = 'HashMatrix';\n  static DEFAULT_PATH_DELIMITER = '.';\n  static ERRORS = {\n    INVALID_HASH_MATRIX: 'INVALID_HASH_MATRIX',\n    INVALID_PATH_DELIMITER: 'INVALID_PATH_DELIMITER',\n    INVALID_PATH_CHANGE_HANDLER: 'INVALID_PATH_CHANGE_HANDLER',\n    PROTECTED_HASH_MATRIX: 'PROTECTED_HASH_MATRIX'\n  };\n\n  static keyIsNumeric(key) {\n    let numeric = false;\n\n    try {\n      numeric = Number.isInteger(parseInt(key, 10));\n    } catch (error) {\n      // Ignore.\n    }\n\n    return numeric;\n  }\n\n  _changeHandlerMap = {};\n\n  /**\n   * The name of this `HashMatrix`.\n   * @type {string}\n   * */\n  name;\n\n  /**\n   * The target path for a proxied `HashMatrix`.\n   * @type {Array|string}\n   * */\n  targetPath;\n\n  /**\n   * An automatically maintained structure that acts as the source of all values.\n   * If set a to a `HashMatrix`, it will be proxied.\n   * @type {Object.<*>|HashMatrix}\n   * */\n  hashMatrix;\n\n  /**\n   * The `string` used to delimit all paths.\n   * @type {string}\n   * */\n  pathDelimiter;\n\n  constructor(config = {}) {\n    super(config);\n\n    if (!this.hasOwnProperty('pathDelimiter')) {\n      this.pathDelimiter = HashMatrix.DEFAULT_PATH_DELIMITER;\n    }\n\n    if (typeof this.pathDelimiter !== 'string') {\n      throw {\n        message: HashMatrix.ERRORS.INVALID_PATH_DELIMITER,\n        data: this\n      };\n    }\n\n    this._setDefaultName();\n  }\n\n  _setDefaultName() {\n    if (!this.hasOwnProperty('name')) {\n      if (typeof this.constructor.DEFAULT_NAME === 'string') {\n        this.name = this.constructor.DEFAULT_NAME;\n      } else {\n        this.name = HashMatrix.DEFAULT_NAME;\n      }\n    }\n  }\n\n  getChangeHandlerList(path) {\n    const pathString = this.getPathString(path);\n\n    return this._changeHandlerMap[pathString] || [];\n  }\n\n  setChangeHandlerList(path, handlerList = []) {\n    const pathString = this.getPathString(path);\n\n    this._changeHandlerMap[pathString] = handlerList;\n  }\n\n  addChangeHandler(path = '', handler) {\n    if (this.hashMatrix instanceof HashMatrix) {\n      return this.hashMatrix.addChangeHandler(\n        this.getPathArray(path, this.targetPath),\n        handler\n      );\n    }\n\n    if (handler instanceof Function) {\n      const handlerList = this.getChangeHandlerList(path);\n\n      if (handlerList.indexOf(handler) === -1) {\n        handlerList.push(handler);\n\n        this.setChangeHandlerList(path, handlerList);\n\n        return () => this.removeChangeHandler(handler);\n      }\n    }\n  }\n\n  removeChangeHandler(path = '', handler) {\n    if (this.hashMatrix instanceof HashMatrix) {\n      return this.hashMatrix.removeChangeHandler(\n        this.getPathArray(path, this.targetPath),\n        handler\n      );\n    }\n\n    const handlerList = this.getChangeHandlerList(path);\n\n    if (handlerList.indexOf(handler) !== -1) {\n      const newHandlerList = [];\n\n      handlerList.forEach((h) => {\n        if (h !== handler) {\n          newHandlerList.push(h);\n        }\n      });\n\n      this.setChangeHandlerList(path, newHandlerList);\n    }\n  }\n\n  onChange(path, causePath) {\n    const handlerList = this.getChangeHandlerList(path);\n\n    handlerList.forEach((h) => h(path, causePath, this));\n  }\n\n  getBasePathArray(path = '') {\n    return path instanceof Array ?\n      [...path] :\n      (path === '' ? [] : `${path}`.split(this.pathDelimiter));\n  }\n\n  getPathArray(path = '', prefixPath = '') {\n    const prefixPathArray = this.getBasePathArray(prefixPath);\n    const pathArray = this.getBasePathArray(path);\n\n    return [\n      ...prefixPathArray,\n      ...pathArray\n    ];\n  }\n\n  getPathString(path, prefixPath) {\n    return this.getPathArray(path, prefixPath)\n      .join(this.pathDelimiter);\n  }\n\n  dispatchChanges(path) {\n    const pathArray = this.getPathArray(path);\n    const pathString = this.getPathString(pathArray);\n\n    // Notify lifecycle listeners of changes all the way up the path.\n\n    if (pathArray.length) {\n      const currentPath = [...pathArray];\n\n      // TRICKY: Start with the deepest path and move up to the most shallow.\n      while (currentPath.length) {\n        this.onChange(\n          // Path as a string.\n          this.getPathString(currentPath),\n          // The cause path.\n          pathString\n        );\n        currentPath.pop();\n      }\n    }\n\n    this.onChange('', pathString);\n  }\n\n  _getPathInternal(path) {\n    if (this.hashMatrix instanceof HashMatrix) {\n      return this.hashMatrix.getPath(\n        this.getPathArray(path, this.targetPath)\n      );\n    }\n\n    const pathArray = this.getPathArray(path);\n\n    if (pathArray.length) {\n      let value,\n        currentValue = this.hashMatrix,\n        finished = true;\n\n      for (const part of pathArray) {\n        // Don't fail, just return `undefined`.\n        try {\n          currentValue = currentValue[part];\n        } catch (error) {\n          finished = false;\n          break;\n        }\n      }\n\n      // TRICKY: Don't select the current value if the full path wasn't processed.\n      if (finished) {\n        value = currentValue;\n      }\n\n      return value;\n    } else {\n      return this.hashMatrix;\n    }\n  }\n\n  getPath(path) {\n    return this._getPathInternal(path);\n  }\n\n  _setPathInternal(path, value) {\n    if (this.hashMatrix instanceof HashMatrix) {\n      return this.hashMatrix.setPath(\n        this.getPathArray(path, this.targetPath),\n        value\n      );\n    }\n\n    // TRICKY: DO NOT set if the value is exactly equal.\n    if (value !== this._getPathInternal(path)) {\n      const newHashMatrix = {\n        ...this.hashMatrix\n      };\n      const pathArray = this.getPathArray(path);\n\n      if (pathArray.length) {\n        const lastIndex = pathArray.length - 1;\n        const lastPart = pathArray[lastIndex];\n\n        let currentValue = newHashMatrix;\n\n        for (let i = 0; i < lastIndex; i++) {\n          const part = pathArray[i];\n          const nextPart = pathArray[i + 1];\n\n          // TRICKY: Build out the tree is it's not there.\n          if (typeof currentValue[part] === 'undefined') {\n            currentValue[part] = HashMatrix.keyIsNumeric(nextPart) ? [] : {};\n          } else if (currentValue[part] instanceof Array) {\n            currentValue[part] = [\n              ...currentValue[part]\n            ];\n          } else if (currentValue[part] instanceof Object) {\n            currentValue[part] = {\n              ...currentValue[part]\n            };\n          }\n\n          currentValue = currentValue[part];\n        }\n\n        currentValue[lastPart] = value;\n\n        this.hashMatrix = newHashMatrix;\n      } else {\n        this.hashMatrix = value;\n      }\n\n      this.dispatchChanges(pathArray);\n    }\n  }\n\n  setPath(path, value) {\n    return this._setPathInternal(path, value);\n  }\n\n  getValue() {\n    return this.getPath([]);\n  }\n\n  setValue(value) {\n    return this.setPath([], value);\n  }\n}\n",
     "static": true,
     "longname": "/Users/ryangraff/projects/incarnate/src/HashMatrix.jsx",
     "access": "public",
@@ -235,7 +242,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 12,
+    "__docId__": 13,
     "kind": "class",
     "name": "HashMatrix",
     "memberof": "src/HashMatrix.jsx",
@@ -245,51 +252,21 @@
     "export": true,
     "importPath": "incarnate/src/HashMatrix.jsx",
     "importStyle": "HashMatrix",
-    "description": "Easily manage a data structure that can be dynamically built\nfrom paths with out throwing errors for accessing undefined\nportions of the structure.",
-    "lineNumber": 6,
-    "interface": false
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/ConfigurableInstance.js~ConfigurableInstance"
+    ]
   },
   {
-    "__docId__": 13,
+    "__docId__": 14,
     "kind": "member",
     "name": "DEFAULT_NAME",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
     "static": true,
     "longname": "src/HashMatrix.jsx~HashMatrix.DEFAULT_NAME",
-    "access": "public",
-    "description": null,
-    "lineNumber": 7,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 14,
-    "kind": "member",
-    "name": "DEFAULT_PATH_DELIMITER",
-    "memberof": "src/HashMatrix.jsx~HashMatrix",
-    "static": true,
-    "longname": "src/HashMatrix.jsx~HashMatrix.DEFAULT_PATH_DELIMITER",
-    "access": "public",
-    "description": null,
-    "lineNumber": 8,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 15,
-    "kind": "member",
-    "name": "ERRORS",
-    "memberof": "src/HashMatrix.jsx~HashMatrix",
-    "static": true,
-    "longname": "src/HashMatrix.jsx~HashMatrix.ERRORS",
     "access": "public",
     "description": null,
     "lineNumber": 9,
@@ -301,7 +278,41 @@
     }
   },
   {
+    "__docId__": 15,
+    "kind": "member",
+    "name": "DEFAULT_PATH_DELIMITER",
+    "memberof": "src/HashMatrix.jsx~HashMatrix",
+    "static": true,
+    "longname": "src/HashMatrix.jsx~HashMatrix.DEFAULT_PATH_DELIMITER",
+    "access": "public",
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
     "__docId__": 16,
+    "kind": "member",
+    "name": "ERRORS",
+    "memberof": "src/HashMatrix.jsx~HashMatrix",
+    "static": true,
+    "longname": "src/HashMatrix.jsx~HashMatrix.ERRORS",
+    "access": "public",
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 17,
     "kind": "method",
     "name": "keyIsNumeric",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -311,7 +322,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix.keyIsNumeric",
     "access": "public",
     "description": null,
-    "lineNumber": 16,
+    "lineNumber": 18,
     "undocument": true,
     "params": [
       {
@@ -328,7 +339,7 @@
     }
   },
   {
-    "__docId__": 17,
+    "__docId__": 18,
     "kind": "member",
     "name": "_changeHandlerMap",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -336,7 +347,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#_changeHandlerMap",
     "access": "private",
     "description": null,
-    "lineNumber": 28,
+    "lineNumber": 30,
     "undocument": true,
     "type": {
       "types": [
@@ -345,7 +356,7 @@
     }
   },
   {
-    "__docId__": 18,
+    "__docId__": 19,
     "kind": "member",
     "name": "name",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -353,7 +364,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#name",
     "access": "public",
     "description": "The name of this `HashMatrix`.",
-    "lineNumber": 34,
+    "lineNumber": 36,
     "type": {
       "nullable": null,
       "types": [
@@ -364,7 +375,7 @@
     }
   },
   {
-    "__docId__": 19,
+    "__docId__": 20,
     "kind": "member",
     "name": "targetPath",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -372,7 +383,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#targetPath",
     "access": "public",
     "description": "The target path for a proxied `HashMatrix`.",
-    "lineNumber": 40,
+    "lineNumber": 42,
     "type": {
       "nullable": null,
       "types": [
@@ -384,7 +395,7 @@
     }
   },
   {
-    "__docId__": 20,
+    "__docId__": 21,
     "kind": "member",
     "name": "hashMatrix",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -392,7 +403,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#hashMatrix",
     "access": "public",
     "description": "An automatically maintained structure that acts as the source of all values.\nIf set a to a `HashMatrix`, it will be proxied.",
-    "lineNumber": 47,
+    "lineNumber": 49,
     "type": {
       "nullable": null,
       "types": [
@@ -404,7 +415,7 @@
     }
   },
   {
-    "__docId__": 21,
+    "__docId__": 22,
     "kind": "member",
     "name": "pathDelimiter",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -412,7 +423,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#pathDelimiter",
     "access": "public",
     "description": "The `string` used to delimit all paths.",
-    "lineNumber": 53,
+    "lineNumber": 55,
     "type": {
       "nullable": null,
       "types": [
@@ -423,7 +434,7 @@
     }
   },
   {
-    "__docId__": 22,
+    "__docId__": 23,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -433,11 +444,11 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#constructor",
     "access": "public",
     "description": null,
-    "lineNumber": 55,
+    "lineNumber": 57,
     "undocument": true
   },
   {
-    "__docId__": 24,
+    "__docId__": 25,
     "kind": "method",
     "name": "_setDefaultName",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -447,13 +458,13 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#_setDefaultName",
     "access": "private",
     "description": null,
-    "lineNumber": 72,
+    "lineNumber": 74,
     "undocument": true,
     "params": [],
     "return": null
   },
   {
-    "__docId__": 27,
+    "__docId__": 28,
     "kind": "method",
     "name": "getChangeHandlerList",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -463,7 +474,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#getChangeHandlerList",
     "access": "public",
     "description": null,
-    "lineNumber": 82,
+    "lineNumber": 84,
     "undocument": true,
     "params": [
       {
@@ -480,7 +491,7 @@
     }
   },
   {
-    "__docId__": 28,
+    "__docId__": 29,
     "kind": "method",
     "name": "setChangeHandlerList",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -490,7 +501,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#setChangeHandlerList",
     "access": "public",
     "description": null,
-    "lineNumber": 88,
+    "lineNumber": 90,
     "undocument": true,
     "params": [
       {
@@ -512,7 +523,7 @@
     "return": null
   },
   {
-    "__docId__": 29,
+    "__docId__": 30,
     "kind": "method",
     "name": "addChangeHandler",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -522,43 +533,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#addChangeHandler",
     "access": "public",
     "description": null,
-    "lineNumber": 94,
-    "undocument": true,
-    "params": [
-      {
-        "name": "path",
-        "optional": true,
-        "types": [
-          "string"
-        ],
-        "defaultRaw": "",
-        "defaultValue": ""
-      },
-      {
-        "name": "handler",
-        "types": [
-          "*"
-        ]
-      }
-    ],
-    "return": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 30,
-    "kind": "method",
-    "name": "removeChangeHandler",
-    "memberof": "src/HashMatrix.jsx~HashMatrix",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/HashMatrix.jsx~HashMatrix#removeChangeHandler",
-    "access": "public",
-    "description": null,
-    "lineNumber": 115,
+    "lineNumber": 96,
     "undocument": true,
     "params": [
       {
@@ -586,6 +561,42 @@
   {
     "__docId__": 31,
     "kind": "method",
+    "name": "removeChangeHandler",
+    "memberof": "src/HashMatrix.jsx~HashMatrix",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/HashMatrix.jsx~HashMatrix#removeChangeHandler",
+    "access": "public",
+    "description": null,
+    "lineNumber": 117,
+    "undocument": true,
+    "params": [
+      {
+        "name": "path",
+        "optional": true,
+        "types": [
+          "string"
+        ],
+        "defaultRaw": "",
+        "defaultValue": ""
+      },
+      {
+        "name": "handler",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 32,
+    "kind": "method",
     "name": "onChange",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
     "generator": false,
@@ -594,7 +605,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#onChange",
     "access": "public",
     "description": null,
-    "lineNumber": 138,
+    "lineNumber": 140,
     "undocument": true,
     "params": [
       {
@@ -613,7 +624,7 @@
     "return": null
   },
   {
-    "__docId__": 32,
+    "__docId__": 33,
     "kind": "method",
     "name": "getBasePathArray",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -623,7 +634,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#getBasePathArray",
     "access": "public",
     "description": null,
-    "lineNumber": 144,
+    "lineNumber": 146,
     "undocument": true,
     "params": [
       {
@@ -643,7 +654,7 @@
     }
   },
   {
-    "__docId__": 33,
+    "__docId__": 34,
     "kind": "method",
     "name": "getPathArray",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -653,7 +664,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#getPathArray",
     "access": "public",
     "description": null,
-    "lineNumber": 150,
+    "lineNumber": 152,
     "undocument": true,
     "params": [
       {
@@ -682,7 +693,7 @@
     }
   },
   {
-    "__docId__": 34,
+    "__docId__": 35,
     "kind": "method",
     "name": "getPathString",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -692,7 +703,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#getPathString",
     "access": "public",
     "description": null,
-    "lineNumber": 160,
+    "lineNumber": 162,
     "undocument": true,
     "params": [
       {
@@ -715,7 +726,7 @@
     }
   },
   {
-    "__docId__": 35,
+    "__docId__": 36,
     "kind": "method",
     "name": "dispatchChanges",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
@@ -725,7 +736,7 @@
     "longname": "src/HashMatrix.jsx~HashMatrix#dispatchChanges",
     "access": "public",
     "description": null,
-    "lineNumber": 165,
+    "lineNumber": 167,
     "undocument": true,
     "params": [
       {
@@ -738,17 +749,17 @@
     "return": null
   },
   {
-    "__docId__": 36,
+    "__docId__": 37,
     "kind": "method",
-    "name": "getPath",
+    "name": "_getPathInternal",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/HashMatrix.jsx~HashMatrix#getPath",
-    "access": "public",
+    "longname": "src/HashMatrix.jsx~HashMatrix#_getPathInternal",
+    "access": "private",
     "description": null,
-    "lineNumber": 189,
+    "lineNumber": 191,
     "undocument": true,
     "params": [
       {
@@ -765,17 +776,44 @@
     }
   },
   {
-    "__docId__": 37,
+    "__docId__": 38,
     "kind": "method",
-    "name": "setPath",
+    "name": "getPath",
     "memberof": "src/HashMatrix.jsx~HashMatrix",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/HashMatrix.jsx~HashMatrix#setPath",
+    "longname": "src/HashMatrix.jsx~HashMatrix#getPath",
     "access": "public",
     "description": null,
-    "lineNumber": 224,
+    "lineNumber": 226,
+    "undocument": true,
+    "params": [
+      {
+        "name": "path",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 39,
+    "kind": "method",
+    "name": "_setPathInternal",
+    "memberof": "src/HashMatrix.jsx~HashMatrix",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/HashMatrix.jsx~HashMatrix#_setPathInternal",
+    "access": "private",
+    "description": null,
+    "lineNumber": 230,
     "undocument": true,
     "params": [
       {
@@ -798,51 +836,33 @@
     }
   },
   {
-    "__docId__": 40,
-    "kind": "file",
-    "name": "src/Incarnate.jsx",
-    "content": "import HashMatrixInternal from './HashMatrix';\nimport LifePodInternal from './LifePod';\nimport DependencyDeclarationInternal from './DependencyDeclaration';\nimport SubMapDeclarationInternal from './SubMapDeclaration';\n\nexport const DependencyDeclaration = DependencyDeclarationInternal;\nexport const SubMapDeclaration = SubMapDeclarationInternal;\nexport const HashMatrix = HashMatrixInternal;\nexport const LifePod = LifePodInternal;\n\n/**\n * Manage the lifecycle of application dependencies.\n * Use dependencies as application entry-points and keep track of live changes.\n * */\nexport default class Incarnate extends HashMatrix {\n  static DEFAULT_NAME = 'Incarnate';\n  static ERRORS = {\n    INVALID_MAP: 'INVALID_MAP',\n    UNSATISFIED_SHARED_DEPENDENCY: 'UNSATISFIED_SHARED_DEPENDENCY'\n  };\n\n  /**\n   * The map of dependency and subMap declarations.\n   * @type {Object.<DependencyDeclaration|SubMapDeclaration|Incarnate|LifePod|HashMatrix>}\n   * */\n  map;\n\n  /**\n   * A function used to transform the arguments for a `LifePod` factory.\n   * @type {Function}\n   * @see LifePod::transformArgs\n   * */\n  transformArgs;\n\n  _parsedMap = {};\n\n  /**\n   * When `true`, `LifePod` objects will throw an error when dependencies resolve to `undefined`.\n   * Default: `false`.\n   * */\n  strictRequired;\n\n  constructor(config = {}) {\n    super(config);\n\n    if (!(this.map instanceof Object)) {\n      throw {\n        message: Incarnate.ERRORS.INVALID_MAP,\n        data: this\n      };\n    }\n\n    if (!this.hasOwnProperty('strictRequired')) {\n      this.strictRequired = false;\n    }\n  }\n\n  createLifePod(name, dependencyDeclaration = {}) {\n    const {\n      required = [],\n      optional = [],\n      getters = [],\n      setters = [],\n      invalidators = [],\n      listeners = [],\n      targets = [],\n      transformArgs,\n      strictRequired\n    } = dependencyDeclaration;\n    const config = {\n      ...dependencyDeclaration,\n      name: this.getPathString(name, this.name),\n      targetPath: name,\n      hashMatrix: this,\n      required: required.map(this.getDependency),\n      optional: optional.map(this.getDependency),\n      getters: getters.map(this.createGetter),\n      setters: setters.map(this.createSetter),\n      invalidators: invalidators.map(this.createInvalidator),\n      listeners: listeners.map(this.createListener),\n      targets: targets.map(this.createTarget),\n      transformArgs: typeof transformArgs !== 'undefined' ?\n        transformArgs :\n        this.transformArgs,\n      strictRequired: typeof strictRequired !== 'undefined' ?\n        strictRequired :\n        this.strictRequired\n    };\n\n    return new LifePod(config);\n  }\n\n  createIncarnate(name, subMapDeclaration = {}) {\n    const {\n      subMap = {},\n      shared = {},\n      transformArgs,\n      strictRequired\n    } = subMapDeclaration;\n    const parsedSharedMap = Object.keys(shared)\n      .reduce((acc, k) => {\n        const p = shared[k];\n\n        acc[k] = this.getDependency(p);\n\n        return acc;\n      }, {});\n    const subMapWithShared = {\n      ...subMap,\n      ...parsedSharedMap\n    };\n    const config = {\n      ...subMapDeclaration,\n      name: this.getPathString(name, this.name),\n      targetPath: name,\n      hashMatrix: this,\n      map: subMapWithShared,\n      transformArgs: typeof transformArgs !== 'undefined' ?\n        transformArgs :\n        this.transformArgs,\n      strictRequired: typeof strictRequired !== 'undefined' ?\n        strictRequired :\n        this.strictRequired\n    };\n\n    return new Incarnate(config);\n  }\n\n  convertDeclaration(name, declaration = {}) {\n    if (declaration instanceof HashMatrix) {\n      return declaration;\n    }\n\n    const {subMap} = declaration;\n\n    if (subMap instanceof Object) {\n      return this.createIncarnate(name, declaration);\n    } else {\n      return this.createLifePod(name, declaration);\n    }\n  }\n\n  /**\n   * Get a dependency by path.\n   * @param {Array|string} path The path to the dependency.\n   * @returns {Incarnate|LifePod|HashMatrix} The dependency.\n   * */\n  getDependency = (path = '') => {\n    const pathArray = this.getPathArray(path);\n    const pathString = this.getPathString(pathArray);\n\n    if (!pathArray.length) {\n      return this;\n    }\n\n    const name = pathArray.shift();\n    const subPath = [...pathArray];\n\n    if (!this._parsedMap.hasOwnProperty(name) && this.map.hasOwnProperty(name)) {\n      this._parsedMap[name] = this.convertDeclaration(name, this.map[name]);\n    }\n\n    const dep = this._parsedMap[name];\n\n    if (dep instanceof Incarnate) {\n      return dep.getDependency(subPath);\n    } else if (dep instanceof HashMatrix) {\n      if (subPath.length) {\n        if (dep instanceof LifePod) {\n          return new LifePod({\n            name: pathString,\n            targetPath: subPath,\n            hashMatrix: dep,\n            strictRequired: this.strictRequired\n          });\n        } else {\n          return new HashMatrix({\n            name: pathString,\n            targetPath: subPath,\n            hashMatrix: dep\n          });\n        }\n      } else {\n        return dep;\n      }\n    } else {\n      return new HashMatrix({\n        name: pathString,\n        targetPath: [\n          name,\n          ...subPath\n        ],\n        hashMatrix: this\n      });\n    }\n  };\n\n  createGetter = (path) => {\n    return (subPath = []) => {\n      // TRICKY: Get the `dep` \"just in time\" to avoid recursion.\n      const dep = this.getDependency(path);\n\n      return dep.getPath(subPath);\n    }\n  };\n\n  createSetter = (path) => {\n    return (value, subPath = []) => {\n      // TRICKY: Get the `dep` \"just in time\" to avoid recursion.\n      const dep = this.getDependency(path);\n\n      return dep.setPath(subPath, value);\n    }\n  };\n\n  createInvalidator = (path) => {\n    const setter = this.createSetter(path);\n\n    return () => setter(undefined);\n  };\n\n  createListener = (path) => {\n    return (handler, subPath = []) => {\n      // TRICKY: Get the `dep` \"just in time\" to avoid recursion.\n      const dep = this.getDependency(path);\n\n      return dep.addChangeHandler(subPath, handler);\n    }\n  };\n\n  createTarget = (path) => {\n    return this.getDependency(path);\n  };\n}\n",
-    "static": true,
-    "longname": "/Users/ryangraff/projects/incarnate/src/Incarnate.jsx",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 41,
-    "kind": "variable",
-    "name": "DependencyDeclaration",
-    "memberof": "src/Incarnate.jsx",
-    "static": true,
-    "longname": "src/Incarnate.jsx~DependencyDeclaration",
-    "access": "public",
-    "export": true,
-    "importPath": "incarnate",
-    "importStyle": "{DependencyDeclaration}",
-    "description": null,
-    "lineNumber": 6,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
     "__docId__": 42,
-    "kind": "variable",
-    "name": "SubMapDeclaration",
-    "memberof": "src/Incarnate.jsx",
-    "static": true,
-    "longname": "src/Incarnate.jsx~SubMapDeclaration",
+    "kind": "method",
+    "name": "setPath",
+    "memberof": "src/HashMatrix.jsx~HashMatrix",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/HashMatrix.jsx~HashMatrix#setPath",
     "access": "public",
-    "export": true,
-    "importPath": "incarnate",
-    "importStyle": "{SubMapDeclaration}",
     "description": null,
-    "lineNumber": 7,
+    "lineNumber": 282,
     "undocument": true,
-    "type": {
+    "params": [
+      {
+        "name": "path",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "value",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
       "types": [
         "*"
       ]
@@ -850,19 +870,19 @@
   },
   {
     "__docId__": 43,
-    "kind": "variable",
-    "name": "HashMatrix",
-    "memberof": "src/Incarnate.jsx",
-    "static": true,
-    "longname": "src/Incarnate.jsx~HashMatrix",
+    "kind": "method",
+    "name": "getValue",
+    "memberof": "src/HashMatrix.jsx~HashMatrix",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/HashMatrix.jsx~HashMatrix#getValue",
     "access": "public",
-    "export": true,
-    "importPath": "incarnate",
-    "importStyle": "{HashMatrix}",
     "description": null,
-    "lineNumber": 8,
+    "lineNumber": 286,
     "undocument": true,
-    "type": {
+    "params": [],
+    "return": {
       "types": [
         "*"
       ]
@@ -870,19 +890,26 @@
   },
   {
     "__docId__": 44,
-    "kind": "variable",
-    "name": "LifePod",
-    "memberof": "src/Incarnate.jsx",
-    "static": true,
-    "longname": "src/Incarnate.jsx~LifePod",
+    "kind": "method",
+    "name": "setValue",
+    "memberof": "src/HashMatrix.jsx~HashMatrix",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/HashMatrix.jsx~HashMatrix#setValue",
     "access": "public",
-    "export": true,
-    "importPath": "incarnate",
-    "importStyle": "{LifePod}",
     "description": null,
-    "lineNumber": 9,
+    "lineNumber": 290,
     "undocument": true,
-    "type": {
+    "params": [
+      {
+        "name": "value",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
       "types": [
         "*"
       ]
@@ -890,6 +917,17 @@
   },
   {
     "__docId__": 45,
+    "kind": "file",
+    "name": "src/Incarnate.jsx",
+    "content": "import HashMatrix from './HashMatrix';\nimport LifePod from './LifePod';\nimport DependencyDeclaration from './DependencyDeclaration';\nimport SubMapDeclaration from './SubMapDeclaration';\n\n/**\n * Manage the lifecycle of application dependencies.\n * Use dependencies as application entry-points and keep track of live changes.\n * */\nexport default class Incarnate extends HashMatrix {\n  static DEFAULT_NAME = 'Incarnate';\n  static ERRORS = {\n    UNSATISFIED_SHARED_DEPENDENCY: 'UNSATISFIED_SHARED_DEPENDENCY'\n  };\n\n  /**\n   * The map of dependency and subMap declarations.\n   * @type {Object.<DependencyDeclaration|SubMapDeclaration|Incarnate|LifePod|HashMatrix>}\n   * */\n  subMap;\n\n  _parsedSubMap = {};\n\n  /**\n   * If `true`, `LifePod` factories will NOT be called until **none** of the `dependencies` are `undefined`.\n   * @type {boolean}\n   * */\n  strict;\n\n  /**\n   * @param {SubMapDeclaration} subMapDeclaration The `SubMapDeclaration` to be managed.\n   * */\n  constructor(subMapDeclaration = new SubMapDeclaration()) {\n    super(subMapDeclaration);\n\n    if (!(this.subMap instanceof Object)) {\n      this.subMap = {};\n    }\n\n    if (!(this.hashMatrix instanceof Object)) {\n      this.hashMatrix = {};\n    }\n  }\n\n  createLifePod(name, dependencyDeclaration = {}) {\n    const {\n      dependencies = {},\n      getters = {},\n      setters = {},\n      invalidators = {},\n      listeners = {},\n      strict,\n      ...otherConfig\n    } = dependencyDeclaration;\n    const newDependencyDeclaration = new DependencyDeclaration({\n      ...otherConfig,\n      name: this.getPathString(name, this.name),\n      targetPath: name,\n      hashMatrix: this,\n      dependencies: this.getDependenciesFromMap(dependencies),\n      getters: this.createFromMap(getters, this.createGetter),\n      setters: this.createFromMap(setters, this.createSetter),\n      invalidators: this.createFromMap(invalidators, this.createInvalidator),\n      listeners: this.createFromMap(listeners, this.createListener),\n      strict: typeof strict !== 'undefined' ?\n        strict :\n        this.strict\n    });\n\n    return new LifePod(newDependencyDeclaration);\n  }\n\n  createIncarnate(name, subMapDeclaration = {}) {\n    const {\n      subMap = {},\n      shared = {},\n      strict,\n      ...otherConfig\n    } = subMapDeclaration;\n    const parsedSharedMap = Object.keys(shared)\n      .reduce((acc, k) => {\n        const p = shared[k];\n\n        acc[k] = this.getDependency(p);\n\n        return acc;\n      }, {});\n    const subMapWithShared = {\n      ...subMap,\n      ...parsedSharedMap\n    };\n    const newSubMapDeclaration = new SubMapDeclaration({\n      ...otherConfig,\n      name: this.getPathString(name, this.name),\n      targetPath: name,\n      hashMatrix: this,\n      subMap: subMapWithShared,\n      strict: typeof strict !== 'undefined' ?\n        strict :\n        this.strict\n    });\n\n    for (const k in subMap) {\n      const depDec = subMap[k];\n\n      if (depDec === true && !shared.hasOwnProperty(k)) {\n        throw {\n          message: Incarnate.ERRORS.UNSATISFIED_SHARED_DEPENDENCY,\n          data: k,\n          subject: subMapDeclaration,\n          context: this\n        };\n      }\n    }\n\n    return new Incarnate(newSubMapDeclaration);\n  }\n\n  convertDeclaration(name, declaration = {}) {\n    if (declaration instanceof HashMatrix) {\n      return declaration;\n    }\n\n    const {subMap} = declaration;\n\n    if (subMap instanceof Object) {\n      return this.createIncarnate(name, declaration);\n    } else {\n      return this.createLifePod(name, declaration);\n    }\n  }\n\n  /**\n   * Get a dependency by path.\n   * @param {Array|string} path The path to the dependency.\n   * @returns {Incarnate|LifePod|HashMatrix} The dependency.\n   * */\n  getDependency = (path = '') => {\n    const pathArray = this.getPathArray(path);\n    const pathString = this.getPathString(pathArray);\n\n    if (!pathArray.length) {\n      return this;\n    }\n\n    const name = pathArray.shift();\n    const subPath = [...pathArray];\n\n    if (!this._parsedSubMap.hasOwnProperty(name) && this.subMap.hasOwnProperty(name)) {\n      this._parsedSubMap[name] = this.convertDeclaration(name, this.subMap[name]);\n    }\n\n    const dep = this._parsedSubMap[name];\n\n    if (dep instanceof Incarnate) {\n      return dep.getDependency(subPath);\n    } else if (dep instanceof HashMatrix) {\n      if (subPath.length) {\n        if (dep instanceof LifePod) {\n          return new LifePod(new DependencyDeclaration({\n            name: pathString,\n            targetPath: subPath,\n            hashMatrix: dep,\n            strict: this.strict\n          }));\n        } else {\n          return new HashMatrix({\n            name: pathString,\n            targetPath: subPath,\n            hashMatrix: dep\n          });\n        }\n      } else {\n        return dep;\n      }\n    } else {\n      return new HashMatrix({\n        name: pathString,\n        targetPath: [\n          name,\n          ...subPath\n        ],\n        hashMatrix: this\n      });\n    }\n  };\n\n  getDependenciesFromMap(dependencyMap = {}) {\n    return Object\n      .keys(dependencyMap)\n      .reduce((acc, k) => {\n        const depPath = dependencyMap[k];\n        acc[k] = this.getDependency(depPath);\n\n        return acc;\n      }, {});\n  }\n\n  createFromMap(map = {}, creator) {\n    return Object\n      .keys(map)\n      .reduce((acc, k) => {\n        const path = map[k];\n        acc[k] = creator(path);\n\n        return acc;\n      }, {});\n  }\n\n  createGetter = (path) => {\n    return (subPath = []) => {\n      // TRICKY: Get the `dep` \"just in time\" to avoid recursion.\n      const dep = this.getDependency(path);\n\n      return dep.getPath(subPath);\n    }\n  };\n\n  createSetter = (path) => {\n    return (value, subPath = []) => {\n      // TRICKY: Get the `dep` \"just in time\" to avoid recursion.\n      const dep = this.getDependency(path);\n\n      return dep.setPath(subPath, value);\n    }\n  };\n\n  createInvalidator = (path) => {\n    const setter = this.createSetter(path);\n\n    return () => setter(undefined);\n  };\n\n  createListener = (path) => {\n    return (handler, subPath = []) => {\n      // TRICKY: Get the `dep` \"just in time\" to avoid recursion.\n      const dep = this.getDependency(path);\n\n      return dep.addChangeHandler(subPath, handler);\n    }\n  };\n\n  /**\n   * The same as `getPath` but triggers `LifePod` dependency resolution.\n   * */\n  getResolvedPath(path) {\n    const dep = this.getDependency(path);\n\n    if (dep instanceof LifePod) {\n      return dep.getValue();\n    } else {\n      return this.getPath(path);\n    }\n  }\n\n  /**\n   * The same as `getPath` but triggers `LifePod` dependency resolution and waits for a value.\n   * */\n  async getResolvedPathAsync(path) {\n    const dep = this.getDependency(path);\n\n    if (dep instanceof LifePod) {\n      return dep.getValueAsync();\n    } else {\n      return this.getPath(path);\n    }\n  }\n}\n",
+    "static": true,
+    "longname": "/Users/ryangraff/projects/incarnate/src/Incarnate.jsx",
+    "access": "public",
+    "description": null,
+    "lineNumber": 1
+  },
+  {
+    "__docId__": 46,
     "kind": "class",
     "name": "Incarnate",
     "memberof": "src/Incarnate.jsx",
@@ -897,17 +935,17 @@
     "longname": "src/Incarnate.jsx~Incarnate",
     "access": "public",
     "export": true,
-    "importPath": "incarnate",
+    "importPath": "incarnate/src/Incarnate.jsx",
     "importStyle": "Incarnate",
     "description": "Manage the lifecycle of application dependencies.\nUse dependencies as application entry-points and keep track of live changes.",
-    "lineNumber": 15,
+    "lineNumber": 10,
     "interface": false,
     "extends": [
-      "HashMatrix"
+      "src/HashMatrix.js~HashMatrix"
     ]
   },
   {
-    "__docId__": 46,
+    "__docId__": 47,
     "kind": "member",
     "name": "DEFAULT_NAME",
     "memberof": "src/Incarnate.jsx~Incarnate",
@@ -915,24 +953,7 @@
     "longname": "src/Incarnate.jsx~Incarnate.DEFAULT_NAME",
     "access": "public",
     "description": null,
-    "lineNumber": 16,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 47,
-    "kind": "member",
-    "name": "ERRORS",
-    "memberof": "src/Incarnate.jsx~Incarnate",
-    "static": true,
-    "longname": "src/Incarnate.jsx~Incarnate.ERRORS",
-    "access": "public",
-    "description": null,
-    "lineNumber": 17,
+    "lineNumber": 11,
     "undocument": true,
     "type": {
       "types": [
@@ -943,13 +964,30 @@
   {
     "__docId__": 48,
     "kind": "member",
-    "name": "map",
+    "name": "ERRORS",
+    "memberof": "src/Incarnate.jsx~Incarnate",
+    "static": true,
+    "longname": "src/Incarnate.jsx~Incarnate.ERRORS",
+    "access": "public",
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 49,
+    "kind": "member",
+    "name": "subMap",
     "memberof": "src/Incarnate.jsx~Incarnate",
     "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#map",
+    "longname": "src/Incarnate.jsx~Incarnate#subMap",
     "access": "public",
     "description": "The map of dependency and subMap declarations.",
-    "lineNumber": 26,
+    "lineNumber": 20,
     "type": {
       "nullable": null,
       "types": [
@@ -960,37 +998,15 @@
     }
   },
   {
-    "__docId__": 49,
-    "kind": "member",
-    "name": "transformArgs",
-    "memberof": "src/Incarnate.jsx~Incarnate",
-    "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#transformArgs",
-    "access": "public",
-    "description": "A function used to transform the arguments for a `LifePod` factory.",
-    "see": [
-      "LifePod::transformArgs"
-    ],
-    "lineNumber": 33,
-    "type": {
-      "nullable": null,
-      "types": [
-        "Function"
-      ],
-      "spread": false,
-      "description": null
-    }
-  },
-  {
     "__docId__": 50,
     "kind": "member",
-    "name": "_parsedMap",
+    "name": "_parsedSubMap",
     "memberof": "src/Incarnate.jsx~Incarnate",
     "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#_parsedMap",
+    "longname": "src/Incarnate.jsx~Incarnate#_parsedSubMap",
     "access": "private",
     "description": null,
-    "lineNumber": 35,
+    "lineNumber": 22,
     "undocument": true,
     "type": {
       "types": [
@@ -1001,17 +1017,20 @@
   {
     "__docId__": 51,
     "kind": "member",
-    "name": "strictRequired",
+    "name": "strict",
     "memberof": "src/Incarnate.jsx~Incarnate",
     "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#strictRequired",
+    "longname": "src/Incarnate.jsx~Incarnate#strict",
     "access": "public",
-    "description": "When `true`, `LifePod` objects will throw an error when dependencies resolve to `undefined`.\nDefault: `false`.",
-    "lineNumber": 41,
+    "description": "If `true`, `LifePod` factories will NOT be called until **none** of the `dependencies` are `undefined`.",
+    "lineNumber": 28,
     "type": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "boolean"
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
@@ -1024,12 +1043,40 @@
     "static": false,
     "longname": "src/Incarnate.jsx~Incarnate#constructor",
     "access": "public",
-    "description": null,
-    "lineNumber": 43,
-    "undocument": true
+    "description": "",
+    "lineNumber": 33,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "SubMapDeclaration"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "subMapDeclaration",
+        "description": "The `SubMapDeclaration` to be managed."
+      }
+    ]
   },
   {
     "__docId__": 54,
+    "kind": "member",
+    "name": "hashMatrix",
+    "memberof": "src/Incarnate.jsx~Incarnate",
+    "static": false,
+    "longname": "src/Incarnate.jsx~Incarnate#hashMatrix",
+    "access": "public",
+    "description": null,
+    "lineNumber": 41,
+    "undocument": true,
+    "type": {
+      "types": [
+        "{}"
+      ]
+    }
+  },
+  {
+    "__docId__": 55,
     "kind": "method",
     "name": "createLifePod",
     "memberof": "src/Incarnate.jsx~Incarnate",
@@ -1039,7 +1086,7 @@
     "longname": "src/Incarnate.jsx~Incarnate#createLifePod",
     "access": "public",
     "description": null,
-    "lineNumber": 58,
+    "lineNumber": 45,
     "undocument": true,
     "params": [
       {
@@ -1065,7 +1112,7 @@
     }
   },
   {
-    "__docId__": 55,
+    "__docId__": 56,
     "kind": "method",
     "name": "createIncarnate",
     "memberof": "src/Incarnate.jsx~Incarnate",
@@ -1075,7 +1122,7 @@
     "longname": "src/Incarnate.jsx~Incarnate#createIncarnate",
     "access": "public",
     "description": null,
-    "lineNumber": 93,
+    "lineNumber": 73,
     "undocument": true,
     "params": [
       {
@@ -1101,7 +1148,7 @@
     }
   },
   {
-    "__docId__": 56,
+    "__docId__": 57,
     "kind": "method",
     "name": "convertDeclaration",
     "memberof": "src/Incarnate.jsx~Incarnate",
@@ -1111,7 +1158,7 @@
     "longname": "src/Incarnate.jsx~Incarnate#convertDeclaration",
     "access": "public",
     "description": null,
-    "lineNumber": 129,
+    "lineNumber": 119,
     "undocument": true,
     "params": [
       {
@@ -1137,7 +1184,7 @@
     }
   },
   {
-    "__docId__": 57,
+    "__docId__": 58,
     "kind": "member",
     "name": "getDependency",
     "memberof": "src/Incarnate.jsx~Incarnate",
@@ -1145,7 +1192,7 @@
     "longname": "src/Incarnate.jsx~Incarnate#getDependency",
     "access": "public",
     "description": "Get a dependency by path.",
-    "lineNumber": 148,
+    "lineNumber": 138,
     "unknown": [
       {
         "tagName": "@returns",
@@ -1182,34 +1229,30 @@
     }
   },
   {
-    "__docId__": 58,
-    "kind": "member",
-    "name": "createGetter",
-    "memberof": "src/Incarnate.jsx~Incarnate",
-    "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#createGetter",
-    "access": "public",
-    "description": null,
-    "lineNumber": 198,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
     "__docId__": 59,
-    "kind": "member",
-    "name": "createSetter",
+    "kind": "method",
+    "name": "getDependenciesFromMap",
     "memberof": "src/Incarnate.jsx~Incarnate",
+    "generator": false,
+    "async": false,
     "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#createSetter",
+    "longname": "src/Incarnate.jsx~Incarnate#getDependenciesFromMap",
     "access": "public",
     "description": null,
-    "lineNumber": 207,
+    "lineNumber": 188,
     "undocument": true,
-    "type": {
+    "params": [
+      {
+        "name": "dependencyMap",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      }
+    ],
+    "return": {
       "types": [
         "*"
       ]
@@ -1217,16 +1260,35 @@
   },
   {
     "__docId__": 60,
-    "kind": "member",
-    "name": "createInvalidator",
+    "kind": "method",
+    "name": "createFromMap",
     "memberof": "src/Incarnate.jsx~Incarnate",
+    "generator": false,
+    "async": false,
     "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#createInvalidator",
+    "longname": "src/Incarnate.jsx~Incarnate#createFromMap",
     "access": "public",
     "description": null,
-    "lineNumber": 216,
+    "lineNumber": 199,
     "undocument": true,
-    "type": {
+    "params": [
+      {
+        "name": "map",
+        "optional": true,
+        "types": [
+          "{}"
+        ],
+        "defaultRaw": {},
+        "defaultValue": "{}"
+      },
+      {
+        "name": "creator",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
       "types": [
         "*"
       ]
@@ -1235,13 +1297,13 @@
   {
     "__docId__": 61,
     "kind": "member",
-    "name": "createListener",
+    "name": "createGetter",
     "memberof": "src/Incarnate.jsx~Incarnate",
     "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#createListener",
+    "longname": "src/Incarnate.jsx~Incarnate#createGetter",
     "access": "public",
     "description": null,
-    "lineNumber": 222,
+    "lineNumber": 210,
     "undocument": true,
     "type": {
       "types": [
@@ -1252,13 +1314,13 @@
   {
     "__docId__": 62,
     "kind": "member",
-    "name": "createTarget",
+    "name": "createSetter",
     "memberof": "src/Incarnate.jsx~Incarnate",
     "static": false,
-    "longname": "src/Incarnate.jsx~Incarnate#createTarget",
+    "longname": "src/Incarnate.jsx~Incarnate#createSetter",
     "access": "public",
     "description": null,
-    "lineNumber": 231,
+    "lineNumber": 219,
     "undocument": true,
     "type": {
       "types": [
@@ -1268,9 +1330,95 @@
   },
   {
     "__docId__": 63,
+    "kind": "member",
+    "name": "createInvalidator",
+    "memberof": "src/Incarnate.jsx~Incarnate",
+    "static": false,
+    "longname": "src/Incarnate.jsx~Incarnate#createInvalidator",
+    "access": "public",
+    "description": null,
+    "lineNumber": 228,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 64,
+    "kind": "member",
+    "name": "createListener",
+    "memberof": "src/Incarnate.jsx~Incarnate",
+    "static": false,
+    "longname": "src/Incarnate.jsx~Incarnate#createListener",
+    "access": "public",
+    "description": null,
+    "lineNumber": 234,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 65,
+    "kind": "method",
+    "name": "getResolvedPath",
+    "memberof": "src/Incarnate.jsx~Incarnate",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/Incarnate.jsx~Incarnate#getResolvedPath",
+    "access": "public",
+    "description": "The same as `getPath` but triggers `LifePod` dependency resolution.",
+    "lineNumber": 246,
+    "params": [
+      {
+        "name": "path",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 66,
+    "kind": "method",
+    "name": "getResolvedPathAsync",
+    "memberof": "src/Incarnate.jsx~Incarnate",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/Incarnate.jsx~Incarnate#getResolvedPathAsync",
+    "access": "public",
+    "description": "The same as `getPath` but triggers `LifePod` dependency resolution and waits for a value.",
+    "lineNumber": 259,
+    "params": [
+      {
+        "name": "path",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 67,
     "kind": "file",
     "name": "src/LifePod.jsx",
-    "content": "import DependencyDeclaration from './DependencyDeclaration';\nimport HashMatrix from './HashMatrix';\n\n/**\n * A container used to resolve a `DependencyDeclaration`.\n * @see DependencyDeclaration\n * */\nexport default class LifePod extends HashMatrix {\n  static DEFAULT_NAME = 'LifePod';\n  static ERRORS = {\n    INVALID_FACTORY: 'INVALID_FACTORY',\n    ASYNCHRONOUS_FACTORY_ERROR: 'ASYNCHRONOUS_FACTORY_ERROR',\n    UNRESOLVED_ASYNCHRONOUS_DEPENDENCY: 'UNRESOLVED_ASYNCHRONOUS_DEPENDENCY',\n    DEPENDENCY_RESOLUTION_RECURSION: 'DEPENDENCY_RESOLUTION_RECURSION',\n    MISSING_REQUIRED_DEPENDENCY: 'MISSING_REQUIRED_DEPENDENCY'\n  };\n\n  _required;\n  _optional;\n\n  /**\n   * @returns {Array.<LifePod>} A list of required dependencies.\n   * */\n  get required() {\n    return this._required;\n  }\n\n  /**\n   * @param {Array.<LifePod>} value A list of required dependencies.\n   * */\n  set required(value) {\n    if (this._required instanceof Array) {\n      this.removeDependencyListChangeHandlers(this._required);\n    }\n\n    this._required = value;\n\n    if (this._required instanceof Array) {\n      this.addDependencyListChangeHandlers(this._required);\n    }\n  }\n\n  /**\n   * @returns {Array.<LifePod>} A list of optional dependencies.\n   * */\n  get optional() {\n    return this._optional;\n  }\n\n  /**\n   * @param {Array.<LifePod>} value A list of optional dependencies.\n   * */\n  set optional(value) {\n    if (this._optional instanceof Array) {\n      this.removeDependencyListChangeHandlers(this._optional);\n    }\n\n    this._optional = value;\n\n    if (this._optional instanceof Array) {\n      this.addDependencyListChangeHandlers(this._optional);\n    }\n  }\n\n  /**\n   * A list of getters.\n   * `getter(path = ''):*`\n   * @type {Array.<Function>}\n   * */\n  getters;\n\n  /**\n   * A list of setters.\n   * `setter(value = *, subPath = '')`\n   * @type {Array.<Function>}\n   * */\n  setters;\n\n  /**\n   * A list of invalidators.\n   * `invalidator(subPath = '')`\n   * @type {Array.<Function>}\n   * */\n  invalidators;\n\n  /**\n   * A list of change handler receivers.\n   * `listen(handler):Function (unlisten)`\n   * @type {Array.<Function>}\n   * */\n  listeners;\n\n  /**\n   * A list of `HashMatrix` objects that will be passed directly to the `factory`.\n   * @type {Array.<HashMatrix>}\n   * */\n  targets;\n\n  /**\n   * An optional function used to transform factory arguments from an argument map (Object)\n   * (keys are the types of dependencies, values are arrays of resolved dependencies)\n   * to an `Array` containing a different structure. Used when the factory\n   * might require a different configuration of arguments.\n   * `transformArgs(argMap = {required, optional, getters, setters, invalidators, listeners, targets}):Array (newArgs)`\n   * If explicitly set to `false`, the factory is simply passed the arguments map directly.\n   * The **default behavior** is to combine all dependencies, in order, into an array.\n   * @type {Function|false}\n   * */\n  transformArgs;\n\n  /**\n   * The factory function used to **resolve** the value of the dependency.\n   * @type {Function}\n   * @param {Array.<*>} ...args The various required dependencies in the order:\n   * `required`, `optional`, `getters`, `setters`, `invalidators`, `listeners`, `targets`\n   * @returns {*|Promise} The value of the dependency.\n   * */\n  factory;\n\n  /**\n   * A function used to handle errors from an asynchronous factory.\n   * @param {Object} errorInformation The error information.\n   * `{message, error, data}`\n   * */\n  handlerAsyncFactoryError;\n\n  /**\n   * A flag designating whether or not this dependency is currently being resolved.\n   * @type {boolean}\n   * */\n  resolving = false;\n\n  /**\n   * The current `Promise` responsible for resolving this dependency.\n   * @type {Promise}\n   * */\n  resolver;\n\n  strictRequired;\n\n  constructor(config = {}) {\n    const {\n      required = [],\n      optional = []\n    } = config;\n    const cleanConfig = {\n      ...config\n    };\n\n    delete cleanConfig.required;\n    delete cleanConfig.optional;\n\n    super(cleanConfig);\n\n    this.required = required;\n    this.optional = optional;\n\n    if (!(this.factory instanceof Function) && !(this.hashMatrix instanceof LifePod)) {\n      throw {\n        message: LifePod.ERRORS.INVALID_FACTORY,\n        data: this\n      };\n    }\n  }\n\n  handleDependencyChange = () => {\n    this.invalidate();\n  };\n\n  addDependencyChangeHandler = (dependency) => {\n    if (dependency instanceof HashMatrix) {\n      dependency.addChangeHandler('', this.handleDependencyChange);\n    }\n  };\n\n  removeDependencyChangeHandler = (dependency) => {\n    if (dependency instanceof HashMatrix) {\n      dependency.removeChangeHandler('', this.handleDependencyChange);\n    }\n  };\n\n  addDependencyListChangeHandlers = (dependencyList = []) => {\n    dependencyList.forEach(this.addDependencyChangeHandler);\n  };\n\n  removeDependencyListChangeHandlers = (dependencyList = []) => {\n    dependencyList.forEach(this.removeDependencyChangeHandler);\n  };\n\n  transFormFactoryArgs(argMap = {}) {\n    if (this.transformArgs === false) {\n      return [argMap];\n    } else if (this.transformArgs instanceof Function) {\n      return this.transformArgs(argMap);\n    } else {\n      const {\n        required = [],\n        optional = [],\n        getters = [],\n        setters = [],\n        invalidators = [],\n        listeners = [],\n        targets = []\n      } = argMap;\n\n      return [\n        ...required,\n        ...optional,\n        ...getters,\n        ...setters,\n        ...invalidators,\n        ...listeners,\n        ...targets\n      ];\n    }\n  }\n\n  resolveDependency = (dependency, optional) => {\n    let resolvedValue;\n\n    if (dependency instanceof LifePod) {\n      resolvedValue = dependency.resolve();\n    } else if (dependency instanceof HashMatrix) {\n      resolvedValue = dependency.getPath([]);\n    } else {\n      resolvedValue = dependency;\n    }\n\n    if (!optional) {\n      if (resolvedValue instanceof Promise) {\n        throw {\n          message: LifePod.ERRORS.UNRESOLVED_ASYNCHRONOUS_DEPENDENCY,\n          data: this,\n          subject: dependency\n        };\n      }\n\n      if (this.strictRequired && typeof resolvedValue === 'undefined') {\n        throw {\n          message: LifePod.ERRORS.MISSING_REQUIRED_DEPENDENCY,\n          data: this,\n          subject: dependency\n        };\n      }\n    }\n\n    return resolvedValue;\n  };\n\n  resolveDependencyList(dependencyList = [], optional) {\n    return dependencyList.map((d) => this.resolveDependency(d, optional));\n  }\n\n  /**\n   * @returns {*}\n   * */\n  async resolveAsyncFactoryPromise(promise) {\n    this.resolving = true;\n    this.resolver = promise;\n\n    try {\n      const value = await promise;\n\n      this.resolving = false;\n      this.resolver = undefined;\n\n      this.setValue(value);\n    } catch (error) {\n      if (this.handlerAsyncFactoryError instanceof Function) {\n        this.handlerAsyncFactoryError({\n          message: LifePod.ERRORS.ASYNCHRONOUS_FACTORY_ERROR,\n          error,\n          data: this\n        });\n      }\n    }\n  }\n\n  /**\n   * Invalidate this dependency.\n   * */\n  invalidate() {\n    this.setValue(undefined);\n  }\n\n  /**\n   * Resolve the value of this dependency using the provided factory and various requirements.\n   * If the value of this dependency is *valid* (not `undefined`), the current value is simply\n   * returned in order to avoid recursive resolution.\n   * @returns {*|Promise} The value of the dependency.\n   * */\n  resolve() {\n    if (this.hashMatrix instanceof LifePod) {\n      // TRICKY: If a `LifePod` is proxied it must be resolved.\n      const proxiedValue = this.hashMatrix.resolve();\n\n      if (proxiedValue instanceof Promise) {\n        return new Promise(async (res, rej) => {\n          try {\n            await proxiedValue;\n\n            res(this.getValue());\n          } catch (error) {\n            rej(error);\n          }\n        });\n      } else {\n        return this.getValue();\n      }\n    }\n\n    if (this.resolving) {\n      if (this.resolver instanceof Promise) {\n        return this.resolver;\n      } else {\n        throw {\n          message: LifePod.ERRORS.DEPENDENCY_RESOLUTION_RECURSION,\n          data: this,\n          subject: this\n        };\n      }\n    }\n\n    if (typeof this.getValue() === 'undefined') {\n      this.resolving = true;\n\n      try {\n        const required = this.resolveDependencyList(this.required);\n        const optional = this.resolveDependencyList(this.optional, true);\n        const argMap = {\n          required,\n          optional,\n          getters: this.getters,\n          setters: this.setters,\n          invalidators: this.invalidators,\n          listeners: this.listeners,\n          targets: this.targets\n        };\n        const args = this.transFormFactoryArgs(argMap);\n        const value = this.factory(...args);\n\n        if (value instanceof Promise) {\n          this.resolveAsyncFactoryPromise(value);\n\n          // TRICKY: Return the value but don't store it.\n          // And do not cancel resolution.\n          return value;\n        } else {\n          this.resolving = false;\n          this.resolver = undefined;\n\n          this.setValue(value);\n        }\n      } catch (error) {\n        // IMPORTANT: If anything throws, cancel resolution.\n        this.resolving = false;\n        this.resolver = undefined;\n\n        throw error;\n      }\n    }\n\n    return this.getValue();\n  }\n\n  getValue() {\n    return this.getPath([]);\n  }\n\n  setValue(value) {\n    return this.setPath([], value);\n  }\n}\n",
+    "content": "import DependencyDeclaration from './DependencyDeclaration';\nimport HashMatrix from './HashMatrix';\n\n/**\n * A container used to resolve a `DependencyDeclaration`.\n * @see DependencyDeclaration\n * */\nexport default class LifePod extends HashMatrix {\n  static DEFAULT_NAME = 'LifePod';\n\n  _dependencies;\n\n  /**\n   * @returns {Object.<HashMatrix>} A map of named dependencies.\n   * */\n  get dependencies() {\n    return this._dependencies;\n  }\n\n  /**\n   * @param {Object.<HashMatrix>} value A map of named dependencies.\n   * */\n  set dependencies(value) {\n    if (this._dependencies instanceof Object) {\n      this.removeDependencyMapChangeHandlers(this._dependencies);\n    }\n\n    this._dependencies = value;\n\n    if (this._dependencies instanceof Object) {\n      this.addDependencyMapChangeHandlers(this._dependencies);\n    }\n  }\n\n  /**\n   * A map of named getters.\n   * `getter(path = ''):*`\n   * @type {Object.<Function>}\n   * */\n  getters;\n\n  /**\n   * A map of named setters.\n   * `setter(value = *, subPath = '')`\n   * @type {Object.<Function>}\n   * */\n  setters;\n\n  /**\n   * A map of named invalidators.\n   * `invalidator(subPath = '')`\n   * @type {Object.<Function>}\n   * */\n  invalidators;\n\n  /**\n   * A map of named change handler receivers.\n   * `listen(handler):Function (unlisten)`\n   * @type {Object.<Function>}\n   * */\n  listeners;\n\n  /**\n   * The factory function used to create the value of the dependency.\n   * @type {Function}\n   * @param {DependencyDeclaration} dependencyValues A `DependencyDeclaration` with resolved values rather than paths.\n   * @returns {*|Promise} The value of the dependency.\n   * */\n  factory;\n\n  /**\n   * If `true`, the `factory` is NOT called until **none** of the `dependencies` are `undefined`.\n   * @type {boolean}\n   * */\n  strict;\n\n  /**\n   * @param {DependencyDeclaration} dependencyDeclaration The `DependencyDeclaration` to be resolved.\n   * */\n  constructor(dependencyDeclaration = new DependencyDeclaration()) {\n    const {\n      dependencies = [],\n      ...cleanDependencyDeclaration\n    } = dependencyDeclaration;\n\n    super(cleanDependencyDeclaration);\n\n    this.dependencies = dependencies;\n  }\n\n  handleDependencyChange = () => {\n    this.invalidate();\n  };\n\n  addDependencyChangeHandler = (dependency) => {\n    if (dependency instanceof HashMatrix) {\n      dependency.addChangeHandler('', this.handleDependencyChange);\n    }\n  };\n\n  removeDependencyChangeHandler = (dependency) => {\n    if (dependency instanceof HashMatrix) {\n      dependency.removeChangeHandler('', this.handleDependencyChange);\n    }\n  };\n\n  addDependencyMapChangeHandlers = (dependencyMap = {}) => {\n    Object\n      .keys(dependencyMap)\n      .forEach(k => this.addDependencyChangeHandler(dependencyMap[k]));\n  };\n\n  removeDependencyMapChangeHandlers = (dependencyMap = {}) => {\n    Object\n      .keys(dependencyMap)\n      .forEach(k => this.removeDependencyChangeHandler(dependencyMap[k]));\n  };\n\n  invalidate() {\n    this.setValue(undefined);\n  }\n\n  resolveDependency(dependency) {\n    if (dependency instanceof HashMatrix) {\n      return dependency.getValue();\n    }\n  }\n\n  resolveDependencyMap(dependencyMap = {}) {\n    const resolvedDependencyDeclaration = new DependencyDeclaration();\n    const dependencyValueMap = {};\n\n    resolvedDependencyDeclaration.dependencies = dependencyValueMap;\n    resolvedDependencyDeclaration.getters = this.getters;\n    resolvedDependencyDeclaration.setters = this.setters;\n    resolvedDependencyDeclaration.invalidators = this.invalidators;\n    resolvedDependencyDeclaration.listeners = this.listeners;\n\n    for (const k in dependencyMap) {\n      const dep = dependencyMap[k];\n      const depValue = this.resolveDependency(dep);\n\n      if (this.strict && typeof depValue === 'undefined') {\n        return undefined;\n      } else {\n        dependencyValueMap[k] = depValue;\n      }\n    }\n\n    return resolvedDependencyDeclaration;\n  }\n\n  async handleFactoryPromise(factoryPromise) {\n    if (factoryPromise instanceof Promise) {\n      const value = await factoryPromise;\n\n      super.setPath([], value);\n    }\n  }\n\n  resolving = false;\n\n  resolve() {\n    let resolvedValue;\n\n    if (!this.resolving) {\n      this.resolving = true;\n\n      // TRICKY: If a `HashMatrix` is *proxied*, it must have a value.\n      if (\n        !(this.hashMatrix instanceof HashMatrix) ||\n        typeof this.hashMatrix.getValue() !== 'undefined'\n      ) {\n        if (this.factory instanceof Function) {\n          const resolvedDependencyDeclaration = this.resolveDependencyMap(this.dependencies);\n\n          if (typeof resolvedDependencyDeclaration !== 'undefined') {\n            resolvedValue = this.factory(resolvedDependencyDeclaration);\n\n            if (resolvedValue instanceof Promise) {\n              this.handleFactoryPromise(resolvedValue);\n            }\n          }\n        } else {\n          resolvedValue = this.getPath([]);\n        }\n      }\n    }\n\n    this.resolving = false;\n\n    return resolvedValue;\n  }\n\n  /**\n   * @override\n   * */\n  getPath(path) {\n    const directValue = super.getPath([]);\n\n    let value;\n\n    if (typeof directValue === 'undefined') {\n      const resolvedDirectValue = this.resolve();\n\n      if (resolvedDirectValue instanceof Promise) {\n        value = undefined;\n      } else {\n        super.setPath([], resolvedDirectValue);\n\n        value = super.getPath(path);\n      }\n    } else {\n      value = super.getPath(path);\n    }\n\n    return value;\n  }\n\n  /**\n   * The same as `getPath` but asynchronous and will wait for a value.\n   * */\n  async getPathAsync(path) {\n    const pathString = this.getPathString(path);\n\n    return new Promise((res, rej) => {\n      const handler = () => {\n        try {\n          const value = this.getPath(path);\n\n          if (typeof value !== 'undefined') {\n            this.removeChangeHandler(pathString, handler);\n            res(value);\n          }\n        } catch (error) {\n          const {message = ''} = error || {};\n\n          rej({\n            message,\n            subject: this,\n            data: path,\n            error\n          });\n        }\n      };\n\n      this.addChangeHandler(pathString, handler);\n\n      handler();\n    });\n  }\n\n  /**\n   * The same as `getValue` but asynchronous and will wait for a value.\n   * */\n  async getValueAsync() {\n    return this.getPathAsync([]);\n  }\n}\n",
     "static": true,
     "longname": "/Users/ryangraff/projects/incarnate/src/LifePod.jsx",
     "access": "public",
@@ -1278,7 +1426,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 64,
+    "__docId__": 68,
     "kind": "class",
     "name": "LifePod",
     "memberof": "src/LifePod.jsx",
@@ -1299,7 +1447,7 @@
     ]
   },
   {
-    "__docId__": 65,
+    "__docId__": 69,
     "kind": "member",
     "name": "DEFAULT_NAME",
     "memberof": "src/LifePod.jsx~LifePod",
@@ -1316,32 +1464,15 @@
     }
   },
   {
-    "__docId__": 66,
+    "__docId__": 70,
     "kind": "member",
-    "name": "ERRORS",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": true,
-    "longname": "src/LifePod.jsx~LifePod.ERRORS",
-    "access": "public",
-    "description": null,
-    "lineNumber": 10,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 67,
-    "kind": "member",
-    "name": "_required",
+    "name": "_dependencies",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#_required",
+    "longname": "src/LifePod.jsx~LifePod#_dependencies",
     "access": "private",
     "description": null,
-    "lineNumber": 18,
+    "lineNumber": 11,
     "undocument": true,
     "type": {
       "types": [
@@ -1350,150 +1481,95 @@
     }
   },
   {
-    "__docId__": 68,
-    "kind": "member",
-    "name": "_optional",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#_optional",
-    "access": "private",
-    "description": null,
-    "lineNumber": 19,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 69,
+    "__docId__": 71,
     "kind": "get",
-    "name": "required",
+    "name": "dependencies",
     "memberof": "src/LifePod.jsx~LifePod",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#required",
+    "longname": "src/LifePod.jsx~LifePod#dependencies",
     "access": "public",
     "description": "",
-    "lineNumber": 24,
+    "lineNumber": 16,
     "unknown": [
       {
         "tagName": "@returns",
-        "tagValue": "{Array.<LifePod>} A list of required dependencies."
+        "tagValue": "{Object.<HashMatrix>} A map of named dependencies."
       }
     ],
     "return": {
       "nullable": null,
       "types": [
-        "Array.<LifePod>"
+        "Object.<HashMatrix>"
       ],
       "spread": false,
-      "description": "A list of required dependencies."
+      "description": "A map of named dependencies."
     },
     "type": {
       "types": [
         "*"
       ]
     }
-  },
-  {
-    "__docId__": 70,
-    "kind": "set",
-    "name": "required",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#required",
-    "access": "public",
-    "description": "",
-    "lineNumber": 31,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "Array.<LifePod>"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "value",
-        "description": "A list of required dependencies."
-      }
-    ]
   },
   {
     "__docId__": 72,
-    "kind": "get",
-    "name": "optional",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#optional",
-    "access": "public",
-    "description": "",
-    "lineNumber": 46,
-    "unknown": [
-      {
-        "tagName": "@returns",
-        "tagValue": "{Array.<LifePod>} A list of optional dependencies."
-      }
-    ],
-    "return": {
-      "nullable": null,
-      "types": [
-        "Array.<LifePod>"
-      ],
-      "spread": false,
-      "description": "A list of optional dependencies."
-    },
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 73,
     "kind": "set",
-    "name": "optional",
+    "name": "dependencies",
     "memberof": "src/LifePod.jsx~LifePod",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#optional",
+    "longname": "src/LifePod.jsx~LifePod#dependencies",
     "access": "public",
     "description": "",
-    "lineNumber": 53,
+    "lineNumber": 23,
     "params": [
       {
         "nullable": null,
         "types": [
-          "Array.<LifePod>"
+          "Object.<HashMatrix>"
         ],
         "spread": false,
         "optional": false,
         "name": "value",
-        "description": "A list of optional dependencies."
+        "description": "A map of named dependencies."
       }
     ]
   },
   {
-    "__docId__": 75,
+    "__docId__": 74,
     "kind": "member",
     "name": "getters",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
     "longname": "src/LifePod.jsx~LifePod#getters",
     "access": "public",
-    "description": "A list of getters.\n`getter(path = ''):*`",
-    "lineNumber": 70,
+    "description": "A map of named getters.\n`getter(path = ''):*`",
+    "lineNumber": 40,
     "type": {
       "nullable": null,
       "types": [
-        "Array.<Function>"
+        "Object.<Function>"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 75,
+    "kind": "member",
+    "name": "setters",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#setters",
+    "access": "public",
+    "description": "A map of named setters.\n`setter(value = *, subPath = '')`",
+    "lineNumber": 47,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Object.<Function>"
       ],
       "spread": false,
       "description": null
@@ -1502,17 +1578,17 @@
   {
     "__docId__": 76,
     "kind": "member",
-    "name": "setters",
+    "name": "invalidators",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#setters",
+    "longname": "src/LifePod.jsx~LifePod#invalidators",
     "access": "public",
-    "description": "A list of setters.\n`setter(value = *, subPath = '')`",
-    "lineNumber": 77,
+    "description": "A map of named invalidators.\n`invalidator(subPath = '')`",
+    "lineNumber": 54,
     "type": {
       "nullable": null,
       "types": [
-        "Array.<Function>"
+        "Object.<Function>"
       ],
       "spread": false,
       "description": null
@@ -1521,17 +1597,17 @@
   {
     "__docId__": 77,
     "kind": "member",
-    "name": "invalidators",
+    "name": "listeners",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#invalidators",
+    "longname": "src/LifePod.jsx~LifePod#listeners",
     "access": "public",
-    "description": "A list of invalidators.\n`invalidator(subPath = '')`",
-    "lineNumber": 84,
+    "description": "A map of named change handler receivers.\n`listen(handler):Function (unlisten)`",
+    "lineNumber": 61,
     "type": {
       "nullable": null,
       "types": [
-        "Array.<Function>"
+        "Object.<Function>"
       ],
       "spread": false,
       "description": null
@@ -1540,71 +1616,13 @@
   {
     "__docId__": 78,
     "kind": "member",
-    "name": "listeners",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#listeners",
-    "access": "public",
-    "description": "A list of change handler receivers.\n`listen(handler):Function (unlisten)`",
-    "lineNumber": 91,
-    "type": {
-      "nullable": null,
-      "types": [
-        "Array.<Function>"
-      ],
-      "spread": false,
-      "description": null
-    }
-  },
-  {
-    "__docId__": 79,
-    "kind": "member",
-    "name": "targets",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#targets",
-    "access": "public",
-    "description": "A list of `HashMatrix` objects that will be passed directly to the `factory`.",
-    "lineNumber": 97,
-    "type": {
-      "nullable": null,
-      "types": [
-        "Array.<HashMatrix>"
-      ],
-      "spread": false,
-      "description": null
-    }
-  },
-  {
-    "__docId__": 80,
-    "kind": "member",
-    "name": "transformArgs",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#transformArgs",
-    "access": "public",
-    "description": "An optional function used to transform factory arguments from an argument map (Object)\n(keys are the types of dependencies, values are arrays of resolved dependencies)\nto an `Array` containing a different structure. Used when the factory\nmight require a different configuration of arguments.\n`transformArgs(argMap = {required, optional, getters, setters, invalidators, listeners, targets}):Array (newArgs)`\nIf explicitly set to `false`, the factory is simply passed the arguments map directly.\nThe **default behavior** is to combine all dependencies, in order, into an array.",
-    "lineNumber": 109,
-    "type": {
-      "nullable": null,
-      "types": [
-        "Function",
-        "false"
-      ],
-      "spread": false,
-      "description": null
-    }
-  },
-  {
-    "__docId__": 81,
-    "kind": "member",
     "name": "factory",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
     "longname": "src/LifePod.jsx~LifePod#factory",
     "access": "public",
-    "description": "The factory function used to **resolve** the value of the dependency.",
-    "lineNumber": 118,
+    "description": "The factory function used to create the value of the dependency.",
+    "lineNumber": 69,
     "unknown": [
       {
         "tagName": "@returns",
@@ -1615,12 +1633,12 @@
       {
         "nullable": null,
         "types": [
-          "Array.<*>"
+          "DependencyDeclaration"
         ],
         "spread": false,
         "optional": false,
-        "name": "...args",
-        "description": "The various required dependencies in the order:\n`required`, `optional`, `getters`, `setters`, `invalidators`, `listeners`, `targets`"
+        "name": "dependencyValues",
+        "description": "A `DependencyDeclaration` with resolved values rather than paths."
       }
     ],
     "return": {
@@ -1642,43 +1660,15 @@
     }
   },
   {
-    "__docId__": 82,
+    "__docId__": 79,
     "kind": "member",
-    "name": "handlerAsyncFactoryError",
+    "name": "strict",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#handlerAsyncFactoryError",
+    "longname": "src/LifePod.jsx~LifePod#strict",
     "access": "public",
-    "description": "A function used to handle errors from an asynchronous factory.",
-    "lineNumber": 125,
-    "params": [
-      {
-        "nullable": null,
-        "types": [
-          "Object"
-        ],
-        "spread": false,
-        "optional": false,
-        "name": "errorInformation",
-        "description": "The error information.\n`{message, error, data}`"
-      }
-    ],
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 83,
-    "kind": "member",
-    "name": "resolving",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#resolving",
-    "access": "public",
-    "description": "A flag designating whether or not this dependency is currently being resolved.",
-    "lineNumber": 131,
+    "description": "If `true`, the `factory` is NOT called until **none** of the `dependencies` are `undefined`.",
+    "lineNumber": 75,
     "type": {
       "nullable": null,
       "types": [
@@ -1689,34 +1679,91 @@
     }
   },
   {
-    "__docId__": 84,
+    "__docId__": 80,
+    "kind": "constructor",
+    "name": "constructor",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#constructor",
+    "access": "public",
+    "description": "",
+    "lineNumber": 80,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "DependencyDeclaration"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "dependencyDeclaration",
+        "description": "The `DependencyDeclaration` to be resolved."
+      }
+    ]
+  },
+  {
+    "__docId__": 82,
     "kind": "member",
-    "name": "resolver",
+    "name": "handleDependencyChange",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#resolver",
+    "longname": "src/LifePod.jsx~LifePod#handleDependencyChange",
     "access": "public",
-    "description": "The current `Promise` responsible for resolving this dependency.",
-    "lineNumber": 137,
+    "description": null,
+    "lineNumber": 91,
+    "undocument": true,
     "type": {
-      "nullable": null,
       "types": [
-        "Promise"
-      ],
-      "spread": false,
-      "description": null
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 83,
+    "kind": "member",
+    "name": "addDependencyChangeHandler",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#addDependencyChangeHandler",
+    "access": "public",
+    "description": null,
+    "lineNumber": 95,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 84,
+    "kind": "member",
+    "name": "removeDependencyChangeHandler",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#removeDependencyChangeHandler",
+    "access": "public",
+    "description": null,
+    "lineNumber": 101,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
     }
   },
   {
     "__docId__": 85,
     "kind": "member",
-    "name": "strictRequired",
+    "name": "addDependencyMapChangeHandlers",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#strictRequired",
+    "longname": "src/LifePod.jsx~LifePod#addDependencyMapChangeHandlers",
     "access": "public",
     "description": null,
-    "lineNumber": 139,
+    "lineNumber": 107,
     "undocument": true,
     "type": {
       "types": [
@@ -1726,28 +1773,14 @@
   },
   {
     "__docId__": 86,
-    "kind": "constructor",
-    "name": "constructor",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#constructor",
-    "access": "public",
-    "description": null,
-    "lineNumber": 141,
-    "undocument": true
-  },
-  {
-    "__docId__": 89,
     "kind": "member",
-    "name": "handleDependencyChange",
+    "name": "removeDependencyMapChangeHandlers",
     "memberof": "src/LifePod.jsx~LifePod",
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#handleDependencyChange",
+    "longname": "src/LifePod.jsx~LifePod#removeDependencyMapChangeHandlers",
     "access": "public",
     "description": null,
-    "lineNumber": 166,
+    "lineNumber": 113,
     "undocument": true,
     "type": {
       "types": [
@@ -1756,89 +1789,64 @@
     }
   },
   {
-    "__docId__": 90,
-    "kind": "member",
-    "name": "addDependencyChangeHandler",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#addDependencyChangeHandler",
-    "access": "public",
-    "description": null,
-    "lineNumber": 170,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 91,
-    "kind": "member",
-    "name": "removeDependencyChangeHandler",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#removeDependencyChangeHandler",
-    "access": "public",
-    "description": null,
-    "lineNumber": 176,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 92,
-    "kind": "member",
-    "name": "addDependencyListChangeHandlers",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#addDependencyListChangeHandlers",
-    "access": "public",
-    "description": null,
-    "lineNumber": 182,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 93,
-    "kind": "member",
-    "name": "removeDependencyListChangeHandlers",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#removeDependencyListChangeHandlers",
-    "access": "public",
-    "description": null,
-    "lineNumber": 186,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 94,
+    "__docId__": 87,
     "kind": "method",
-    "name": "transFormFactoryArgs",
+    "name": "invalidate",
     "memberof": "src/LifePod.jsx~LifePod",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#transFormFactoryArgs",
+    "longname": "src/LifePod.jsx~LifePod#invalidate",
     "access": "public",
     "description": null,
-    "lineNumber": 190,
+    "lineNumber": 119,
+    "undocument": true,
+    "params": [],
+    "return": null
+  },
+  {
+    "__docId__": 88,
+    "kind": "method",
+    "name": "resolveDependency",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#resolveDependency",
+    "access": "public",
+    "description": null,
+    "lineNumber": 123,
     "undocument": true,
     "params": [
       {
-        "name": "argMap",
+        "name": "dependency",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 89,
+    "kind": "method",
+    "name": "resolveDependencyMap",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#resolveDependencyMap",
+    "access": "public",
+    "description": null,
+    "lineNumber": 129,
+    "undocument": true,
+    "params": [
+      {
+        "name": "dependencyMap",
         "optional": true,
         "types": [
           "{}"
@@ -1849,20 +1857,43 @@
     ],
     "return": {
       "types": [
-        "undefined[]"
+        "*"
       ]
     }
   },
   {
-    "__docId__": 95,
-    "kind": "member",
-    "name": "resolveDependency",
+    "__docId__": 90,
+    "kind": "method",
+    "name": "handleFactoryPromise",
     "memberof": "src/LifePod.jsx~LifePod",
+    "generator": false,
+    "async": true,
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#resolveDependency",
+    "longname": "src/LifePod.jsx~LifePod#handleFactoryPromise",
     "access": "public",
     "description": null,
-    "lineNumber": 218,
+    "lineNumber": 153,
+    "undocument": true,
+    "params": [
+      {
+        "name": "factoryPromise",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": null
+  },
+  {
+    "__docId__": 91,
+    "kind": "member",
+    "name": "resolving",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#resolving",
+    "access": "public",
+    "description": null,
+    "lineNumber": 161,
     "undocument": true,
     "type": {
       "types": [
@@ -1871,30 +1902,67 @@
     }
   },
   {
-    "__docId__": 96,
+    "__docId__": 92,
     "kind": "method",
-    "name": "resolveDependencyList",
+    "name": "resolve",
     "memberof": "src/LifePod.jsx~LifePod",
     "generator": false,
     "async": false,
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#resolveDependencyList",
+    "longname": "src/LifePod.jsx~LifePod#resolve",
     "access": "public",
     "description": null,
-    "lineNumber": 250,
+    "lineNumber": 163,
     "undocument": true,
+    "params": [],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 95,
+    "kind": "method",
+    "name": "getPath",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "generator": false,
+    "async": false,
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#getPath",
+    "access": "public",
+    "description": "",
+    "lineNumber": 198,
+    "override": true,
     "params": [
       {
-        "name": "dependencyList",
-        "optional": true,
+        "name": "path",
         "types": [
-          "*[]"
-        ],
-        "defaultRaw": [],
-        "defaultValue": "[]"
-      },
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 96,
+    "kind": "method",
+    "name": "getPathAsync",
+    "memberof": "src/LifePod.jsx~LifePod",
+    "generator": false,
+    "async": true,
+    "static": false,
+    "longname": "src/LifePod.jsx~LifePod#getPathAsync",
+    "access": "public",
+    "description": "The same as `getPath` but asynchronous and will wait for a value.",
+    "lineNumber": 223,
+    "params": [
       {
-        "name": "optional",
+        "name": "path",
         "types": [
           "*"
         ]
@@ -1909,95 +1977,15 @@
   {
     "__docId__": 97,
     "kind": "method",
-    "name": "resolveAsyncFactoryPromise",
+    "name": "getValueAsync",
     "memberof": "src/LifePod.jsx~LifePod",
     "generator": false,
     "async": true,
     "static": false,
-    "longname": "src/LifePod.jsx~LifePod#resolveAsyncFactoryPromise",
+    "longname": "src/LifePod.jsx~LifePod#getValueAsync",
     "access": "public",
-    "description": "",
-    "lineNumber": 257,
-    "unknown": [
-      {
-        "tagName": "@returns",
-        "tagValue": "{*}"
-      }
-    ],
-    "return": {
-      "nullable": null,
-      "types": [
-        "*"
-      ],
-      "spread": false,
-      "description": ""
-    },
-    "params": [
-      {
-        "name": "promise",
-        "types": [
-          "*"
-        ]
-      }
-    ]
-  },
-  {
-    "__docId__": 102,
-    "kind": "method",
-    "name": "invalidate",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#invalidate",
-    "access": "public",
-    "description": "Invalidate this dependency.",
-    "lineNumber": 282,
-    "params": [],
-    "return": null
-  },
-  {
-    "__docId__": 103,
-    "kind": "method",
-    "name": "resolve",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#resolve",
-    "access": "public",
-    "description": "Resolve the value of this dependency using the provided factory and various requirements.\nIf the value of this dependency is *valid* (not `undefined`), the current value is simply\nreturned in order to avoid recursive resolution.",
-    "lineNumber": 292,
-    "unknown": [
-      {
-        "tagName": "@returns",
-        "tagValue": "{*|Promise} The value of the dependency."
-      }
-    ],
-    "return": {
-      "nullable": null,
-      "types": [
-        "*",
-        "Promise"
-      ],
-      "spread": false,
-      "description": "The value of the dependency."
-    },
-    "params": []
-  },
-  {
-    "__docId__": 109,
-    "kind": "method",
-    "name": "getValue",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#getValue",
-    "access": "public",
-    "description": null,
-    "lineNumber": 366,
-    "undocument": true,
+    "description": "The same as `getValue` but asynchronous and will wait for a value.",
+    "lineNumber": 256,
     "params": [],
     "return": {
       "types": [
@@ -2006,37 +1994,10 @@
     }
   },
   {
-    "__docId__": 110,
-    "kind": "method",
-    "name": "setValue",
-    "memberof": "src/LifePod.jsx~LifePod",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/LifePod.jsx~LifePod#setValue",
-    "access": "public",
-    "description": null,
-    "lineNumber": 370,
-    "undocument": true,
-    "params": [
-      {
-        "name": "value",
-        "types": [
-          "*"
-        ]
-      }
-    ],
-    "return": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 111,
+    "__docId__": 98,
     "kind": "file",
     "name": "src/SubMapDeclaration.jsx",
-    "content": "import DependencyDeclaration from './DependencyDeclaration';\n\n/**\n * Declare an available map of dependencies.\n * */\nexport default class SubMapDeclaration {\n  /**\n   * The map of dependencies.\n   * @type {Object.<DependencyDeclaration>}\n   * */\n  subMap;\n\n  /**\n   * The dependencies from the current level that should be shared to the `subMap`.\n   * Keys are the keys from the `subMap`, values are the paths to the dependencies to be shared.\n   * @type {Object.<string>}\n   * */\n  shared;\n\n  /**\n   * A function used to transform the arguments for dependency factories.\n   * @type {Function}\n   * @see DependencyDeclaration::transformArgs\n   * */\n  transformArgs;\n\n  constructor(config = {}) {\n    Object.assign(this, config);\n  }\n}\n",
+    "content": "import DependencyDeclaration from './DependencyDeclaration';\nimport ConfigurableInstance from './ConfigurableInstance';\n\n/**\n * Declare an available map of dependencies.\n * */\nexport default class SubMapDeclaration extends ConfigurableInstance {\n  /**\n   * The map of dependencies.\n   * @type {Object.<DependencyDeclaration>}\n   * */\n  subMap;\n\n  /**\n   * The dependencies from the current level that should be shared to the `subMap`.\n   * Keys are the keys from the `subMap`, values are the paths to the dependencies to be shared.\n   * @type {Object.<string>}\n   * */\n  shared;\n}\n",
     "static": true,
     "longname": "/Users/ryangraff/projects/incarnate/src/SubMapDeclaration.jsx",
     "access": "public",
@@ -2044,7 +2005,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 112,
+    "__docId__": 99,
     "kind": "class",
     "name": "SubMapDeclaration",
     "memberof": "src/SubMapDeclaration.jsx",
@@ -2055,11 +2016,14 @@
     "importPath": "incarnate/src/SubMapDeclaration.jsx",
     "importStyle": "SubMapDeclaration",
     "description": "Declare an available map of dependencies.",
-    "lineNumber": 6,
-    "interface": false
+    "lineNumber": 7,
+    "interface": false,
+    "extends": [
+      "src/ConfigurableInstance.js~ConfigurableInstance"
+    ]
   },
   {
-    "__docId__": 113,
+    "__docId__": 100,
     "kind": "member",
     "name": "subMap",
     "memberof": "src/SubMapDeclaration.jsx~SubMapDeclaration",
@@ -2067,7 +2031,7 @@
     "longname": "src/SubMapDeclaration.jsx~SubMapDeclaration#subMap",
     "access": "public",
     "description": "The map of dependencies.",
-    "lineNumber": 11,
+    "lineNumber": 12,
     "type": {
       "nullable": null,
       "types": [
@@ -2078,7 +2042,7 @@
     }
   },
   {
-    "__docId__": 114,
+    "__docId__": 101,
     "kind": "member",
     "name": "shared",
     "memberof": "src/SubMapDeclaration.jsx~SubMapDeclaration",
@@ -2086,7 +2050,7 @@
     "longname": "src/SubMapDeclaration.jsx~SubMapDeclaration#shared",
     "access": "public",
     "description": "The dependencies from the current level that should be shared to the `subMap`.\nKeys are the keys from the `subMap`, values are the paths to the dependencies to be shared.",
-    "lineNumber": 18,
+    "lineNumber": 19,
     "type": {
       "nullable": null,
       "types": [
@@ -2097,44 +2061,19 @@
     }
   },
   {
-    "__docId__": 115,
-    "kind": "member",
-    "name": "transformArgs",
-    "memberof": "src/SubMapDeclaration.jsx~SubMapDeclaration",
-    "static": false,
-    "longname": "src/SubMapDeclaration.jsx~SubMapDeclaration#transformArgs",
-    "access": "public",
-    "description": "A function used to transform the arguments for dependency factories.",
-    "see": [
-      "DependencyDeclaration::transformArgs"
-    ],
-    "lineNumber": 25,
-    "type": {
-      "nullable": null,
-      "types": [
-        "Function"
-      ],
-      "spread": false,
-      "description": null
-    }
-  },
-  {
-    "__docId__": 116,
-    "kind": "constructor",
-    "name": "constructor",
-    "memberof": "src/SubMapDeclaration.jsx~SubMapDeclaration",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/SubMapDeclaration.jsx~SubMapDeclaration#constructor",
+    "__docId__": 102,
+    "kind": "file",
+    "name": "src/index.jsx",
+    "content": "import IncarnateInternal from './Incarnate';\n\nexport {default as ConfigurableInstance} from './ConfigurableInstance';\nexport {default as DependencyDeclaration} from './DependencyDeclaration';\nexport {default as HashMatrix} from './HashMatrix';\nexport {default as Incarnate} from './Incarnate';\nexport {default as LifePod} from './LifePod';\nexport {default as SubMapDeclaration} from './SubMapDeclaration';\nexport default IncarnateInternal;\n",
+    "static": true,
+    "longname": "/Users/ryangraff/projects/incarnate/src/index.jsx",
     "access": "public",
     "description": null,
-    "lineNumber": 27,
-    "undocument": true
+    "lineNumber": 1
   },
   {
     "kind": "index",
-    "content": "# Incarnate [![Build Status](https://travis-ci.org/resistdesign/incarnate.svg?branch=master)](https://travis-ci.org/resistdesign/incarnate)\n\nRuntime Dependency Lifecycle Management for JavaScript.\n\n## Install\n\n`npm i -S incarnate`\n\n## Usage\n\nSee the website: http://incarnate.resist.design\n\n## License\n\n[MIT](LICENSE.txt)\n",
+    "content": "# Incarnate [![Build Status](https://travis-ci.org/resistdesign/incarnate.svg?branch=master)](https://travis-ci.org/resistdesign/incarnate)\n\nRuntime Dependency Lifecycle Management for JavaScript.\n\n## Install\n\n`npm i -S incarnate`\n\n## API Docs\n\nhttp://incarnate.resist.design\n\n## Usage Example\n\n```jsx\nimport Incarnate from 'incarnate';\n\n// Declare your application.\nconst inc = new Incarnate({\n  subMap: {\n    // Keep track of your state.\n    state: {\n      subMap: {\n        user: {\n          factory: () => ({\n            authToken: undefined\n          })\n        }\n      }\n    },\n    // Supply some services.\n    services: {\n      // Some services need authorization information.\n      shared: {\n        user: 'state.user'\n      },\n      subMap: {\n        user: true,\n        login: {\n          factory: () => {\n            return async (username, password) => {\n              // Make a login request, get the `authToken`.\n              const fakeToken = `${username}:${password}`;\n              \n              // For demo purposes we'll use the `Buffer` API in node.js to base64 encode the credentials.\n              return Buffer.from(fakeToken).toString('base64');\n            };\n          } \n        },\n        accounts: {\n          dependencies: {\n            user: 'user'\n          },\n          factory: ({dependencies: {user: {authToken = ''} = {}} = {}} = {}) => {\n            return async () => {\n              // NOTE: IF we call this service method AFTER `login`,\n              // the `authToken` will have been automatically updated,\n              // in this service, by Incarnate.\n              if(!authToken){\n                throw new Error('The accounts service requires an authentication token but none was supplied.');\n              }\n              \n              // Get a list of accounts with the `authToken` in the headers.\n              console.log('Getting accounts with headers:', {\n                Authorization: `Bearer: ${authToken}`\n              });\n              \n              return [\n                {name: 'Account 1'},\n                {name: 'Account 2'},\n                {name: 'Account 3'},\n                {name: 'Account 4'}\n              ];\n            };\n          }\n        }\n      }\n    },\n    // Expose some actions that call services and store the results in a nice, tidy, reproducible way.\n    actions: {\n      shared: {\n        user: 'user',\n        loginService: 'services.login'\n      },\n      subMap: {\n        user: true,\n        loginService: true,\n        login: {\n          dependencies: {\n            loginService: 'loginService'\n          },\n          setters: {\n            setUser: 'user'\n          },\n          factory: ({dependencies: {loginService} = {}, setters: {setUser} = {}} = {}) => {\n            return async ({username, password} = {}) => {\n              // Login\n              const authToken = await loginService(username, password);\n              \n              // Store the `authToken`.\n              setUser({\n                authToken\n              });\n              \n              return true;\n            };\n          }\n        }\n      }\n    }\n  }\n});\n\n// Here's your app.\nasync function app(){\n  // Get the Login Action.\n  const loginAction = inc.getPath('actions.login');\n  // Do the login.\n  const loginResult = await loginAction({\n    username: 'TestUser',\n    password: 'StopTryingToReadThis'\n  });\n  // Get the Accounts Service. It needs the User's `authToken`,\n  // but you declared it as a Dependency,\n  // so Incarnate took care of that for you.\n  const accountsService = inc.getPath('services.accounts');\n  // Get those accounts you've been dying to see...\n  const accounts = await accountsService();\n  \n  // Here they are!\n  console.log('These are the accounts:', accounts);\n}\n\n// You need to run your app.\napp();\n```\n\n## License\n\n[MIT](LICENSE.txt)\n",
     "longname": "/Users/ryangraff/projects/incarnate/README.md",
     "name": "./README.md",
     "static": true,

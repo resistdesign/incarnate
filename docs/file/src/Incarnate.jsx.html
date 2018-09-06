@@ -29,29 +29,21 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ConfigurableInstance.jsx~ConfigurableInstance.html">ConfigurableInstance</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DependencyDeclaration">DependencyDeclaration</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-HashMatrix">HashMatrix</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/Incarnate.jsx</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import HashMatrixInternal from &apos;./HashMatrix&apos;;
-import LifePodInternal from &apos;./LifePod&apos;;
-import DependencyDeclarationInternal from &apos;./DependencyDeclaration&apos;;
-import SubMapDeclarationInternal from &apos;./SubMapDeclaration&apos;;
-
-export const DependencyDeclaration = DependencyDeclarationInternal;
-export const SubMapDeclaration = SubMapDeclarationInternal;
-export const HashMatrix = HashMatrixInternal;
-export const LifePod = LifePodInternal;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import HashMatrix from &apos;./HashMatrix&apos;;
+import LifePod from &apos;./LifePod&apos;;
+import DependencyDeclaration from &apos;./DependencyDeclaration&apos;;
+import SubMapDeclaration from &apos;./SubMapDeclaration&apos;;
 
 /**
  * Manage the lifecycle of application dependencies.
@@ -60,7 +52,6 @@ export const LifePod = LifePodInternal;
 export default class Incarnate extends HashMatrix {
   static DEFAULT_NAME = &apos;Incarnate&apos;;
   static ERRORS = {
-    INVALID_MAP: &apos;INVALID_MAP&apos;,
     UNSATISFIED_SHARED_DEPENDENCY: &apos;UNSATISFIED_SHARED_DEPENDENCY&apos;
   };
 
@@ -68,79 +59,65 @@ export default class Incarnate extends HashMatrix {
    * The map of dependency and subMap declarations.
    * @type {Object.&lt;DependencyDeclaration|SubMapDeclaration|Incarnate|LifePod|HashMatrix&gt;}
    * */
-  map;
+  subMap;
+
+  _parsedSubMap = {};
 
   /**
-   * A function used to transform the arguments for a `LifePod` factory.
-   * @type {Function}
-   * @see LifePod::transformArgs
+   * If `true`, `LifePod` factories will NOT be called until **none** of the `dependencies` are `undefined`.
+   * @type {boolean}
    * */
-  transformArgs;
-
-  _parsedMap = {};
+  strict;
 
   /**
-   * When `true`, `LifePod` objects will throw an error when dependencies resolve to `undefined`.
-   * Default: `false`.
+   * @param {SubMapDeclaration} subMapDeclaration The `SubMapDeclaration` to be managed.
    * */
-  strictRequired;
+  constructor(subMapDeclaration = new SubMapDeclaration()) {
+    super(subMapDeclaration);
 
-  constructor(config = {}) {
-    super(config);
-
-    if (!(this.map instanceof Object)) {
-      throw {
-        message: Incarnate.ERRORS.INVALID_MAP,
-        data: this
-      };
+    if (!(this.subMap instanceof Object)) {
+      this.subMap = {};
     }
 
-    if (!this.hasOwnProperty(&apos;strictRequired&apos;)) {
-      this.strictRequired = false;
+    if (!(this.hashMatrix instanceof Object)) {
+      this.hashMatrix = {};
     }
   }
 
   createLifePod(name, dependencyDeclaration = {}) {
     const {
-      required = [],
-      optional = [],
-      getters = [],
-      setters = [],
-      invalidators = [],
-      listeners = [],
-      targets = [],
-      transformArgs,
-      strictRequired
+      dependencies = {},
+      getters = {},
+      setters = {},
+      invalidators = {},
+      listeners = {},
+      strict,
+      ...otherConfig
     } = dependencyDeclaration;
-    const config = {
-      ...dependencyDeclaration,
+    const newDependencyDeclaration = new DependencyDeclaration({
+      ...otherConfig,
       name: this.getPathString(name, this.name),
       targetPath: name,
       hashMatrix: this,
-      required: required.map(this.getDependency),
-      optional: optional.map(this.getDependency),
-      getters: getters.map(this.createGetter),
-      setters: setters.map(this.createSetter),
-      invalidators: invalidators.map(this.createInvalidator),
-      listeners: listeners.map(this.createListener),
-      targets: targets.map(this.createTarget),
-      transformArgs: typeof transformArgs !== &apos;undefined&apos; ?
-        transformArgs :
-        this.transformArgs,
-      strictRequired: typeof strictRequired !== &apos;undefined&apos; ?
-        strictRequired :
-        this.strictRequired
-    };
+      dependencies: this.getDependenciesFromMap(dependencies),
+      getters: this.createFromMap(getters, this.createGetter),
+      setters: this.createFromMap(setters, this.createSetter),
+      invalidators: this.createFromMap(invalidators, this.createInvalidator),
+      listeners: this.createFromMap(listeners, this.createListener),
+      strict: typeof strict !== &apos;undefined&apos; ?
+        strict :
+        this.strict
+    });
 
-    return new LifePod(config);
+    return new LifePod(newDependencyDeclaration);
   }
 
   createIncarnate(name, subMapDeclaration = {}) {
     const {
       subMap = {},
       shared = {},
-      transformArgs,
-      strictRequired
+      strict,
+      ...otherConfig
     } = subMapDeclaration;
     const parsedSharedMap = Object.keys(shared)
       .reduce((acc, k) =&gt; {
@@ -154,21 +131,31 @@ export default class Incarnate extends HashMatrix {
       ...subMap,
       ...parsedSharedMap
     };
-    const config = {
-      ...subMapDeclaration,
+    const newSubMapDeclaration = new SubMapDeclaration({
+      ...otherConfig,
       name: this.getPathString(name, this.name),
       targetPath: name,
       hashMatrix: this,
-      map: subMapWithShared,
-      transformArgs: typeof transformArgs !== &apos;undefined&apos; ?
-        transformArgs :
-        this.transformArgs,
-      strictRequired: typeof strictRequired !== &apos;undefined&apos; ?
-        strictRequired :
-        this.strictRequired
-    };
+      subMap: subMapWithShared,
+      strict: typeof strict !== &apos;undefined&apos; ?
+        strict :
+        this.strict
+    });
 
-    return new Incarnate(config);
+    for (const k in subMap) {
+      const depDec = subMap[k];
+
+      if (depDec === true &amp;&amp; !shared.hasOwnProperty(k)) {
+        throw {
+          message: Incarnate.ERRORS.UNSATISFIED_SHARED_DEPENDENCY,
+          data: k,
+          subject: subMapDeclaration,
+          context: this
+        };
+      }
+    }
+
+    return new Incarnate(newSubMapDeclaration);
   }
 
   convertDeclaration(name, declaration = {}) {
@@ -201,23 +188,23 @@ export default class Incarnate extends HashMatrix {
     const name = pathArray.shift();
     const subPath = [...pathArray];
 
-    if (!this._parsedMap.hasOwnProperty(name) &amp;&amp; this.map.hasOwnProperty(name)) {
-      this._parsedMap[name] = this.convertDeclaration(name, this.map[name]);
+    if (!this._parsedSubMap.hasOwnProperty(name) &amp;&amp; this.subMap.hasOwnProperty(name)) {
+      this._parsedSubMap[name] = this.convertDeclaration(name, this.subMap[name]);
     }
 
-    const dep = this._parsedMap[name];
+    const dep = this._parsedSubMap[name];
 
     if (dep instanceof Incarnate) {
       return dep.getDependency(subPath);
     } else if (dep instanceof HashMatrix) {
       if (subPath.length) {
         if (dep instanceof LifePod) {
-          return new LifePod({
+          return new LifePod(new DependencyDeclaration({
             name: pathString,
             targetPath: subPath,
             hashMatrix: dep,
-            strictRequired: this.strictRequired
-          });
+            strict: this.strict
+          }));
         } else {
           return new HashMatrix({
             name: pathString,
@@ -239,6 +226,28 @@ export default class Incarnate extends HashMatrix {
       });
     }
   };
+
+  getDependenciesFromMap(dependencyMap = {}) {
+    return Object
+      .keys(dependencyMap)
+      .reduce((acc, k) =&gt; {
+        const depPath = dependencyMap[k];
+        acc[k] = this.getDependency(depPath);
+
+        return acc;
+      }, {});
+  }
+
+  createFromMap(map = {}, creator) {
+    return Object
+      .keys(map)
+      .reduce((acc, k) =&gt; {
+        const path = map[k];
+        acc[k] = creator(path);
+
+        return acc;
+      }, {});
+  }
 
   createGetter = (path) =&gt; {
     return (subPath = []) =&gt; {
@@ -273,9 +282,31 @@ export default class Incarnate extends HashMatrix {
     }
   };
 
-  createTarget = (path) =&gt; {
-    return this.getDependency(path);
-  };
+  /**
+   * The same as `getPath` but triggers `LifePod` dependency resolution.
+   * */
+  getResolvedPath(path) {
+    const dep = this.getDependency(path);
+
+    if (dep instanceof LifePod) {
+      return dep.getValue();
+    } else {
+      return this.getPath(path);
+    }
+  }
+
+  /**
+   * The same as `getPath` but triggers `LifePod` dependency resolution and waits for a value.
+   * */
+  async getResolvedPathAsync(path) {
+    const dep = this.getDependency(path);
+
+    if (dep instanceof LifePod) {
+      return dep.getValueAsync();
+    } else {
+      return this.getPath(path);
+    }
+  }
 }
 </code></pre>
 

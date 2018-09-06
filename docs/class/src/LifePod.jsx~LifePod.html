@@ -29,15 +29,12 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ConfigurableInstance.jsx~ConfigurableInstance.html">ConfigurableInstance</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DependencyDeclaration">DependencyDeclaration</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-HashMatrix">HashMatrix</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -114,34 +111,6 @@
       
     </td>
   </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#static-member-ERRORS">ERRORS</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
 </tbody>
 </table>
 </div>
@@ -164,7 +133,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-constructor-constructor">constructor</a></span></span><span class="code" data-ice="signature">()</span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-constructor-constructor">constructor</a></span></span><span class="code" data-ice="signature">(dependencyDeclaration: <span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span>)</span>
         </p>
       </div>
       <div>
@@ -227,7 +196,63 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-addDependencyListChangeHandlers">addDependencyListChangeHandlers</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-addDependencyMapChangeHandlers">addDependencyMapChangeHandlers</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">get</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-get-dependencies">dependencies</a></span></span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">set</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-set-dependencies">dependencies</a></span></span><span class="code" data-ice="signature">(value: <span>Object</span>&lt;<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;)</span>
         </p>
       </div>
       <div>
@@ -255,13 +280,13 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-factory">factory</a></span></span><span class="code" data-ice="signature">: <span>*</span> | <span>Promise</span>: <span>Function</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-factory">factory</a></span></span><span class="code" data-ice="signature">(dependencyValues: <span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span>): <span>*</span> | <span>Promise</span>: <span>Function</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>The factory function used to <strong>resolve</strong> the value of the dependency.</p>
+        <div data-ice="description"><p>The factory function used to create the value of the dependency.</p>
 </div>
       </div>
     </td>
@@ -284,13 +309,13 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-getters">getters</a></span></span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span>Function</span>&gt;</span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-getters">getters</a></span></span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>Function</span>&gt;</span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>A list of getters.</p>
+        <div data-ice="description"><p>A map of named getters.</p>
 </div>
       </div>
     </td>
@@ -341,13 +366,13 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-handlerAsyncFactoryError">handlerAsyncFactoryError</a></span></span><span class="code" data-ice="signature">(errorInformation: <span>Object</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-invalidators">invalidators</a></span></span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>Function</span>&gt;</span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>A function used to handle errors from an asynchronous factory.</p>
+        <div data-ice="description"><p>A map of named invalidators.</p>
 </div>
       </div>
     </td>
@@ -370,99 +395,14 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-invalidators">invalidators</a></span></span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span>Function</span>&gt;</span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-listeners">listeners</a></span></span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>Function</span>&gt;</span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>A list of invalidators.</p>
+        <div data-ice="description"><p>A map of named change handler receivers.</p>
 </div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-listeners">listeners</a></span></span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span>Function</span>&gt;</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>A list of change handler receivers.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">get</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-get-optional">optional</a></span></span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">set</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-set-optional">optional</a></span></span><span class="code" data-ice="signature">(value: <span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;)</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
       </div>
     </td>
     <td>
@@ -512,63 +452,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-removeDependencyListChangeHandlers">removeDependencyListChangeHandlers</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">set</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-set-required">required</a></span></span><span class="code" data-ice="signature">(value: <span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;)</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">get</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-get-required">required</a></span></span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;: <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-removeDependencyMapChangeHandlers">removeDependencyMapChangeHandlers</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -596,7 +480,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-resolveDependency">resolveDependency</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-resolving">resolving</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -624,13 +508,13 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-resolver">resolver</a></span></span><span class="code" data-ice="signature">: <span>Promise</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-setters">setters</a></span></span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>Function</span>&gt;</span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>The current <code>Promise</code> responsible for resolving this dependency.</p>
+        <div data-ice="description"><p>A map of named setters.</p>
 </div>
       </div>
     </td>
@@ -653,130 +537,13 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-resolving">resolving</a></span></span><span class="code" data-ice="signature">: <span>boolean</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-strict">strict</a></span></span><span class="code" data-ice="signature">: <span>boolean</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>A flag designating whether or not this dependency is currently being resolved.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-setters">setters</a></span></span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span>Function</span>&gt;</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>A list of setters.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-strictRequired">strictRequired</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-targets">targets</a></span></span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>A list of <code>HashMatrix</code> objects that will be passed directly to the <code>factory</code>.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-transformArgs">transformArgs</a></span></span><span class="code" data-ice="signature">: <span>Function</span> | <span>false</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>An optional function used to transform factory arguments from an argument map (Object)
-(keys are the types of dependencies, values are arrays of resolved dependencies)
-to an <code>Array</code> containing a different structure.</p>
+        <div data-ice="description"><p>If <code>true</code>, the <code>factory</code> is NOT called until <strong>none</strong> of the <code>dependencies</code> are <code>undefined</code>.</p>
 </div>
       </div>
     </td>
@@ -805,35 +572,7 @@ to an <code>Array</code> containing a different structure.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-_optional">_optional</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-_required">_required</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-member-_dependencies">_dependencies</a></span></span><span class="code" data-ice="signature">: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -868,7 +607,93 @@ to an <code>Array</code> containing a different structure.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-getValue">getValue</a></span></span><span class="code" data-ice="signature">(): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-getPath">getPath</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          <span data-ice="async">async</span>
+          
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-getPathAsync">getPathAsync</a></span></span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>The same as <code>getPath</code> but asynchronous and will wait for a value.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          <span data-ice="async">async</span>
+          
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-getValueAsync">getValueAsync</a></span></span><span class="code" data-ice="signature">(): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>The same as <code>getValue</code> but asynchronous and will wait for a value.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          <span data-ice="async">async</span>
+          
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-handleFactoryPromise">handleFactoryPromise</a></span></span><span class="code" data-ice="signature">(factoryPromise: <span>*</span>)</span>
         </p>
       </div>
       <div>
@@ -902,8 +727,7 @@ to an <code>Array</code> containing a different structure.</p>
       <div>
         
         
-        <div data-ice="description"><p>Invalidate this dependency.</p>
-</div>
+        
       </div>
     </td>
     <td>
@@ -925,36 +749,7 @@ to an <code>Array</code> containing a different structure.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-resolve">resolve</a></span></span><span class="code" data-ice="signature">(): <span>*</span> | <span>Promise</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Resolve the value of this dependency using the provided factory and various requirements.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          <span data-ice="async">async</span>
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-resolveAsyncFactoryPromise">resolveAsyncFactoryPromise</a></span></span><span class="code" data-ice="signature">(promise: <span>*</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-resolve">resolve</a></span></span><span class="code" data-ice="signature">(): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -982,7 +777,7 @@ to an <code>Array</code> containing a different structure.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-resolveDependencyList">resolveDependencyList</a></span></span><span class="code" data-ice="signature">(dependencyList: <span><span>*</span><span>[]</span></span>, optional: <span>*</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-resolveDependency">resolveDependency</a></span></span><span class="code" data-ice="signature">(dependency: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -1010,35 +805,7 @@ to an <code>Array</code> containing a different structure.</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-setValue">setValue</a></span></span><span class="code" data-ice="signature">(value: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-transFormFactoryArgs">transFormFactoryArgs</a></span></span><span class="code" data-ice="signature">(argMap: {}): <span><span>undefined</span><span>[]</span></span></span>
+          <span class="code" data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html#instance-method-resolveDependencyMap">resolveDependencyMap</a></span></span><span class="code" data-ice="signature">(dependencyMap: {}): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -1103,49 +870,6 @@ to an <code>Array</code> containing a different structure.</p>
   
   
 </div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-member-ERRORS">
-    <span class="access" data-ice="access">public</span>
-    <span data-ice="static">static</span>
-    
-    
-    
-    
-    <span class="code" data-ice="name">ERRORS</span><span class="code" data-ice="signature">: <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber10">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
 </div>
 
 <div data-ice="constructorDetails"><h2 data-ice="title">Public Constructors</h2>
@@ -1158,11 +882,11 @@ to an <code>Array</code> containing a different structure.</p>
     
     
     
-    <span class="code" data-ice="name">constructor</span><span class="code" data-ice="signature">()</span>
+    <span class="code" data-ice="name">constructor</span><span class="code" data-ice="signature">(dependencyDeclaration: <span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber141">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber80">source</a></span></span>
     </span>
   </h3>
 
@@ -1173,7 +897,24 @@ to an <code>Array</code> containing a different structure.</p>
 
   
 
-  <div data-ice="properties">
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">dependencyDeclaration</td>
+      <td data-ice="type" class="code"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The <code>DependencyDeclaration</code> to be resolved.</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
 </div>
 
   
@@ -1208,7 +949,7 @@ to an <code>Array</code> containing a different structure.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber170">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber95">source</a></span></span>
     </span>
   </h3>
 
@@ -1240,18 +981,117 @@ to an <code>Array</code> containing a different structure.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-addDependencyListChangeHandlers">
+  <h3 data-ice="anchor" id="instance-member-addDependencyMapChangeHandlers">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">addDependencyListChangeHandlers</span><span class="code" data-ice="signature">: <span>*</span></span>
+    <span class="code" data-ice="name">addDependencyMapChangeHandlers</span><span class="code" data-ice="signature">: <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber182">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber107">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-get-dependencies">
+    <span class="access" data-ice="access">public</span>
+    
+    <span class="kind" data-ice="kind">get</span>
+    
+    
+    
+    <span class="code" data-ice="name">dependencies</span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;: <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber16">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>Object</span>&lt;<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;</td>
+          <td class="return-desc" data-ice="returnDescription"><p>A map of named dependencies.</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-set-dependencies">
+    <span class="access" data-ice="access">public</span>
+    
+    <span class="kind" data-ice="kind">set</span>
+    
+    
+    
+    <span class="code" data-ice="name">dependencies</span><span class="code" data-ice="signature">(value: <span>Object</span>&lt;<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber23">source</a></span></span>
     </span>
   </h3>
 
@@ -1290,18 +1130,18 @@ to an <code>Array</code> containing a different structure.</p>
     
     
     
-    <span class="code" data-ice="name">factory</span><span class="code" data-ice="signature">: <span>*</span> | <span>Promise</span>: <span>Function</span></span>
+    <span class="code" data-ice="name">factory</span><span class="code" data-ice="signature">(dependencyValues: <span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span>): <span>*</span> | <span>Promise</span>: <span>Function</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber118">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber69">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>The factory function used to <strong>resolve</strong> the value of the dependency.</p>
+  <div data-ice="description"><p>The factory function used to create the value of the dependency.</p>
 </div>
 
   
@@ -1347,18 +1187,18 @@ to an <code>Array</code> containing a different structure.</p>
     
     
     
-    <span class="code" data-ice="name">getters</span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span>Function</span>&gt;</span>
+    <span class="code" data-ice="name">getters</span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>Function</span>&gt;</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber70">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber40">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>A list of getters.
+  <div data-ice="description"><p>A map of named getters.
 <code>getter(path = &apos;&apos;):*</code></p>
 </div>
 
@@ -1396,7 +1236,7 @@ to an <code>Array</code> containing a different structure.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber166">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber91">source</a></span></span>
     </span>
   </h3>
 
@@ -1404,50 +1244,6 @@ to an <code>Array</code> containing a different structure.</p>
   
   
   
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-handlerAsyncFactoryError">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">handlerAsyncFactoryError</span><span class="code" data-ice="signature">(errorInformation: <span>Object</span>): <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber125">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>A function used to handle errors from an asynchronous factory.</p>
-</div>
 
   
 
@@ -1479,18 +1275,18 @@ to an <code>Array</code> containing a different structure.</p>
     
     
     
-    <span class="code" data-ice="name">invalidators</span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span>Function</span>&gt;</span>
+    <span class="code" data-ice="name">invalidators</span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>Function</span>&gt;</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber84">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber54">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>A list of invalidators.
+  <div data-ice="description"><p>A map of named invalidators.
 <code>invalidator(subPath = &apos;&apos;)</code></p>
 </div>
 
@@ -1524,119 +1320,20 @@ to an <code>Array</code> containing a different structure.</p>
     
     
     
-    <span class="code" data-ice="name">listeners</span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span>Function</span>&gt;</span>
+    <span class="code" data-ice="name">listeners</span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>Function</span>&gt;</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber91">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber61">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>A list of change handler receivers.
+  <div data-ice="description"><p>A map of named change handler receivers.
 <code>listen(handler):Function (unlisten)</code></p>
 </div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-get-optional">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">get</span>
-    
-    
-    
-    <span class="code" data-ice="name">optional</span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;: <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber46">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;</td>
-          <td class="return-desc" data-ice="returnDescription"><p>A list of optional dependencies.</p>
-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-set-optional">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">set</span>
-    
-    
-    
-    <span class="code" data-ice="name">optional</span><span class="code" data-ice="signature">(value: <span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;)</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber53">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
 
   
 
@@ -1672,7 +1369,7 @@ to an <code>Array</code> containing a different structure.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber176">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber101">source</a></span></span>
     </span>
   </h3>
 
@@ -1704,18 +1401,18 @@ to an <code>Array</code> containing a different structure.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-removeDependencyListChangeHandlers">
+  <h3 data-ice="anchor" id="instance-member-removeDependencyMapChangeHandlers">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">removeDependencyListChangeHandlers</span><span class="code" data-ice="signature">: <span>*</span></span>
+    <span class="code" data-ice="name">removeDependencyMapChangeHandlers</span><span class="code" data-ice="signature">: <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber186">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber113">source</a></span></span>
     </span>
   </h3>
 
@@ -1723,192 +1420,6 @@ to an <code>Array</code> containing a different structure.</p>
   
   
   
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-set-required">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">set</span>
-    
-    
-    
-    <span class="code" data-ice="name">required</span><span class="code" data-ice="signature">(value: <span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;)</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber31">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-get-required">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">get</span>
-    
-    
-    
-    <span class="code" data-ice="name">required</span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;: <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber24">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>Array</span>&lt;<span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span>&gt;</td>
-          <td class="return-desc" data-ice="returnDescription"><p>A list of required dependencies.</p>
-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-resolveDependency">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">resolveDependency</span><span class="code" data-ice="signature">: <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber218">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-resolver">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">resolver</span><span class="code" data-ice="signature">: <span>Promise</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber137">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>The current <code>Promise</code> responsible for resolving this dependency.</p>
-</div>
 
   
 
@@ -1940,19 +1451,18 @@ to an <code>Array</code> containing a different structure.</p>
     
     
     
-    <span class="code" data-ice="name">resolving</span><span class="code" data-ice="signature">: <span>boolean</span></span>
+    <span class="code" data-ice="name">resolving</span><span class="code" data-ice="signature">: <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber131">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber161">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>A flag designating whether or not this dependency is currently being resolved.</p>
-</div>
+  
 
   
 
@@ -1984,18 +1494,18 @@ to an <code>Array</code> containing a different structure.</p>
     
     
     
-    <span class="code" data-ice="name">setters</span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span>Function</span>&gt;</span>
+    <span class="code" data-ice="name">setters</span><span class="code" data-ice="signature">: <span>Object</span>&lt;<span>Function</span>&gt;</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber77">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber47">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>A list of setters.
+  <div data-ice="description"><p>A map of named setters.
 <code>setter(value = *, subPath = &apos;&apos;)</code></p>
 </div>
 
@@ -2022,118 +1532,25 @@ to an <code>Array</code> containing a different structure.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-strictRequired">
+  <h3 data-ice="anchor" id="instance-member-strict">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">strictRequired</span><span class="code" data-ice="signature">: <span>*</span></span>
+    <span class="code" data-ice="name">strict</span><span class="code" data-ice="signature">: <span>boolean</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber139">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber75">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-targets">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">targets</span><span class="code" data-ice="signature">: <span>Array</span>&lt;<span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span>&gt;</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber97">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>A list of <code>HashMatrix</code> objects that will be passed directly to the <code>factory</code>.</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-transformArgs">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">transformArgs</span><span class="code" data-ice="signature">: <span>Function</span> | <span>false</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber109">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>An optional function used to transform factory arguments from an argument map (Object)
-(keys are the types of dependencies, values are arrays of resolved dependencies)
-to an <code>Array</code> containing a different structure. Used when the factory
-might require a different configuration of arguments.
-<code>transformArgs(argMap = {required, optional, getters, setters, invalidators, listeners, targets}):Array (newArgs)</code>
-If explicitly set to <code>false</code>, the factory is simply passed the arguments map directly.
-The <strong>default behavior</strong> is to combine all dependencies, in order, into an array.</p>
+  <div data-ice="description"><p>If <code>true</code>, the <code>factory</code> is NOT called until <strong>none</strong> of the <code>dependencies</code> are <code>undefined</code>.</p>
 </div>
 
   
@@ -2161,61 +1578,18 @@ The <strong>default behavior</strong> is to combine all dependencies, in order, 
 <h2 data-ice="title">Private Members</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-_optional">
+  <h3 data-ice="anchor" id="instance-member-_dependencies">
     <span class="access" data-ice="access">private</span>
     
     
     
     
     
-    <span class="code" data-ice="name">_optional</span><span class="code" data-ice="signature">: <span>*</span></span>
+    <span class="code" data-ice="name">_dependencies</span><span class="code" data-ice="signature">: <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber19">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-_required">
-    <span class="access" data-ice="access">private</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">_required</span><span class="code" data-ice="signature">: <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber18">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber11">source</a></span></span>
     </span>
   </h3>
 
@@ -2250,18 +1624,18 @@ The <strong>default behavior</strong> is to combine all dependencies, in order, 
 <div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-getValue">
+  <h3 data-ice="anchor" id="instance-method-getPath">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">getValue</span><span class="code" data-ice="signature">(): <span>*</span></span>
+    <span class="code" data-ice="name">getPath</span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber366">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber198">source</a></span></span>
     </span>
   </h3>
 
@@ -2269,6 +1643,150 @@ The <strong>default behavior</strong> is to combine all dependencies, in order, 
   
   
   
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">path</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getPathAsync">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    <span data-ice="async">async</span>
+    
+    <span class="code" data-ice="name">getPathAsync</span><span class="code" data-ice="signature">(path: <span>*</span>): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber223">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>The same as <code>getPath</code> but asynchronous and will wait for a value.</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">path</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getValueAsync">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    <span data-ice="async">async</span>
+    
+    <span class="code" data-ice="name">getValueAsync</span><span class="code" data-ice="signature">(): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber256">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>The same as <code>getValue</code> but asynchronous and will wait for a value.</p>
+</div>
 
   
 
@@ -2305,6 +1823,65 @@ The <strong>default behavior</strong> is to combine all dependencies, in order, 
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-handleFactoryPromise">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    <span data-ice="async">async</span>
+    
+    <span class="code" data-ice="name">handleFactoryPromise</span><span class="code" data-ice="signature">(factoryPromise: <span>*</span>)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber153">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">factoryPromise</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-invalidate">
     <span class="access" data-ice="access">public</span>
     
@@ -2316,15 +1893,14 @@ The <strong>default behavior</strong> is to combine all dependencies, in order, 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber282">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber119">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Invalidate this dependency.</p>
-</div>
+  
 
   
 
@@ -2356,21 +1932,18 @@ The <strong>default behavior</strong> is to combine all dependencies, in order, 
     
     
     
-    <span class="code" data-ice="name">resolve</span><span class="code" data-ice="signature">(): <span>*</span> | <span>Promise</span></span>
+    <span class="code" data-ice="name">resolve</span><span class="code" data-ice="signature">(): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber292">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber163">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Resolve the value of this dependency using the provided factory and various requirements.
-If the value of this dependency is <em>valid</em> (not <code>undefined</code>), the current value is simply
-returned in order to avoid recursive resolution.</p>
-</div>
+  
 
   
 
@@ -2382,9 +1955,8 @@ returned in order to avoid recursive resolution.</p>
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span> | <span>Promise</span></td>
-          <td class="return-desc" data-ice="returnDescription"><p>The value of the dependency.</p>
-</td>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          
         </tr>
       </tbody>
     </table>
@@ -2408,18 +1980,18 @@ returned in order to avoid recursive resolution.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-resolveAsyncFactoryPromise">
+  <h3 data-ice="anchor" id="instance-method-resolveDependency">
     <span class="access" data-ice="access">public</span>
     
     
     
-    <span data-ice="async">async</span>
     
-    <span class="code" data-ice="name">resolveAsyncFactoryPromise</span><span class="code" data-ice="signature">(promise: <span>*</span>): <span>*</span></span>
+    
+    <span class="code" data-ice="name">resolveDependency</span><span class="code" data-ice="signature">(dependency: <span>*</span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber257">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber123">source</a></span></span>
     </span>
   </h3>
 
@@ -2439,7 +2011,7 @@ returned in order to avoid recursive resolution.</p>
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">promise</td>
+      <td data-ice="name" class="code" data-depth="0">dependency</td>
       <td data-ice="type" class="code"><span>*</span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
@@ -2479,18 +2051,18 @@ returned in order to avoid recursive resolution.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-resolveDependencyList">
+  <h3 data-ice="anchor" id="instance-method-resolveDependencyMap">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">resolveDependencyList</span><span class="code" data-ice="signature">(dependencyList: <span><span>*</span><span>[]</span></span>, optional: <span>*</span>): <span>*</span></span>
+    <span class="code" data-ice="name">resolveDependencyMap</span><span class="code" data-ice="signature">(dependencyMap: {}): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber250">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber129">source</a></span></span>
     </span>
   </h3>
 
@@ -2510,156 +2082,7 @@ returned in order to avoid recursive resolution.</p>
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">dependencyList</td>
-      <td data-ice="type" class="code"><span><span>*</span><span>[]</span></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: []</li></ul></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">optional</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-setValue">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">setValue</span><span class="code" data-ice="signature">(value: <span>*</span>): <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber370">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">value</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-transFormFactoryArgs">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">transFormFactoryArgs</span><span class="code" data-ice="signature">(argMap: {}): <span><span>undefined</span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/LifePod.jsx.html#lineNumber190">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">argMap</td>
+      <td data-ice="name" class="code" data-depth="0">dependencyMap</td>
       <td data-ice="type" class="code">{}</td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: {}</li></ul></td>
@@ -2675,7 +2098,7 @@ returned in order to avoid recursive resolution.</p>
     <table>
       <tbody>
         <tr>
-          <td class="return-type code" data-ice="returnType"><span><span>undefined</span><span>[]</span></span></td>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
           
         </tr>
       </tbody>

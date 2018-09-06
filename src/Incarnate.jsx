@@ -22,9 +22,9 @@ export default class Incarnate extends HashMatrix {
    * The map of dependency and subMap declarations.
    * @type {Object.<DependencyDeclaration|SubMapDeclaration|Incarnate|LifePod|HashMatrix>}
    * */
-  map;
+  subMap;
 
-  _parsedMap = {};
+  _parsedSubMap = {};
 
   /**
    * If `true`, `LifePod` factories will NOT be called until **none** of the `dependencies` are `undefined`.
@@ -32,11 +32,14 @@ export default class Incarnate extends HashMatrix {
    * */
   strict;
 
-  constructor(config = {}) {
-    super(config);
+  /**
+   * @param {SubMapDeclaration} subMapDeclaration The `SubMapDeclaration` to be managed.
+   * */
+  constructor(subMapDeclaration = new SubMapDeclaration()) {
+    super(subMapDeclaration);
 
-    if (!(this.map instanceof Object)) {
-      this.map = {};
+    if (!(this.subMap instanceof Object)) {
+      this.subMap = {};
     }
 
     if (!(this.hashMatrix instanceof Object)) {
@@ -96,7 +99,7 @@ export default class Incarnate extends HashMatrix {
       name: this.getPathString(name, this.name),
       targetPath: name,
       hashMatrix: this,
-      map: subMapWithShared,
+      subMap: subMapWithShared,
       strict: typeof strict !== 'undefined' ?
         strict :
         this.strict
@@ -148,11 +151,11 @@ export default class Incarnate extends HashMatrix {
     const name = pathArray.shift();
     const subPath = [...pathArray];
 
-    if (!this._parsedMap.hasOwnProperty(name) && this.map.hasOwnProperty(name)) {
-      this._parsedMap[name] = this.convertDeclaration(name, this.map[name]);
+    if (!this._parsedSubMap.hasOwnProperty(name) && this.subMap.hasOwnProperty(name)) {
+      this._parsedSubMap[name] = this.convertDeclaration(name, this.subMap[name]);
     }
 
-    const dep = this._parsedMap[name];
+    const dep = this._parsedSubMap[name];
 
     if (dep instanceof Incarnate) {
       return dep.getDependency(subPath);

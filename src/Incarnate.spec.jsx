@@ -2,6 +2,7 @@ import expect from 'expect.js';
 import Incarnate from './Incarnate';
 import LifePod from './LifePod';
 import HashMatrix from './HashMatrix';
+import SubMapDeclaration from './SubMapDeclaration';
 
 export default {
   Incarnate: {
@@ -10,21 +11,21 @@ export default {
     },
     'getDependency': {
       'should get a declared dependency': () => {
-        const inc = new Incarnate({
-          map: {
+        const inc = new Incarnate(new SubMapDeclaration({
+          subMap: {
             testDep: {
               factory: () => 'Tomato'
             }
           }
-        });
+        }));
         const dep = inc.getDependency('testDep');
 
         expect(dep).to.be.a(LifePod);
       },
       'should get an undeclared dependency': () => {
-        const inc = new Incarnate({
-          map: {}
-        });
+        const inc = new Incarnate(new SubMapDeclaration({
+          subMap: {}
+        }));
         const dep = inc.getDependency('testDep');
 
         expect(dep).to.be.a(HashMatrix);
@@ -32,15 +33,15 @@ export default {
     },
     'getResolvedPath': {
       'should resolve a synchronous dependency': () => {
-        const inc = new Incarnate({
-          map: {
+        const inc = new Incarnate(new SubMapDeclaration({
+          subMap: {
             testDep: {
               factory: () => {
                 return 'Tomato';
               }
             }
           }
-        });
+        }));
         const testDep = inc.getResolvedPath('testDep');
 
         expect(testDep).to.equal('Tomato');
@@ -48,15 +49,15 @@ export default {
     },
     'getResolvedPathAsync': {
       'should resolve an asynchronous dependency': async () => {
-        const inc = new Incarnate({
-          map: {
+        const inc = new Incarnate(new SubMapDeclaration({
+          subMap: {
             testDep: {
               factory: async () => {
                 return 'Tomato';
               }
             }
           }
-        });
+        }));
         const testDep = await inc.getResolvedPathAsync('testDep');
 
         expect(testDep).to.equal('Tomato');

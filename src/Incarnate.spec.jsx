@@ -4,6 +4,7 @@ import Incarnate, {
   SubMapDeclaration,
   LifePod
 } from './index';
+import DemoApp from '../demo/app';
 
 export default {
   Incarnate: {
@@ -63,6 +64,19 @@ export default {
 
         expect(testDep).to.equal('Tomato');
       }
+    },
+    'should automatically update dependants when their dependencies change': async () => {
+      let ok = false;
+
+      try {
+        await DemoApp();
+
+        ok = true;
+      } catch (error) {
+        console.log(error);
+      }
+
+      expect(ok).to.equal(true);
     }
   }
 };

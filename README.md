@@ -41,11 +41,11 @@ const inc = new Incarnate({
             return async (username, password) => {
               // Make a login request, get the `authToken`.
               const fakeToken = `${username}:${password}`;
-              
+
               // For demo purposes we'll use the `Buffer` API in node.js to base64 encode the credentials.
               return Buffer.from(fakeToken).toString('base64');
             };
-          } 
+          }
         },
         accounts: {
           dependencies: {
@@ -56,15 +56,15 @@ const inc = new Incarnate({
               // NOTE: IF we call this service method AFTER `login`,
               // the `authToken` will have been automatically updated,
               // in this service, by Incarnate.
-              if(!authToken){
-                throw new Error('The accounts service requires an authentication token but none was supplied.');
+              if (!authToken) {
+                throw new Error('The accounts service requires an authorization token but none was supplied.');
               }
-              
+
               // Get a list of accounts with the `authToken` in the headers.
               console.log('Getting accounts with headers:', {
                 Authorization: `Bearer: ${authToken}`
               });
-              
+
               return [
                 {name: 'Account 1'},
                 {name: 'Account 2'},
@@ -79,7 +79,7 @@ const inc = new Incarnate({
     // Expose some actions that call services and store the results in a nice, tidy, reproducible way.
     actions: {
       shared: {
-        user: 'user',
+        user: 'state.user',
         loginService: 'services.login'
       },
       subMap: {
@@ -96,12 +96,12 @@ const inc = new Incarnate({
             return async ({username, password} = {}) => {
               // Login
               const authToken = await loginService(username, password);
-              
+
               // Store the `authToken`.
               setUser({
                 authToken
               });
-              
+
               return true;
             };
           }
@@ -112,9 +112,9 @@ const inc = new Incarnate({
 });
 
 // Here's your app.
-async function app(){
+export default async function app() {
   // Get the Login Action.
-  const loginAction = inc.getPath('actions.login');
+  const loginAction = inc.getResolvedPath('actions.login');
   // Do the login.
   const loginResult = await loginAction({
     username: 'TestUser',
@@ -123,10 +123,10 @@ async function app(){
   // Get the Accounts Service. It needs the User's `authToken`,
   // but you declared it as a Dependency,
   // so Incarnate took care of that for you.
-  const accountsService = inc.getPath('services.accounts');
+  const accountsService = inc.getResolvedPath('services.accounts');
   // Get those accounts you've been dying to see...
   const accounts = await accountsService();
-  
+
   // Here they are!
   console.log('These are the accounts:', accounts);
 }

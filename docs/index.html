@@ -74,7 +74,7 @@ const inc = new Incarnate({
               // For demo purposes we&apos;ll use the `Buffer` API in node.js to base64 encode the credentials.
               return Buffer.from(fakeToken).toString(&apos;base64&apos;);
             };
-          } 
+          }
         },
         accounts: {
           dependencies: {
@@ -85,8 +85,8 @@ const inc = new Incarnate({
               // NOTE: IF we call this service method AFTER `login`,
               // the `authToken` will have been automatically updated,
               // in this service, by Incarnate.
-              if(!authToken){
-                throw new Error(&apos;The accounts service requires an authentication token but none was supplied.&apos;);
+              if (!authToken) {
+                throw new Error(&apos;The accounts service requires an authorization token but none was supplied.&apos;);
               }
 
               // Get a list of accounts with the `authToken` in the headers.
@@ -108,7 +108,7 @@ const inc = new Incarnate({
     // Expose some actions that call services and store the results in a nice, tidy, reproducible way.
     actions: {
       shared: {
-        user: &apos;user&apos;,
+        user: &apos;state.user&apos;,
         loginService: &apos;services.login&apos;
       },
       subMap: {
@@ -141,9 +141,9 @@ const inc = new Incarnate({
 });
 
 // Here&apos;s your app.
-async function app(){
+export default async function app() {
   // Get the Login Action.
-  const loginAction = inc.getPath(&apos;actions.login&apos;);
+  const loginAction = inc.getResolvedPath(&apos;actions.login&apos;);
   // Do the login.
   const loginResult = await loginAction({
     username: &apos;TestUser&apos;,
@@ -152,7 +152,7 @@ async function app(){
   // Get the Accounts Service. It needs the User&apos;s `authToken`,
   // but you declared it as a Dependency,
   // so Incarnate took care of that for you.
-  const accountsService = inc.getPath(&apos;services.accounts&apos;);
+  const accountsService = inc.getResolvedPath(&apos;services.accounts&apos;);
   // Get those accounts you&apos;ve been dying to see...
   const accounts = await accountsService();
 

@@ -166,24 +166,18 @@ export default class LifePod extends HashMatrix {
     if (!this.resolving) {
       this.resolving = true;
 
-      // TRICKY: If a `HashMatrix` is *proxied*, it must have a value.
-      if (
-        !(this.hashMatrix instanceof HashMatrix) ||
-        typeof this.hashMatrix.getValue() !== 'undefined'
-      ) {
-        if (this.factory instanceof Function) {
-          const resolvedDependencyDeclaration = this.resolveDependencyMap(this.dependencies);
+      if (this.factory instanceof Function) {
+        const resolvedDependencyDeclaration = this.resolveDependencyMap(this.dependencies);
 
-          if (typeof resolvedDependencyDeclaration !== 'undefined') {
-            resolvedValue = this.factory(resolvedDependencyDeclaration);
+        if (typeof resolvedDependencyDeclaration !== 'undefined') {
+          resolvedValue = this.factory(resolvedDependencyDeclaration);
 
-            if (resolvedValue instanceof Promise) {
-              this.handleFactoryPromise(resolvedValue);
-            }
+          if (resolvedValue instanceof Promise) {
+            this.handleFactoryPromise(resolvedValue);
           }
-        } else {
-          resolvedValue = this.getPath([]);
         }
+      } else {
+        resolvedValue = super.getPath([]);
       }
     }
 

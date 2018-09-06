@@ -4,7 +4,12 @@
   "description": "Dependency Injection (DI) with Lifecycle features for JavaScript.",
   "main": "src/Incarnate.jsx",
   "watch": {
-    "test": "{src,test}/*.jsx"
+    "test": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "jsx,spec.jsx"
+    }
   },
   "scripts": {
     "test": "mocha --require resistdesign-babel-register --ui exports **/*.spec.jsx",
@@ -53,7 +58,7 @@
     "esdoc-standard-plugin": "^1.0.0",
     "expect.js": "^0.3.1",
     "mocha": "^3.5.3",
-    "npm-watch": "^0.1.6",
+    "npm-watch": "^0.3.0",
     "resistdesign-babel-register": "^2.0.0"
   }
 }

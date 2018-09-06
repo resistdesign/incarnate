@@ -154,7 +154,7 @@ export default class LifePod extends HashMatrix {
     if (factoryPromise instanceof Promise) {
       const value = await factoryPromise;
 
-      this.setValue(value);
+      super.setPath([], value);
     }
   }
 
@@ -206,6 +206,8 @@ export default class LifePod extends HashMatrix {
       if (resolvedDirectValue instanceof Promise) {
         value = undefined;
       } else {
+        super.setPath([], resolvedDirectValue);
+
         value = super.getPath(path);
       }
     } else {
@@ -213,5 +215,45 @@ export default class LifePod extends HashMatrix {
     }
 
     return value;
+  }
+
+  /**
+   * The same as `getPath` but asynchronous and will wait for a value.
+   * */
+  async getPathAsync(path) {
+    const pathString = this.getPathString(path);
+
+    return new Promise((res, rej) => {
+      const handler = () => {
+        try {
+          const value = this.getPath(path);
+
+          if (typeof value !== 'undefined') {
+            this.removeChangeHandler(pathString, handler);
+            res(value);
+          }
+        } catch (error) {
+          const {message = ''} = error || {};
+
+          rej({
+            message,
+            subject: this,
+            data: path,
+            error
+          });
+        }
+      };
+
+      this.addChangeHandler(pathString, handler);
+
+      handler();
+    });
+  }
+
+  /**
+   * The same as `getValue` but asynchronous and will wait for a value.
+   * */
+  async getValueAsync() {
+    return this.getPathAsync([]);
   }
 }

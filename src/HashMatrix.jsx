@@ -188,7 +188,7 @@ export default class HashMatrix extends ConfigurableInstance {
     this.onChange('', pathString);
   }
 
-  getPath(path) {
+  _getPathInternal(path) {
     if (this.hashMatrix instanceof HashMatrix) {
       return this.hashMatrix.getPath(
         this.getPathArray(path, this.targetPath)
@@ -223,7 +223,11 @@ export default class HashMatrix extends ConfigurableInstance {
     }
   }
 
-  setPath(path, value) {
+  getPath(path) {
+    return this._getPathInternal(path);
+  }
+
+  _setPathInternal(path, value) {
     if (this.hashMatrix instanceof HashMatrix) {
       return this.hashMatrix.setPath(
         this.getPathArray(path, this.targetPath),
@@ -232,7 +236,7 @@ export default class HashMatrix extends ConfigurableInstance {
     }
 
     // TRICKY: DO NOT set if the value is exactly equal.
-    if (value !== this.getPath(path)) {
+    if (value !== this._getPathInternal(path)) {
       const newHashMatrix = {
         ...this.hashMatrix
       };
@@ -273,6 +277,10 @@ export default class HashMatrix extends ConfigurableInstance {
 
       this.dispatchChanges(pathArray);
     }
+  }
+
+  setPath(path, value) {
+    return this._setPathInternal(path, value);
   }
 
   getValue() {

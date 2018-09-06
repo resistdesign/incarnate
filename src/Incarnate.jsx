@@ -38,6 +38,10 @@ export default class Incarnate extends HashMatrix {
     if (!(this.map instanceof Object)) {
       this.map = {};
     }
+
+    if (!(this.hashMatrix instanceof Object)) {
+      this.hashMatrix = {};
+    }
   }
 
   createLifePod(name, dependencyDeclaration = {}) {
@@ -237,4 +241,30 @@ export default class Incarnate extends HashMatrix {
       return dep.addChangeHandler(subPath, handler);
     }
   };
+
+  /**
+   * The same as `getPath` but triggers `LifePod` dependency resolution.
+   * */
+  getResolvedPath(path) {
+    const dep = this.getDependency(path);
+
+    if (dep instanceof LifePod) {
+      return dep.getValue();
+    } else {
+      return this.getPath(path);
+    }
+  }
+
+  /**
+   * The same as `getPath` but triggers `LifePod` dependency resolution and waits for a value.
+   * */
+  async getResolvedPathAsync(path) {
+    const dep = this.getDependency(path);
+
+    if (dep instanceof LifePod) {
+      return dep.getValueAsync();
+    } else {
+      return this.getPath(path);
+    }
+  }
 }

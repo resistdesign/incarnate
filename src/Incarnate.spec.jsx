@@ -11,6 +11,19 @@ export default {
     'should be a class': () => {
       expect(Incarnate).to.be.a(Function);
     },
+    'should automatically update dependants when their dependencies change': async () => {
+      let ok = false;
+
+      try {
+        await DemoApp();
+
+        ok = true;
+      } catch (error) {
+        console.log(error);
+      }
+
+      expect(ok).to.equal(true);
+    },
     'getDependency': {
       'should get a declared dependency': () => {
         const inc = new Incarnate(new SubMapDeclaration({
@@ -65,18 +78,32 @@ export default {
         expect(testDep).to.equal('Tomato');
       }
     },
-    'should automatically update dependants when their dependencies change': async () => {
-      let ok = false;
+    'createIncarnate': {
+      'should throw when a required, shared dependency is not satisfied': () => {
+        let missingSharedDependencyError;
 
-      try {
-        await DemoApp();
+        try {
+          const inc = new Incarnate(new SubMapDeclaration({
+            subMap: {
+              needsShared: {
+                subMap: {
+                  missing: true
+                }
+              }
+            }
+          }));
 
-        ok = true;
-      } catch (error) {
-        console.log(error);
+          inc.getDependency('needsShared');
+        } catch (error) {
+          missingSharedDependencyError = error;
+        }
+
+        expect(missingSharedDependencyError).to.be.an(Object);
+        expect(missingSharedDependencyError.message).to.equal(
+          Incarnate.ERRORS.UNSATISFIED_SHARED_DEPENDENCY
+        );
+        expect(missingSharedDependencyError.data).to.equal('missing');
       }
-
-      expect(ok).to.equal(true);
     }
   }
 };

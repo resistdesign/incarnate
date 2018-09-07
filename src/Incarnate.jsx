@@ -1,12 +1,7 @@
-import HashMatrixInternal from './HashMatrix';
-import LifePodInternal from './LifePod';
-import DependencyDeclarationInternal from './DependencyDeclaration';
-import SubMapDeclarationInternal from './SubMapDeclaration';
-
-export const DependencyDeclaration = DependencyDeclarationInternal;
-export const SubMapDeclaration = SubMapDeclarationInternal;
-export const HashMatrix = HashMatrixInternal;
-export const LifePod = LifePodInternal;
+import HashMatrix from './HashMatrix';
+import LifePod from './LifePod';
+import DependencyDeclaration from './DependencyDeclaration';
+import SubMapDeclaration from './SubMapDeclaration';
 
 /**
  * Manage the lifecycle of application dependencies.
@@ -15,7 +10,6 @@ export const LifePod = LifePodInternal;
 export default class Incarnate extends HashMatrix {
   static DEFAULT_NAME = 'Incarnate';
   static ERRORS = {
-    INVALID_MAP: 'INVALID_MAP',
     UNSATISFIED_SHARED_DEPENDENCY: 'UNSATISFIED_SHARED_DEPENDENCY'
   };
 
@@ -23,79 +17,65 @@ export default class Incarnate extends HashMatrix {
    * The map of dependency and subMap declarations.
    * @type {Object.<DependencyDeclaration|SubMapDeclaration|Incarnate|LifePod|HashMatrix>}
    * */
-  map;
+  subMap;
+
+  _parsedSubMap = {};
 
   /**
-   * A function used to transform the arguments for a `LifePod` factory.
-   * @type {Function}
-   * @see LifePod::transformArgs
+   * If `true`, `LifePod` factories will NOT be called until **none** of the `dependencies` are `undefined`.
+   * @type {boolean}
    * */
-  transformArgs;
-
-  _parsedMap = {};
+  strict;
 
   /**
-   * When `true`, `LifePod` objects will throw an error when dependencies resolve to `undefined`.
-   * Default: `false`.
+   * @param {SubMapDeclaration} subMapDeclaration The `SubMapDeclaration` to be managed.
    * */
-  strictRequired;
+  constructor(subMapDeclaration = new SubMapDeclaration()) {
+    super(subMapDeclaration);
 
-  constructor(config = {}) {
-    super(config);
-
-    if (!(this.map instanceof Object)) {
-      throw {
-        message: Incarnate.ERRORS.INVALID_MAP,
-        data: this
-      };
+    if (!(this.subMap instanceof Object)) {
+      this.subMap = {};
     }
 
-    if (!this.hasOwnProperty('strictRequired')) {
-      this.strictRequired = false;
+    if (!(this.hashMatrix instanceof Object)) {
+      this.hashMatrix = {};
     }
   }
 
   createLifePod(name, dependencyDeclaration = {}) {
     const {
-      required = [],
-      optional = [],
-      getters = [],
-      setters = [],
-      invalidators = [],
-      listeners = [],
-      targets = [],
-      transformArgs,
-      strictRequired
+      dependencies = {},
+      getters = {},
+      setters = {},
+      invalidators = {},
+      listeners = {},
+      strict,
+      ...otherConfig
     } = dependencyDeclaration;
-    const config = {
-      ...dependencyDeclaration,
+    const newDependencyDeclaration = new DependencyDeclaration({
+      ...otherConfig,
       name: this.getPathString(name, this.name),
       targetPath: name,
       hashMatrix: this,
-      required: required.map(this.getDependency),
-      optional: optional.map(this.getDependency),
-      getters: getters.map(this.createGetter),
-      setters: setters.map(this.createSetter),
-      invalidators: invalidators.map(this.createInvalidator),
-      listeners: listeners.map(this.createListener),
-      targets: targets.map(this.createTarget),
-      transformArgs: typeof transformArgs !== 'undefined' ?
-        transformArgs :
-        this.transformArgs,
-      strictRequired: typeof strictRequired !== 'undefined' ?
-        strictRequired :
-        this.strictRequired
-    };
+      dependencies: this.getDependenciesFromMap(dependencies),
+      getters: this.createFromMap(getters, this.createGetter),
+      setters: this.createFromMap(setters, this.createSetter),
+      invalidators: this.createFromMap(invalidators, this.createInvalidator),
+      listeners: this.createFromMap(listeners, this.createListener),
+      strict: typeof strict !== 'undefined' ?
+        strict :
+        this.strict
+    });
 
-    return new LifePod(config);
+    return new LifePod(newDependencyDeclaration);
   }
 
   createIncarnate(name, subMapDeclaration = {}) {
     const {
       subMap = {},
       shared = {},
-      transformArgs,
-      strictRequired
+      strict,
+      ...otherConfig
     } = subMapDeclaration;
     const parsedSharedMap = Object.keys(shared)
       .reduce((acc, k) => {
@@ -109,21 +89,31 @@ export default class Incarnate extends HashMatrix {
       ...subMap,
       ...parsedSharedMap
     };
-    const config = {
-      ...subMapDeclaration,
+    const newSubMapDeclaration = new SubMapDeclaration({
+      ...otherConfig,
       name: this.getPathString(name, this.name),
       targetPath: name,
       hashMatrix: this,
-      map: subMapWithShared,
-      transformArgs: typeof transformArgs !== 'undefined' ?
-        transformArgs :
-        this.transformArgs,
-      strictRequired: typeof strictRequired !== 'undefined' ?
-        strictRequired :
-        this.strictRequired
-    };
+      subMap: subMapWithShared,
+      strict: typeof strict !== 'undefined' ?
+        strict :
+        this.strict
+    });
 
-    return new Incarnate(config);
+    for (const k in subMap) {
+      const depDec = subMap[k];
+
+      if (depDec === true && !shared.hasOwnProperty(k)) {
+        throw {
+          message: Incarnate.ERRORS.UNSATISFIED_SHARED_DEPENDENCY,
+          data: k,
+          subject: subMapDeclaration,
+          context: this
+        };
+      }
+    }
+
+    return new Incarnate(newSubMapDeclaration);
   }
 
   convertDeclaration(name, declaration = {}) {
@@ -156,23 +146,23 @@ export default class Incarnate extends HashMatrix {
     const name = pathArray.shift();
     const subPath = [...pathArray];
 
-    if (!this._parsedMap.hasOwnProperty(name) && this.map.hasOwnProperty(name)) {
-      this._parsedMap[name] = this.convertDeclaration(name, this.map[name]);
+    if (!this._parsedSubMap.hasOwnProperty(name) && this.subMap.hasOwnProperty(name)) {
+      this._parsedSubMap[name] = this.convertDeclaration(name, this.subMap[name]);
     }
 
-    const dep = this._parsedMap[name];
+    const dep = this._parsedSubMap[name];
 
     if (dep instanceof Incarnate) {
       return dep.getDependency(subPath);
     } else if (dep instanceof HashMatrix) {
       if (subPath.length) {
         if (dep instanceof LifePod) {
-          return new LifePod({
+          return new LifePod(new DependencyDeclaration({
             name: pathString,
             targetPath: subPath,
             hashMatrix: dep,
-            strictRequired: this.strictRequired
-          });
+            strict: this.strict
+          }));
         } else {
           return new HashMatrix({
             name: pathString,
@@ -194,6 +184,28 @@ export default class Incarnate extends HashMatrix {
       });
     }
   };
+
+  getDependenciesFromMap(dependencyMap = {}) {
+    return Object
+      .keys(dependencyMap)
+      .reduce((acc, k) => {
+        const depPath = dependencyMap[k];
+        acc[k] = this.getDependency(depPath);
+
+        return acc;
+      }, {});
+  }
+
+  createFromMap(map = {}, creator) {
+    return Object
+      .keys(map)
+      .reduce((acc, k) => {
+        const path = map[k];
+        acc[k] = creator(path);
+
+        return acc;
+      }, {});
+  }
 
   createGetter = (path) => {
     return (subPath = []) => {
@@ -228,7 +240,29 @@ export default class Incarnate extends HashMatrix {
     }
   };
 
-  createTarget = (path) => {
-    return this.getDependency(path);
-  };
+  /**
+   * The same as `getPath` but triggers `LifePod` dependency resolution.
+   * */
+  getResolvedPath(path) {
+    const dep = this.getDependency(path);
+
+    if (dep instanceof LifePod) {
+      return dep.getValue();
+    } else {
+      return this.getPath(path);
+    }
+  }
+
+  /**
+   * The same as `getPath` but triggers `LifePod` dependency resolution and waits for a value.
+   * */
+  async getResolvedPathAsync(path) {
+    const dep = this.getDependency(path);
+
+    if (dep instanceof LifePod) {
+      return dep.getValueAsync();
+    } else {
+      return this.getPath(path);
+    }
+  }
 }

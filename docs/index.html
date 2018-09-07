@@ -29,22 +29,140 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/ConfigurableInstance.jsx~ConfigurableInstance.html">ConfigurableInstance</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/DependencyDeclaration.jsx~DependencyDeclaration.html">DependencyDeclaration</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/HashMatrix.jsx~HashMatrix.html">HashMatrix</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/Incarnate.jsx~Incarnate.html">Incarnate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/LifePod.jsx~LifePod.html">LifePod</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/SubMapDeclaration.jsx~SubMapDeclaration.html">SubMapDeclaration</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-DependencyDeclaration">DependencyDeclaration</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-HashMatrix">HashMatrix</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-LifePod">LifePod</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-SubMapDeclaration">SubMapDeclaration</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="incarnate--a-href--https---travis-ci-org-resistdesign-incarnate---img-src--https---travis-ci-org-resistdesign-incarnate-svg-branch-master--alt--build-status----a-">Incarnate <a href="https://travis-ci.org/resistdesign/incarnate"><img src="https://travis-ci.org/resistdesign/incarnate.svg?branch=master" alt="Build Status"></a></h1><p>Runtime Dependency Lifecycle Management for JavaScript.</p>
 <h2 id="install">Install</h2><p><code>npm i -S incarnate</code></p>
-<h2 id="usage">Usage</h2><p>See the website: <a href="http://incarnate.resist.design">http://incarnate.resist.design</a></p>
+<h2 id="api-docs">API Docs</h2><p><a href="http://incarnate.resist.design">http://incarnate.resist.design</a></p>
+<h2 id="usage-example">Usage Example</h2><pre><code class="lang-jsx"><code class="source-code prettyprint">import Incarnate from &apos;incarnate&apos;;
+
+// Declare your application.
+const inc = new Incarnate({
+  subMap: {
+    // Keep track of your state.
+    state: {
+      subMap: {
+        user: {
+          factory: () =&gt; ({
+            authToken: undefined
+          })
+        }
+      }
+    },
+    // Supply some services.
+    services: {
+      // Some services need authorization information.
+      shared: {
+        user: &apos;state.user&apos;
+      },
+      subMap: {
+        user: true,
+        login: {
+          factory: () =&gt; {
+            return async (username, password) =&gt; {
+              // Make a login request, get the `authToken`.
+              const fakeToken = `${username}:${password}`;
+
+              // For demo purposes we&apos;ll use the `Buffer` API in node.js to base64 encode the credentials.
+              return Buffer.from(fakeToken).toString(&apos;base64&apos;);
+            };
+          }
+        },
+        accounts: {
+          dependencies: {
+            user: &apos;user&apos;
+          },
+          factory: ({dependencies: {user: {authToken = &apos;&apos;} = {}} = {}} = {}) =&gt; {
+            return async () =&gt; {
+              // NOTE: IF we call this service method AFTER `login`,
+              // the `authToken` will have been automatically updated,
+              // in this service, by Incarnate.
+              if (!authToken) {
+                throw new Error(&apos;The accounts service requires an authorization token but none was supplied.&apos;);
+              }
+
+              // Get a list of accounts with the `authToken` in the headers.
+              console.log(&apos;Getting accounts with headers:&apos;, {
+                Authorization: `Bearer: ${authToken}`
+              });
+
+              return [
+                {name: &apos;Account 1&apos;},
+                {name: &apos;Account 2&apos;},
+                {name: &apos;Account 3&apos;},
+                {name: &apos;Account 4&apos;}
+              ];
+            };
+          }
+        }
+      }
+    },
+    // Expose some actions that call services and store the results in a nice, tidy, reproducible way.
+    actions: {
+      shared: {
+        user: &apos;state.user&apos;,
+        loginService: &apos;services.login&apos;
+      },
+      subMap: {
+        user: true,
+        loginService: true,
+        login: {
+          dependencies: {
+            loginService: &apos;loginService&apos;
+          },
+          setters: {
+            setUser: &apos;user&apos;
+          },
+          factory: ({dependencies: {loginService} = {}, setters: {setUser} = {}} = {}) =&gt; {
+            return async ({username, password} = {}) =&gt; {
+              // Login
+              const authToken = await loginService(username, password);
+
+              // Store the `authToken`.
+              setUser({
+                authToken
+              });
+
+              return true;
+            };
+          }
+        }
+      }
+    }
+  }
+});
+
+// Here&apos;s your app.
+export default async function app() {
+  // Get the Login Action.
+  const loginAction = inc.getResolvedPath(&apos;actions.login&apos;);
+  // Do the login.
+  const loginResult = await loginAction({
+    username: &apos;TestUser&apos;,
+    password: &apos;StopTryingToReadThis&apos;
+  });
+  // Get the Accounts Service. It needs the User&apos;s `authToken`,
+  // but you declared it as a Dependency,
+  // so Incarnate took care of that for you.
+  const accountsService = inc.getResolvedPath(&apos;services.accounts&apos;);
+  // Get those accounts you&apos;ve been dying to see...
+  const accounts = await accountsService();
+
+  // Here they are!
+  console.log(&apos;These are the accounts:&apos;, accounts);
+}
+
+// You need to run your app.
+app();</code>
+</code></pre>
 <h2 id="license">License</h2><p><a href="LICENSE.txt">MIT</a></p>
 </div>
 </div>

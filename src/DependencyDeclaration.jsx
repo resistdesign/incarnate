@@ -1,64 +1,50 @@
 /**
  * Declare an available dependency with various types of requirements.
  * */
-export default class DependencyDeclaration {
+import ConfigurableInstance from './ConfigurableInstance';
+
+export default class DependencyDeclaration extends ConfigurableInstance {
   /**
-   * A list of required dependencies.
-   * @type {Array.<string>}
+   * A map of named dependencies.
+   * @type {Object.<string|*>}
    * */
-  required;
+  dependencies;
 
   /**
-   * A list of optional dependencies.
-   * @type {Array.<string>}
-   * */
-  optional;
-
-  /**
-   * A list of getters.
-   * @type {Array.<string>}
+   * A map of named getters.
+   * @type {Object.<string|Function>}
    * */
   getters;
 
   /**
-   * A list of setters.
-   * @type {Array.<string>}
+   * A map of named setters.
+   * @type {Object.<string|Function>}
    * */
   setters;
 
   /**
-   * A list of invalidators.
-   * @type {Array.<string>}
+   * A map of named invalidators.
+   * @type {Object.<string|Function>}
    * */
   invalidators;
 
   /**
-   * A list of change handler receivers.
-   * @type {Array.<string>}
+   * A map of named change handler receivers.
+   * @type {Object.<string|Function>}
    * */
   listeners;
 
   /**
-   * A list of paths that will resolve to dependency controllers rather than values directly.
-   * @type {Array.<string>}
-   * */
-  targets;
-
-  /**
-   * An optional function used to transform factory arguments from an `Array`
-   * to another `Array` containing a different structure. Used when the factory
-   * might require a different configuration of arguments.
-   * `transformArgs(args = []):Array (newArgs)`
+   * The factory function used to create the value of the dependency.
    * @type {Function}
-   * */
-  transformArgs;
-
-  /**
-   * The factory function used to **resolve** the value of the dependency.
-   * @type {Function}
-   * @param {Array.<*>} ...args The various required dependencies in the order:
-   * `required`, `optional`, `getters`, `setters`, `invalidators`, `listeners`
+   * @param {DependencyDeclaration} dependencyValues A `DependencyDeclaration` with resolved values rather than paths.
    * @returns {*|Promise} The value of the dependency.
    * */
   factory;
+
+  /**
+   * If `true`, the `factory` is NOT called until **none** of the `dependencies` are `undefined`.
+   * @type {boolean}
+   * */
+  strict;
 }

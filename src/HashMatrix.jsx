@@ -3,7 +3,9 @@
  * from paths with out throwing errors for accessing undefined
  * portions of the structure.
  * */
-export default class HashMatrix {
+import ConfigurableInstance from './ConfigurableInstance';
+
+export default class HashMatrix extends ConfigurableInstance {
   static DEFAULT_NAME = 'HashMatrix';
   static DEFAULT_PATH_DELIMITER = '.';
   static ERRORS = {
@@ -53,7 +55,7 @@ export default class HashMatrix {
   pathDelimiter;
 
   constructor(config = {}) {
-    Object.assign(this, config);
+    super(config);
 
     if (!this.hasOwnProperty('pathDelimiter')) {
       this.pathDelimiter = HashMatrix.DEFAULT_PATH_DELIMITER;
@@ -186,7 +188,7 @@ export default class HashMatrix {
     this.onChange('', pathString);
   }
 
-  getPath(path) {
+  _getPathInternal(path) {
     if (this.hashMatrix instanceof HashMatrix) {
       return this.hashMatrix.getPath(
         this.getPathArray(path, this.targetPath)
@@ -221,7 +223,11 @@ export default class HashMatrix {
     }
   }
 
-  setPath(path, value) {
+  getPath(path) {
+    return this._getPathInternal(path);
+  }
+
+  _setPathInternal(path, value) {
     if (this.hashMatrix instanceof HashMatrix) {
       return this.hashMatrix.setPath(
         this.getPathArray(path, this.targetPath),
@@ -230,7 +236,7 @@ export default class HashMatrix {
     }
 
     // TRICKY: DO NOT set if the value is exactly equal.
-    if (value !== this.getPath(path)) {
+    if (value !== this._getPathInternal(path)) {
       const newHashMatrix = {
         ...this.hashMatrix
       };
@@ -271,5 +277,17 @@ export default class HashMatrix {
 
       this.dispatchChanges(pathArray);
     }
+  }
+
+  setPath(path, value) {
+    return this._setPathInternal(path, value);
+  }
+
+  getValue() {
+    return this.getPath([]);
+  }
+
+  setValue(value) {
+    return this.setPath([], value);
   }
 }

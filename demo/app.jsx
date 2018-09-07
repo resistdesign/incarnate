@@ -1,19 +1,4 @@
-# Incarnate [![Build Status](https://travis-ci.org/resistdesign/incarnate.svg?branch=master)](https://travis-ci.org/resistdesign/incarnate)
-
-Runtime Dependency Lifecycle Management for JavaScript.
-
-## Install
-
-`npm i -S incarnate`
-
-## API Docs
-
-http://incarnate.resist.design
-
-## Usage Example
-
-```jsx
-import Incarnate from 'incarnate';
+import Incarnate from '../src/index';
 
 // Declare your application.
 const inc = new Incarnate({
@@ -130,11 +115,3 @@ export default async function app() {
   // Here they are!
   console.log('These are the accounts:', accounts);
 }
-
-// You need to run your app.
-app();
-```
-
-## License
-
-[MIT](LICENSE.txt)

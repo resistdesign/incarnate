@@ -1,15 +1,15 @@
 window.esdocSearchIndex = [
   [
+    "incarnate/src/configurableinstance.jsx~configurableinstance",
+    "class/src/ConfigurableInstance.jsx~ConfigurableInstance.html",
+    "<span>ConfigurableInstance</span> <span class=\"search-result-import-path\">incarnate/src/ConfigurableInstance.jsx</span>",
+    "class"
+  ],
+  [
     "incarnate/src/dependencydeclaration.jsx~dependencydeclaration",
     "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html",
     "<span>DependencyDeclaration</span> <span class=\"search-result-import-path\">incarnate/src/DependencyDeclaration.jsx</span>",
     "class"
-  ],
-  [
-    "incarnate~dependencydeclaration",
-    "variable/index.html#static-variable-DependencyDeclaration",
-    "<span>DependencyDeclaration</span> <span class=\"search-result-import-path\">incarnate</span>",
-    "variable"
   ],
   [
     "incarnate/src/hashmatrix.jsx~hashmatrix",
@@ -18,15 +18,9 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "incarnate~hashmatrix",
-    "variable/index.html#static-variable-HashMatrix",
-    "<span>HashMatrix</span> <span class=\"search-result-import-path\">incarnate</span>",
-    "variable"
-  ],
-  [
-    "incarnate~incarnate",
+    "incarnate/src/incarnate.jsx~incarnate",
     "class/src/Incarnate.jsx~Incarnate.html",
-    "<span>Incarnate</span> <span class=\"search-result-import-path\">incarnate</span>",
+    "<span>Incarnate</span> <span class=\"search-result-import-path\">incarnate/src/Incarnate.jsx</span>",
     "class"
   ],
   [
@@ -36,28 +30,34 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "incarnate~lifepod",
-    "variable/index.html#static-variable-LifePod",
-    "<span>LifePod</span> <span class=\"search-result-import-path\">incarnate</span>",
-    "variable"
-  ],
-  [
     "incarnate/src/submapdeclaration.jsx~submapdeclaration",
     "class/src/SubMapDeclaration.jsx~SubMapDeclaration.html",
     "<span>SubMapDeclaration</span> <span class=\"search-result-import-path\">incarnate/src/SubMapDeclaration.jsx</span>",
     "class"
   ],
   [
-    "incarnate~submapdeclaration",
-    "variable/index.html#static-variable-SubMapDeclaration",
-    "<span>SubMapDeclaration</span> <span class=\"search-result-import-path\">incarnate</span>",
-    "variable"
+    "src/configurableinstance.jsx",
+    "file/src/ConfigurableInstance.jsx.html",
+    "src/ConfigurableInstance.jsx",
+    "file"
+  ],
+  [
+    "src/configurableinstance.jsx~configurableinstance#constructor",
+    "class/src/ConfigurableInstance.jsx~ConfigurableInstance.html#instance-constructor-constructor",
+    "src/ConfigurableInstance.jsx~ConfigurableInstance#constructor",
+    "method"
   ],
   [
     "src/dependencydeclaration.jsx",
     "file/src/DependencyDeclaration.jsx.html",
     "src/DependencyDeclaration.jsx",
     "file"
+  ],
+  [
+    "src/dependencydeclaration.jsx~dependencydeclaration#dependencies",
+    "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-dependencies",
+    "src/DependencyDeclaration.jsx~DependencyDeclaration#dependencies",
+    "member"
   ],
   [
     "src/dependencydeclaration.jsx~dependencydeclaration#factory",
@@ -84,33 +84,15 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/dependencydeclaration.jsx~dependencydeclaration#optional",
-    "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-optional",
-    "src/DependencyDeclaration.jsx~DependencyDeclaration#optional",
-    "member"
-  ],
-  [
-    "src/dependencydeclaration.jsx~dependencydeclaration#required",
-    "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-required",
-    "src/DependencyDeclaration.jsx~DependencyDeclaration#required",
-    "member"
-  ],
-  [
     "src/dependencydeclaration.jsx~dependencydeclaration#setters",
     "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-setters",
     "src/DependencyDeclaration.jsx~DependencyDeclaration#setters",
     "member"
   ],
   [
-    "src/dependencydeclaration.jsx~dependencydeclaration#targets",
-    "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-targets",
-    "src/DependencyDeclaration.jsx~DependencyDeclaration#targets",
-    "member"
-  ],
-  [
-    "src/dependencydeclaration.jsx~dependencydeclaration#transformargs",
-    "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-transformArgs",
-    "src/DependencyDeclaration.jsx~DependencyDeclaration#transformArgs",
+    "src/dependencydeclaration.jsx~dependencydeclaration#strict",
+    "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-strict",
+    "src/DependencyDeclaration.jsx~DependencyDeclaration#strict",
     "member"
   ],
   [
@@ -126,9 +108,21 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/hashmatrix.jsx~hashmatrix#_getpathinternal",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-_getPathInternal",
+    "src/HashMatrix.jsx~HashMatrix#_getPathInternal",
+    "method"
+  ],
+  [
     "src/hashmatrix.jsx~hashmatrix#_setdefaultname",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-_setDefaultName",
     "src/HashMatrix.jsx~HashMatrix#_setDefaultName",
+    "method"
+  ],
+  [
+    "src/hashmatrix.jsx~hashmatrix#_setpathinternal",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-_setPathInternal",
+    "src/HashMatrix.jsx~HashMatrix#_setPathInternal",
     "method"
   ],
   [
@@ -180,6 +174,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/hashmatrix.jsx~hashmatrix#getvalue",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getValue",
+    "src/HashMatrix.jsx~HashMatrix#getValue",
+    "method"
+  ],
+  [
     "src/hashmatrix.jsx~hashmatrix#hashmatrix",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-member-hashMatrix",
     "src/HashMatrix.jsx~HashMatrix#hashMatrix",
@@ -222,6 +222,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/hashmatrix.jsx~hashmatrix#setvalue",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-setValue",
+    "src/HashMatrix.jsx~HashMatrix#setValue",
+    "method"
+  ],
+  [
     "src/hashmatrix.jsx~hashmatrix#targetpath",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-member-targetPath",
     "src/HashMatrix.jsx~HashMatrix#targetPath",
@@ -258,9 +264,9 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/incarnate.jsx~incarnate#_parsedmap",
-    "class/src/Incarnate.jsx~Incarnate.html#instance-member-_parsedMap",
-    "src/Incarnate.jsx~Incarnate#_parsedMap",
+    "src/incarnate.jsx~incarnate#_parsedsubmap",
+    "class/src/Incarnate.jsx~Incarnate.html#instance-member-_parsedSubMap",
+    "src/Incarnate.jsx~Incarnate#_parsedSubMap",
     "member"
   ],
   [
@@ -273,6 +279,12 @@ window.esdocSearchIndex = [
     "src/incarnate.jsx~incarnate#convertdeclaration",
     "class/src/Incarnate.jsx~Incarnate.html#instance-method-convertDeclaration",
     "src/Incarnate.jsx~Incarnate#convertDeclaration",
+    "method"
+  ],
+  [
+    "src/incarnate.jsx~incarnate#createfrommap",
+    "class/src/Incarnate.jsx~Incarnate.html#instance-method-createFromMap",
+    "src/Incarnate.jsx~Incarnate#createFromMap",
     "method"
   ],
   [
@@ -312,10 +324,10 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/incarnate.jsx~incarnate#createtarget",
-    "class/src/Incarnate.jsx~Incarnate.html#instance-member-createTarget",
-    "src/Incarnate.jsx~Incarnate#createTarget",
-    "member"
+    "src/incarnate.jsx~incarnate#getdependenciesfrommap",
+    "class/src/Incarnate.jsx~Incarnate.html#instance-method-getDependenciesFromMap",
+    "src/Incarnate.jsx~Incarnate#getDependenciesFromMap",
+    "method"
   ],
   [
     "src/incarnate.jsx~incarnate#getdependency",
@@ -324,21 +336,33 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/incarnate.jsx~incarnate#map",
-    "class/src/Incarnate.jsx~Incarnate.html#instance-member-map",
-    "src/Incarnate.jsx~Incarnate#map",
+    "src/incarnate.jsx~incarnate#getresolvedpath",
+    "class/src/Incarnate.jsx~Incarnate.html#instance-method-getResolvedPath",
+    "src/Incarnate.jsx~Incarnate#getResolvedPath",
+    "method"
+  ],
+  [
+    "src/incarnate.jsx~incarnate#getresolvedpathasync",
+    "class/src/Incarnate.jsx~Incarnate.html#instance-method-getResolvedPathAsync",
+    "src/Incarnate.jsx~Incarnate#getResolvedPathAsync",
+    "method"
+  ],
+  [
+    "src/incarnate.jsx~incarnate#hashmatrix",
+    "class/src/Incarnate.jsx~Incarnate.html#instance-member-hashMatrix",
+    "src/Incarnate.jsx~Incarnate#hashMatrix",
     "member"
   ],
   [
-    "src/incarnate.jsx~incarnate#strictrequired",
-    "class/src/Incarnate.jsx~Incarnate.html#instance-member-strictRequired",
-    "src/Incarnate.jsx~Incarnate#strictRequired",
+    "src/incarnate.jsx~incarnate#strict",
+    "class/src/Incarnate.jsx~Incarnate.html#instance-member-strict",
+    "src/Incarnate.jsx~Incarnate#strict",
     "member"
   ],
   [
-    "src/incarnate.jsx~incarnate#transformargs",
-    "class/src/Incarnate.jsx~Incarnate.html#instance-member-transformArgs",
-    "src/Incarnate.jsx~Incarnate#transformArgs",
+    "src/incarnate.jsx~incarnate#submap",
+    "class/src/Incarnate.jsx~Incarnate.html#instance-member-subMap",
+    "src/Incarnate.jsx~Incarnate#subMap",
     "member"
   ],
   [
@@ -360,15 +384,9 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/lifepod.jsx~lifepod#_optional",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-_optional",
-    "src/LifePod.jsx~LifePod#_optional",
-    "member"
-  ],
-  [
-    "src/lifepod.jsx~lifepod#_required",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-_required",
-    "src/LifePod.jsx~LifePod#_required",
+    "src/lifepod.jsx~lifepod#_dependencies",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-_dependencies",
+    "src/LifePod.jsx~LifePod#_dependencies",
     "member"
   ],
   [
@@ -378,9 +396,9 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/lifepod.jsx~lifepod#adddependencylistchangehandlers",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-addDependencyListChangeHandlers",
-    "src/LifePod.jsx~LifePod#addDependencyListChangeHandlers",
+    "src/lifepod.jsx~lifepod#adddependencymapchangehandlers",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-addDependencyMapChangeHandlers",
+    "src/LifePod.jsx~LifePod#addDependencyMapChangeHandlers",
     "member"
   ],
   [
@@ -390,15 +408,39 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/lifepod.jsx~lifepod#dependencies",
+    "class/src/LifePod.jsx~LifePod.html#instance-get-dependencies",
+    "src/LifePod.jsx~LifePod#dependencies",
+    "member"
+  ],
+  [
+    "src/lifepod.jsx~lifepod#dependencies",
+    "class/src/LifePod.jsx~LifePod.html#instance-set-dependencies",
+    "src/LifePod.jsx~LifePod#dependencies",
+    "member"
+  ],
+  [
     "src/lifepod.jsx~lifepod#factory",
     "class/src/LifePod.jsx~LifePod.html#instance-member-factory",
     "src/LifePod.jsx~LifePod#factory",
     "member"
   ],
   [
-    "src/lifepod.jsx~lifepod#getvalue",
-    "class/src/LifePod.jsx~LifePod.html#instance-method-getValue",
-    "src/LifePod.jsx~LifePod#getValue",
+    "src/lifepod.jsx~lifepod#getpath",
+    "class/src/LifePod.jsx~LifePod.html#instance-method-getPath",
+    "src/LifePod.jsx~LifePod#getPath",
+    "method"
+  ],
+  [
+    "src/lifepod.jsx~lifepod#getpathasync",
+    "class/src/LifePod.jsx~LifePod.html#instance-method-getPathAsync",
+    "src/LifePod.jsx~LifePod#getPathAsync",
+    "method"
+  ],
+  [
+    "src/lifepod.jsx~lifepod#getvalueasync",
+    "class/src/LifePod.jsx~LifePod.html#instance-method-getValueAsync",
+    "src/LifePod.jsx~LifePod#getValueAsync",
     "method"
   ],
   [
@@ -414,10 +456,10 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/lifepod.jsx~lifepod#handlerasyncfactoryerror",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-handlerAsyncFactoryError",
-    "src/LifePod.jsx~LifePod#handlerAsyncFactoryError",
-    "member"
+    "src/lifepod.jsx~lifepod#handlefactorypromise",
+    "class/src/LifePod.jsx~LifePod.html#instance-method-handleFactoryPromise",
+    "src/LifePod.jsx~LifePod#handleFactoryPromise",
+    "method"
   ],
   [
     "src/lifepod.jsx~lifepod#invalidate",
@@ -438,39 +480,15 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/lifepod.jsx~lifepod#optional",
-    "class/src/LifePod.jsx~LifePod.html#instance-set-optional",
-    "src/LifePod.jsx~LifePod#optional",
-    "member"
-  ],
-  [
-    "src/lifepod.jsx~lifepod#optional",
-    "class/src/LifePod.jsx~LifePod.html#instance-get-optional",
-    "src/LifePod.jsx~LifePod#optional",
-    "member"
-  ],
-  [
     "src/lifepod.jsx~lifepod#removedependencychangehandler",
     "class/src/LifePod.jsx~LifePod.html#instance-member-removeDependencyChangeHandler",
     "src/LifePod.jsx~LifePod#removeDependencyChangeHandler",
     "member"
   ],
   [
-    "src/lifepod.jsx~lifepod#removedependencylistchangehandlers",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-removeDependencyListChangeHandlers",
-    "src/LifePod.jsx~LifePod#removeDependencyListChangeHandlers",
-    "member"
-  ],
-  [
-    "src/lifepod.jsx~lifepod#required",
-    "class/src/LifePod.jsx~LifePod.html#instance-get-required",
-    "src/LifePod.jsx~LifePod#required",
-    "member"
-  ],
-  [
-    "src/lifepod.jsx~lifepod#required",
-    "class/src/LifePod.jsx~LifePod.html#instance-set-required",
-    "src/LifePod.jsx~LifePod#required",
+    "src/lifepod.jsx~lifepod#removedependencymapchangehandlers",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-removeDependencyMapChangeHandlers",
+    "src/LifePod.jsx~LifePod#removeDependencyMapChangeHandlers",
     "member"
   ],
   [
@@ -480,28 +498,16 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/lifepod.jsx~lifepod#resolveasyncfactorypromise",
-    "class/src/LifePod.jsx~LifePod.html#instance-method-resolveAsyncFactoryPromise",
-    "src/LifePod.jsx~LifePod#resolveAsyncFactoryPromise",
-    "method"
-  ],
-  [
     "src/lifepod.jsx~lifepod#resolvedependency",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-resolveDependency",
+    "class/src/LifePod.jsx~LifePod.html#instance-method-resolveDependency",
     "src/LifePod.jsx~LifePod#resolveDependency",
-    "member"
-  ],
-  [
-    "src/lifepod.jsx~lifepod#resolvedependencylist",
-    "class/src/LifePod.jsx~LifePod.html#instance-method-resolveDependencyList",
-    "src/LifePod.jsx~LifePod#resolveDependencyList",
     "method"
   ],
   [
-    "src/lifepod.jsx~lifepod#resolver",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-resolver",
-    "src/LifePod.jsx~LifePod#resolver",
-    "member"
+    "src/lifepod.jsx~lifepod#resolvedependencymap",
+    "class/src/LifePod.jsx~LifePod.html#instance-method-resolveDependencyMap",
+    "src/LifePod.jsx~LifePod#resolveDependencyMap",
+    "method"
   ],
   [
     "src/lifepod.jsx~lifepod#resolving",
@@ -510,39 +516,15 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/lifepod.jsx~lifepod#setvalue",
-    "class/src/LifePod.jsx~LifePod.html#instance-method-setValue",
-    "src/LifePod.jsx~LifePod#setValue",
-    "method"
-  ],
-  [
     "src/lifepod.jsx~lifepod#setters",
     "class/src/LifePod.jsx~LifePod.html#instance-member-setters",
     "src/LifePod.jsx~LifePod#setters",
     "member"
   ],
   [
-    "src/lifepod.jsx~lifepod#strictrequired",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-strictRequired",
-    "src/LifePod.jsx~LifePod#strictRequired",
-    "member"
-  ],
-  [
-    "src/lifepod.jsx~lifepod#targets",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-targets",
-    "src/LifePod.jsx~LifePod#targets",
-    "member"
-  ],
-  [
-    "src/lifepod.jsx~lifepod#transformfactoryargs",
-    "class/src/LifePod.jsx~LifePod.html#instance-method-transFormFactoryArgs",
-    "src/LifePod.jsx~LifePod#transFormFactoryArgs",
-    "method"
-  ],
-  [
-    "src/lifepod.jsx~lifepod#transformargs",
-    "class/src/LifePod.jsx~LifePod.html#instance-member-transformArgs",
-    "src/LifePod.jsx~LifePod#transformArgs",
+    "src/lifepod.jsx~lifepod#strict",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-strict",
+    "src/LifePod.jsx~LifePod#strict",
     "member"
   ],
   [
@@ -552,22 +534,10 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/lifepod.jsx~lifepod.errors",
-    "class/src/LifePod.jsx~LifePod.html#static-member-ERRORS",
-    "src/LifePod.jsx~LifePod.ERRORS",
-    "member"
-  ],
-  [
     "src/submapdeclaration.jsx",
     "file/src/SubMapDeclaration.jsx.html",
     "src/SubMapDeclaration.jsx",
     "file"
-  ],
-  [
-    "src/submapdeclaration.jsx~submapdeclaration#constructor",
-    "class/src/SubMapDeclaration.jsx~SubMapDeclaration.html#instance-constructor-constructor",
-    "src/SubMapDeclaration.jsx~SubMapDeclaration#constructor",
-    "method"
   ],
   [
     "src/submapdeclaration.jsx~submapdeclaration#shared",
@@ -582,9 +552,9 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/submapdeclaration.jsx~submapdeclaration#transformargs",
-    "class/src/SubMapDeclaration.jsx~SubMapDeclaration.html#instance-member-transformArgs",
-    "src/SubMapDeclaration.jsx~SubMapDeclaration#transformArgs",
-    "member"
+    "src/index.jsx",
+    "file/src/index.jsx.html",
+    "src/index.jsx",
+    "file"
   ]
 ]

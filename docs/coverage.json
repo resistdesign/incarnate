@@ -1,87 +1,94 @@
 {
-  "coverage": "45.16%",
-  "expectCount": 93,
-  "actualCount": 42,
+  "coverage": "39.53%",
+  "expectCount": 86,
+  "actualCount": 34,
   "files": {
+    "src/ConfigurableInstance.jsx": {
+      "expectCount": 2,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        2
+      ]
+    },
     "src/DependencyDeclaration.jsx": {
-      "expectCount": 10,
-      "actualCount": 10,
-      "undocumentLines": []
+      "expectCount": 8,
+      "actualCount": 7,
+      "undocumentLines": [
+        6
+      ]
     },
     "src/HashMatrix.jsx": {
-      "expectCount": 23,
-      "actualCount": 5,
+      "expectCount": 27,
+      "actualCount": 4,
       "undocumentLines": [
-        7,
         8,
         9,
-        16,
-        28,
-        55,
-        72,
-        82,
-        88,
-        94,
-        115,
-        138,
-        144,
-        150,
-        160,
-        165,
-        189,
-        224
+        10,
+        11,
+        18,
+        30,
+        57,
+        74,
+        84,
+        90,
+        96,
+        117,
+        140,
+        146,
+        152,
+        162,
+        167,
+        191,
+        226,
+        230,
+        282,
+        286,
+        290
       ]
     },
     "src/Incarnate.jsx": {
-      "expectCount": 21,
-      "actualCount": 5,
+      "expectCount": 20,
+      "actualCount": 7,
       "undocumentLines": [
-        6,
-        7,
-        8,
-        9,
-        16,
-        17,
-        35,
-        43,
-        58,
-        93,
-        129,
-        198,
-        207,
-        216,
-        222,
-        231
+        11,
+        12,
+        22,
+        41,
+        45,
+        73,
+        119,
+        188,
+        199,
+        210,
+        219,
+        228,
+        234
       ]
     },
     "src/LifePod.jsx": {
-      "expectCount": 34,
-      "actualCount": 18,
+      "expectCount": 26,
+      "actualCount": 13,
       "undocumentLines": [
         9,
-        10,
-        18,
-        19,
-        139,
-        141,
-        166,
-        170,
-        176,
-        182,
-        186,
-        190,
-        218,
-        250,
-        366,
-        370
+        11,
+        91,
+        95,
+        101,
+        107,
+        113,
+        119,
+        123,
+        129,
+        153,
+        161,
+        163
       ]
     },
     "src/SubMapDeclaration.jsx": {
-      "expectCount": 5,
-      "actualCount": 4,
-      "undocumentLines": [
-        27
-      ]
+      "expectCount": 3,
+      "actualCount": 3,
+      "undocumentLines": []
     }
   }
 }

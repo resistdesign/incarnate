@@ -1,9 +1,10 @@
 import DependencyDeclaration from './DependencyDeclaration';
+import ConfigurableInstance from './ConfigurableInstance';
 
 /**
  * Declare an available map of dependencies.
  * */
-export default class SubMapDeclaration {
+export default class SubMapDeclaration extends ConfigurableInstance {
   /**
    * The map of dependencies.
    * @type {Object.<DependencyDeclaration>}
@@ -16,15 +17,4 @@ export default class SubMapDeclaration {
    * @type {Object.<string>}
    * */
   shared;
-
-  /**
-   * A function used to transform the arguments for dependency factories.
-   * @type {Function}
-   * @see DependencyDeclaration::transformArgs
-   * */
-  transformArgs;
-
-  constructor(config = {}) {
-    Object.assign(this, config);
-  }
 }

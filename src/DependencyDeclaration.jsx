@@ -47,4 +47,10 @@ export default class DependencyDeclaration extends ConfigurableInstance {
    * @type {boolean}
    * */
   strict;
+
+  /**
+   * Always call the `factory` when calling `getPath`, even if there is an existing value.
+   * @type {boolean}
+   * */
+  noCache;
 }

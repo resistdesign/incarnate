@@ -75,6 +75,12 @@ export default class LifePod extends HashMatrix {
   strict;
 
   /**
+   * Always call the `factory` when calling `getPath`, even if there is an existing value.
+   * @type {boolean}
+   * */
+  noCache;
+
+  /**
    * @param {DependencyDeclaration} dependencyDeclaration The `DependencyDeclaration` to be resolved.
    * */
   constructor(dependencyDeclaration = new DependencyDeclaration()) {
@@ -194,7 +200,7 @@ export default class LifePod extends HashMatrix {
 
     let value;
 
-    if (typeof directValue === 'undefined') {
+    if (typeof directValue === 'undefined' || this.noCache) {
       const resolvedDirectValue = this.resolve();
 
       if (resolvedDirectValue instanceof Promise) {

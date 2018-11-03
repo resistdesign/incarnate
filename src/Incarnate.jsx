@@ -3,12 +3,28 @@ import LifePod from './LifePod';
 import DependencyDeclaration from './DependencyDeclaration';
 import SubMapDeclaration from './SubMapDeclaration';
 
+const STANDARD_DEPENDENCY_NAMES = {
+  GLOBAL: 'GLOBAL'
+};
+const STANDARD_DEPENDENCIES = {
+  [STANDARD_DEPENDENCY_NAMES.GLOBAL]: {
+    factory: () => window || global
+  }
+};
+
 /**
  * Manage the lifecycle of application dependencies.
  * Use dependencies as application entry-points and keep track of live changes.
  * */
 export default class Incarnate extends HashMatrix {
   static DEFAULT_NAME = 'Incarnate';
+
+  /**
+   * The names of the dependencies supplied with a standard instance of `Incarnate`.
+   * @type {Object.<string>}
+   * */
+  static STANDARD_DEPENDENCY_NAMES = STANDARD_DEPENDENCY_NAMES;
+
   static ERRORS = {
     UNSATISFIED_SHARED_DEPENDENCY: 'UNSATISFIED_SHARED_DEPENDENCY'
   };
@@ -33,13 +49,14 @@ export default class Incarnate extends HashMatrix {
   constructor(subMapDeclaration = new SubMapDeclaration()) {
     super(subMapDeclaration);
 
-    if (!(this.subMap instanceof Object)) {
-      this.subMap = {};
-    }
-
     if (!(this.hashMatrix instanceof Object)) {
       this.hashMatrix = {};
     }
+
+    this.subMap = {
+      ...STANDARD_DEPENDENCIES,
+      ...this.subMap
+    };
   }
 
   createLifePod(name, dependencyDeclaration = {}) {

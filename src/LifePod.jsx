@@ -160,6 +160,8 @@ export default class LifePod extends HashMatrix {
     if (factoryPromise instanceof Promise) {
       const value = await factoryPromise;
 
+      this.resolving = false;
+
       super.setPath([], value);
     }
   }
@@ -180,14 +182,16 @@ export default class LifePod extends HashMatrix {
 
           if (resolvedValue instanceof Promise) {
             this.handleFactoryPromise(resolvedValue);
+          } else {
+            this.resolving = false;
           }
         }
       } else {
         resolvedValue = super.getPath([]);
+
+        this.resolving = false;
       }
     }
-
-    this.resolving = false;
 
     return resolvedValue;
   }
@@ -203,7 +207,7 @@ export default class LifePod extends HashMatrix {
     if (typeof directValue === 'undefined' || this.noCache) {
       const resolvedDirectValue = this.resolve();
 
-      if (resolvedDirectValue instanceof Promise) {
+      if (this.resolving) {
         value = undefined;
       } else {
         super.setPath([], resolvedDirectValue);

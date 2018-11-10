@@ -1,6 +1,6 @@
 {
   "name": "incarnate",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "Dependency Injection (DI) with Lifecycle features for JavaScript.",
   "main": "src/index.jsx",
   "watch": {

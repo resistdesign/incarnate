@@ -122,10 +122,6 @@ export default class LifePod extends HashMatrix {
       .forEach(k => this.removeDependencyChangeHandler(dependencyMap[k]));
   };
 
-  invalidate() {
-    this.setValue(undefined);
-  }
-
   resolveDependency(dependency) {
     if (dependency instanceof HashMatrix) {
       return dependency.getValue();

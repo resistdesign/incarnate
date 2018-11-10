@@ -84,6 +84,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/dependencydeclaration.jsx~dependencydeclaration#nocache",
+    "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-noCache",
+    "src/DependencyDeclaration.jsx~DependencyDeclaration#noCache",
+    "member"
+  ],
+  [
     "src/dependencydeclaration.jsx~dependencydeclaration#setters",
     "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-setters",
     "src/DependencyDeclaration.jsx~DependencyDeclaration#setters",
@@ -184,6 +190,18 @@ window.esdocSearchIndex = [
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-member-hashMatrix",
     "src/HashMatrix.jsx~HashMatrix#hashMatrix",
     "member"
+  ],
+  [
+    "src/hashmatrix.jsx~hashmatrix#invalidate",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-invalidate",
+    "src/HashMatrix.jsx~HashMatrix#invalidate",
+    "method"
+  ],
+  [
+    "src/hashmatrix.jsx~hashmatrix#invalidatepath",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-invalidatePath",
+    "src/HashMatrix.jsx~HashMatrix#invalidatePath",
+    "method"
   ],
   [
     "src/hashmatrix.jsx~hashmatrix#name",
@@ -378,6 +396,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/incarnate.jsx~incarnate.standard_dependency_names",
+    "class/src/Incarnate.jsx~Incarnate.html#static-member-STANDARD_DEPENDENCY_NAMES",
+    "src/Incarnate.jsx~Incarnate.STANDARD_DEPENDENCY_NAMES",
+    "member"
+  ],
+  [
     "src/lifepod.jsx",
     "file/src/LifePod.jsx.html",
     "src/LifePod.jsx",
@@ -462,12 +486,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/lifepod.jsx~lifepod#invalidate",
-    "class/src/LifePod.jsx~LifePod.html#instance-method-invalidate",
-    "src/LifePod.jsx~LifePod#invalidate",
-    "method"
-  ],
-  [
     "src/lifepod.jsx~lifepod#invalidators",
     "class/src/LifePod.jsx~LifePod.html#instance-member-invalidators",
     "src/LifePod.jsx~LifePod#invalidators",
@@ -477,6 +495,12 @@ window.esdocSearchIndex = [
     "src/lifepod.jsx~lifepod#listeners",
     "class/src/LifePod.jsx~LifePod.html#instance-member-listeners",
     "src/LifePod.jsx~LifePod#listeners",
+    "member"
+  ],
+  [
+    "src/lifepod.jsx~lifepod#nocache",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-noCache",
+    "src/LifePod.jsx~LifePod#noCache",
     "member"
   ],
   [

@@ -1,10 +1,15 @@
+import ConfigurableInstance from './ConfigurableInstance';
+
+/**
+ * An object used to invalidate a path.
+ * */
+const INVALID = {};
+
 /**
  * Easily manage a data structure that can be dynamically built
  * from paths with out throwing errors for accessing undefined
  * portions of the structure.
  * */
-import ConfigurableInstance from './ConfigurableInstance';
-
 export default class HashMatrix extends ConfigurableInstance {
   static DEFAULT_NAME = 'HashMatrix';
   static DEFAULT_PATH_DELIMITER = '.';
@@ -235,12 +240,14 @@ export default class HashMatrix extends ConfigurableInstance {
       );
     }
 
+    const targetValue = value === INVALID ? undefined : value;
+    const pathArray = this.getPathArray(path);
+
     // TRICKY: DO NOT set if the value is exactly equal.
-    if (value !== this._getPathInternal(path)) {
+    if (targetValue !== this._getPathInternal(path)) {
       const newHashMatrix = {
         ...this.hashMatrix
       };
-      const pathArray = this.getPathArray(path);
 
       if (pathArray.length) {
         const lastIndex = pathArray.length - 1;
@@ -268,13 +275,15 @@ export default class HashMatrix extends ConfigurableInstance {
           currentValue = currentValue[part];
         }
 
-        currentValue[lastPart] = value;
+        currentValue[lastPart] = targetValue;
 
         this.hashMatrix = newHashMatrix;
       } else {
-        this.hashMatrix = value;
+        this.hashMatrix = targetValue;
       }
 
+      this.dispatchChanges(pathArray);
+    } else if (value === INVALID) {
       this.dispatchChanges(pathArray);
     }
   }
@@ -283,11 +292,19 @@ export default class HashMatrix extends ConfigurableInstance {
     return this._setPathInternal(path, value);
   }
 
+  invalidatePath(path) {
+    this.setPath(path, INVALID);
+  }
+
   getValue() {
     return this.getPath([]);
   }
 
   setValue(value) {
     return this.setPath([], value);
+  }
+
+  invalidate() {
+    this.setValue(INVALID);
   }
 }

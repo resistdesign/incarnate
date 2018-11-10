@@ -243,9 +243,12 @@ export default class Incarnate extends HashMatrix {
   };
 
   createInvalidator = (path) => {
-    const setter = this.createSetter(path);
+    return (subPath = []) => {
+      // TRICKY: Get the `dep` "just in time" to avoid recursion.
+      const dep = this.getDependency(path);
 
-    return () => setter(undefined);
+      return dep.invalidatePath(subPath);
+    }
   };
 
   createListener = (path) => {

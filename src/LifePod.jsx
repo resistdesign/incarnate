@@ -181,6 +181,11 @@ export default class LifePod extends HashMatrix {
           } else {
             this.resolving = false;
           }
+        } else {
+          // No resolved dependencies.
+          resolvedValue = undefined;
+
+          this.resolving = false;
         }
       } else {
         resolvedValue = super.getPath([]);

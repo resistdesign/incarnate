@@ -117,6 +117,12 @@ export default class LifePod extends HashMatrix {
   strict;
 
   /**
+   * Always call the `factory` when calling `getPath`, even if there is an existing value.
+   * @type {boolean}
+   * */
+  noCache;
+
+  /**
    * @param {DependencyDeclaration} dependencyDeclaration The `DependencyDeclaration` to be resolved.
    * */
   constructor(dependencyDeclaration = new DependencyDeclaration()) {
@@ -158,10 +164,6 @@ export default class LifePod extends HashMatrix {
       .forEach(k =&gt; this.removeDependencyChangeHandler(dependencyMap[k]));
   };
 
-  invalidate() {
-    this.setValue(undefined);
-  }
-
   resolveDependency(dependency) {
     if (dependency instanceof HashMatrix) {
       return dependency.getValue();
@@ -196,6 +198,8 @@ export default class LifePod extends HashMatrix {
     if (factoryPromise instanceof Promise) {
       const value = await factoryPromise;
 
+      this.resolving = false;
+
       super.setPath([], value);
     }
   }
@@ -216,14 +220,16 @@ export default class LifePod extends HashMatrix {
 
           if (resolvedValue instanceof Promise) {
             this.handleFactoryPromise(resolvedValue);
+          } else {
+            this.resolving = false;
           }
         }
       } else {
         resolvedValue = super.getPath([]);
+
+        this.resolving = false;
       }
     }
-
-    this.resolving = false;
 
     return resolvedValue;
   }
@@ -236,10 +242,10 @@ export default class LifePod extends HashMatrix {
 
     let value;
 
-    if (typeof directValue === &apos;undefined&apos;) {
+    if (typeof directValue === &apos;undefined&apos; || this.noCache) {
       const resolvedDirectValue = this.resolve();
 
-      if (resolvedDirectValue instanceof Promise) {
+      if (this.resolving) {
         value = undefined;
       } else {
         super.setPath([], resolvedDirectValue);

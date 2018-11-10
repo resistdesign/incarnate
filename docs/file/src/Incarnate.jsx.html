@@ -45,12 +45,28 @@ import LifePod from &apos;./LifePod&apos;;
 import DependencyDeclaration from &apos;./DependencyDeclaration&apos;;
 import SubMapDeclaration from &apos;./SubMapDeclaration&apos;;
 
+const STANDARD_DEPENDENCY_NAMES = {
+  GLOBAL: &apos;GLOBAL&apos;
+};
+const STANDARD_DEPENDENCIES = {
+  [STANDARD_DEPENDENCY_NAMES.GLOBAL]: {
+    factory: () =&gt; window || global
+  }
+};
+
 /**
  * Manage the lifecycle of application dependencies.
  * Use dependencies as application entry-points and keep track of live changes.
  * */
 export default class Incarnate extends HashMatrix {
   static DEFAULT_NAME = &apos;Incarnate&apos;;
+
+  /**
+   * The names of the dependencies supplied with a standard instance of `Incarnate`.
+   * @type {Object.&lt;string&gt;}
+   * */
+  static STANDARD_DEPENDENCY_NAMES = STANDARD_DEPENDENCY_NAMES;
+
   static ERRORS = {
     UNSATISFIED_SHARED_DEPENDENCY: &apos;UNSATISFIED_SHARED_DEPENDENCY&apos;
   };
@@ -75,13 +91,14 @@ export default class Incarnate extends HashMatrix {
   constructor(subMapDeclaration = new SubMapDeclaration()) {
     super(subMapDeclaration);
 
-    if (!(this.subMap instanceof Object)) {
-      this.subMap = {};
-    }
-
     if (!(this.hashMatrix instanceof Object)) {
       this.hashMatrix = {};
     }
+
+    this.subMap = {
+      ...STANDARD_DEPENDENCIES,
+      ...this.subMap
+    };
   }
 
   createLifePod(name, dependencyDeclaration = {}) {
@@ -268,9 +285,12 @@ export default class Incarnate extends HashMatrix {
   };
 
   createInvalidator = (path) =&gt; {
-    const setter = this.createSetter(path);
+    return (subPath = []) =&gt; {
+      // TRICKY: Get the `dep` &quot;just in time&quot; to avoid recursion.
+      const dep = this.getDependency(path);
 
-    return () =&gt; setter(undefined);
+      return dep.invalidatePath(subPath);
+    }
   };
 
   createListener = (path) =&gt; {

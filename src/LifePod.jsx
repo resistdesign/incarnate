@@ -94,7 +94,7 @@ export default class LifePod extends HashMatrix {
     this.dependencies = dependencies;
   }
 
-  handleDependencyChange = (...args) => {
+  handleDependencyChange = () => {
     this.invalidate();
   };
 

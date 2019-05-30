@@ -1,6 +1,28 @@
 import DependencyDeclaration from './DependencyDeclaration';
 import HashMatrix from './HashMatrix';
 
+const getMergedDependencies = (depStructure = {}, merge) => {
+  if (merge === false) {
+    return depStructure;
+  }
+
+  const {
+    dependencies,
+    getters,
+    setters,
+    invalidators,
+    listeners
+  } = depStructure;
+
+  return {
+    ...dependencies,
+    ...getters,
+    ...setters,
+    ...invalidators,
+    ...listeners
+  };
+};
+
 /**
  * A container used to resolve a `DependencyDeclaration`.
  * @see DependencyDeclaration
@@ -85,6 +107,12 @@ export default class LifePod extends HashMatrix {
    * @type {boolean}
    * */
   noCache;
+
+  /**
+   * Merge all dependency types into one `Object` when being passed to the `factory`. Default: `true`
+   * @type {boolean}
+   * */
+  mergeDeps;
 
   /**
    * @param {DependencyDeclaration} dependencyDeclaration The `DependencyDeclaration` to be resolved.
@@ -224,7 +252,10 @@ export default class LifePod extends HashMatrix {
 
         if (typeof resolvedDependencyDeclaration !== 'undefined') {
           try {
-            resolvedValue = this.factory(resolvedDependencyDeclaration);
+            resolvedValue = this.factory(getMergedDependencies(
+              resolvedDependencyDeclaration,
+              this.mergeDeps
+            ));
           } catch (error) {
             this.setError(
               [],

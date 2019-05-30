@@ -76,6 +76,36 @@ export default {
         const testDep = await inc.getResolvedPathAsync('testDep');
 
         expect(testDep).to.equal('Tomato');
+      },
+      'should not hang the process when timing out': async () => {
+        const inc = new Incarnate(new SubMapDeclaration({
+          subMap: {
+            dep1: {
+              factory: () => undefined
+            },
+            testDep: {
+              dependencies: {
+                dep1: 'dep1'
+              },
+              strict: true,
+              factory: async () => {
+                return 'Tomato';
+              }
+            }
+          }
+        }));
+        const testDepPod = inc.getDependency('testDep');
+
+        let resError = undefined;
+
+        try {
+          await inc.getResolvedPathAsync('testDep', 1000);
+        } catch (error) {
+          resError = error;
+        }
+
+        expect(resError).to.be.an(Object);
+        expect(testDepPod.resolving).to.equal(false);
       }
     },
     'createIncarnate': {

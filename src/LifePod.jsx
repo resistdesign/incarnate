@@ -7,6 +7,10 @@ import HashMatrix from './HashMatrix';
  * */
 export default class LifePod extends HashMatrix {
   static DEFAULT_NAME = 'LifePod';
+  static ERROR_TYPES = {
+    DEPENDENCY_RESOLUTION_ERROR: 'DEPENDENCY_RESOLUTION_ERROR',
+    FACTORY_RESOLUTION_ERROR: 'FACTORY_RESOLUTION_ERROR'
+  };
 
   _dependencies;
 
@@ -23,12 +27,14 @@ export default class LifePod extends HashMatrix {
   set dependencies(value) {
     if (this._dependencies instanceof Object) {
       this.removeDependencyMapChangeHandlers(this._dependencies);
+      this.removeDependencyMapErrorHandlers(this._dependencies);
     }
 
     this._dependencies = value;
 
     if (this._dependencies instanceof Object) {
       this.addDependencyMapChangeHandlers(this._dependencies);
+      this.addDependencyMapErrorHandlers(this._dependencies);
     }
   }
 
@@ -120,6 +126,43 @@ export default class LifePod extends HashMatrix {
     Object
       .keys(dependencyMap)
       .forEach(k => this.removeDependencyChangeHandler(dependencyMap[k]));
+  };
+
+  handleDependencyError = (error, path, causePath) => {
+    this.onError(
+      {
+        type: LifePod.ERROR_TYPES.DEPENDENCY_RESOLUTION_ERROR,
+        error,
+        path,
+        causePath
+      },
+      this.name,
+      path
+    );
+  };
+
+  addDependencyErrorHandler = (dependency) => {
+    if (dependency instanceof HashMatrix) {
+      dependency.addErrorHandler('', this.handleDependencyError);
+    }
+  };
+
+  removeDependencyErrorHandler = (dependency) => {
+    if (dependency instanceof HashMatrix) {
+      dependency.removeErrorHandler('', this.handleDependencyError);
+    }
+  };
+
+  addDependencyMapErrorHandlers = (dependencyMap = {}) => {
+    Object
+      .keys(dependencyMap)
+      .forEach(k => this.addDependencyErrorHandler(dependencyMap[k]));
+  };
+
+  removeDependencyMapErrorHandlers = (dependencyMap = {}) => {
+    Object
+      .keys(dependencyMap)
+      .forEach(k => this.removeDependencyErrorHandler(dependencyMap[k]));
   };
 
   resolveDependency(dependency) {

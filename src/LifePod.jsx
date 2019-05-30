@@ -285,21 +285,27 @@ export default class LifePod extends HashMatrix {
     const pathString = this.getPathString(path);
 
     return new Promise((res, rej) => {
+      let timeoutIdentifier = undefined;
+
       const handlers = {
+        remove: () => {
+          clearTimeout(timeoutIdentifier);
+          this.removeChangeHandler(pathString, handlers.onChange);
+          this.removeErrorHandler(pathString, handlers.onError);
+        },
         onChange: () => {
           try {
             const value = this.getPath(path);
 
             if (typeof value !== 'undefined') {
-              this.removeChangeHandler(pathString, handlers.onChange);
-              this.removeErrorHandler(pathString, handlers.onError);
+              handlers.remove();
+
               res(value);
             }
           } catch (error) {
             const {message = ''} = error || {};
 
-            this.removeChangeHandler(pathString, handlers.onChange);
-            this.removeErrorHandler(pathString, handlers.onError);
+            handlers.remove();
 
             rej({
               message,
@@ -310,8 +316,7 @@ export default class LifePod extends HashMatrix {
           }
         },
         onError: e => {
-          this.removeChangeHandler(pathString, handlers.onChange);
-          this.removeErrorHandler(pathString, handlers.onError);
+          handlers.remove();
 
           rej(e);
         }
@@ -321,7 +326,7 @@ export default class LifePod extends HashMatrix {
       this.addErrorHandler(pathString, handlers.onError);
 
       if (typeof timeoutMS === 'number') {
-        setTimeout(() => handlers.onError(new Error(LifePod.ERROR_MESSAGES.RESOLUTION_TIMEOUT)), timeoutMS);
+        timeoutIdentifier = setTimeout(() => handlers.onError(new Error(LifePod.ERROR_MESSAGES.RESOLUTION_TIMEOUT)), timeoutMS);
       }
 
       handlers.onChange();

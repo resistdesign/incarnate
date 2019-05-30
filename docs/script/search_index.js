@@ -114,6 +114,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/hashmatrix.jsx~hashmatrix#_errorhandlermap",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-member-_errorHandlerMap",
+    "src/HashMatrix.jsx~HashMatrix#_errorHandlerMap",
+    "member"
+  ],
+  [
     "src/hashmatrix.jsx~hashmatrix#_getpathinternal",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-_getPathInternal",
     "src/HashMatrix.jsx~HashMatrix#_getPathInternal",
@@ -123,6 +129,12 @@ window.esdocSearchIndex = [
     "src/hashmatrix.jsx~hashmatrix#_setdefaultname",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-_setDefaultName",
     "src/HashMatrix.jsx~HashMatrix#_setDefaultName",
+    "method"
+  ],
+  [
+    "src/hashmatrix.jsx~hashmatrix#_seterrorinternal",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-_setErrorInternal",
+    "src/HashMatrix.jsx~HashMatrix#_setErrorInternal",
     "method"
   ],
   [
@@ -138,6 +150,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/hashmatrix.jsx~hashmatrix#adderrorhandler",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-addErrorHandler",
+    "src/HashMatrix.jsx~HashMatrix#addErrorHandler",
+    "method"
+  ],
+  [
     "src/hashmatrix.jsx~hashmatrix#constructor",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-constructor-constructor",
     "src/HashMatrix.jsx~HashMatrix#constructor",
@@ -150,6 +168,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/hashmatrix.jsx~hashmatrix#dispatcherrors",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-dispatchErrors",
+    "src/HashMatrix.jsx~HashMatrix#dispatchErrors",
+    "method"
+  ],
+  [
     "src/hashmatrix.jsx~hashmatrix#getbasepatharray",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getBasePathArray",
     "src/HashMatrix.jsx~HashMatrix#getBasePathArray",
@@ -159,6 +183,12 @@ window.esdocSearchIndex = [
     "src/hashmatrix.jsx~hashmatrix#getchangehandlerlist",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getChangeHandlerList",
     "src/HashMatrix.jsx~HashMatrix#getChangeHandlerList",
+    "method"
+  ],
+  [
+    "src/hashmatrix.jsx~hashmatrix#geterrorhandlerlist",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-getErrorHandlerList",
+    "src/HashMatrix.jsx~HashMatrix#getErrorHandlerList",
     "method"
   ],
   [
@@ -216,6 +246,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/hashmatrix.jsx~hashmatrix#onerror",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-onError",
+    "src/HashMatrix.jsx~HashMatrix#onError",
+    "method"
+  ],
+  [
     "src/hashmatrix.jsx~hashmatrix#pathdelimiter",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-member-pathDelimiter",
     "src/HashMatrix.jsx~HashMatrix#pathDelimiter",
@@ -228,9 +264,27 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/hashmatrix.jsx~hashmatrix#removeerrorhandler",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-removeErrorHandler",
+    "src/HashMatrix.jsx~HashMatrix#removeErrorHandler",
+    "method"
+  ],
+  [
     "src/hashmatrix.jsx~hashmatrix#setchangehandlerlist",
     "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-setChangeHandlerList",
     "src/HashMatrix.jsx~HashMatrix#setChangeHandlerList",
+    "method"
+  ],
+  [
+    "src/hashmatrix.jsx~hashmatrix#seterror",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-setError",
+    "src/HashMatrix.jsx~HashMatrix#setError",
+    "method"
+  ],
+  [
+    "src/hashmatrix.jsx~hashmatrix#seterrorhandlerlist",
+    "class/src/HashMatrix.jsx~HashMatrix.html#instance-method-setErrorHandlerList",
+    "src/HashMatrix.jsx~HashMatrix#setErrorHandlerList",
     "method"
   ],
   [
@@ -420,9 +474,21 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/lifepod.jsx~lifepod#adddependencyerrorhandler",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-addDependencyErrorHandler",
+    "src/LifePod.jsx~LifePod#addDependencyErrorHandler",
+    "member"
+  ],
+  [
     "src/lifepod.jsx~lifepod#adddependencymapchangehandlers",
     "class/src/LifePod.jsx~LifePod.html#instance-member-addDependencyMapChangeHandlers",
     "src/LifePod.jsx~LifePod#addDependencyMapChangeHandlers",
+    "member"
+  ],
+  [
+    "src/lifepod.jsx~lifepod#adddependencymaperrorhandlers",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-addDependencyMapErrorHandlers",
+    "src/LifePod.jsx~LifePod#addDependencyMapErrorHandlers",
     "member"
   ],
   [
@@ -433,13 +499,13 @@ window.esdocSearchIndex = [
   ],
   [
     "src/lifepod.jsx~lifepod#dependencies",
-    "class/src/LifePod.jsx~LifePod.html#instance-get-dependencies",
+    "class/src/LifePod.jsx~LifePod.html#instance-set-dependencies",
     "src/LifePod.jsx~LifePod#dependencies",
     "member"
   ],
   [
     "src/lifepod.jsx~lifepod#dependencies",
-    "class/src/LifePod.jsx~LifePod.html#instance-set-dependencies",
+    "class/src/LifePod.jsx~LifePod.html#instance-get-dependencies",
     "src/LifePod.jsx~LifePod#dependencies",
     "member"
   ],
@@ -480,6 +546,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/lifepod.jsx~lifepod#handledependencyerror",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-handleDependencyError",
+    "src/LifePod.jsx~LifePod#handleDependencyError",
+    "member"
+  ],
+  [
     "src/lifepod.jsx~lifepod#handlefactorypromise",
     "class/src/LifePod.jsx~LifePod.html#instance-method-handleFactoryPromise",
     "src/LifePod.jsx~LifePod#handleFactoryPromise",
@@ -510,9 +582,21 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/lifepod.jsx~lifepod#removedependencyerrorhandler",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-removeDependencyErrorHandler",
+    "src/LifePod.jsx~LifePod#removeDependencyErrorHandler",
+    "member"
+  ],
+  [
     "src/lifepod.jsx~lifepod#removedependencymapchangehandlers",
     "class/src/LifePod.jsx~LifePod.html#instance-member-removeDependencyMapChangeHandlers",
     "src/LifePod.jsx~LifePod#removeDependencyMapChangeHandlers",
+    "member"
+  ],
+  [
+    "src/lifepod.jsx~lifepod#removedependencymaperrorhandlers",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-removeDependencyMapErrorHandlers",
+    "src/LifePod.jsx~LifePod#removeDependencyMapErrorHandlers",
     "member"
   ],
   [

@@ -8,6 +8,10 @@ import HashMatrix from './HashMatrix';
 export default class LifePod extends HashMatrix {
   static DEFAULT_NAME = 'LifePod';
 
+  static ERROR_MESSAGES = {
+    RESOLUTION_TIMEOUT: 'RESOLUTION_TIMEOUT'
+  };
+
   _dependencies;
 
   /**
@@ -273,7 +277,7 @@ export default class LifePod extends HashMatrix {
   /**
    * The same as `getPath` but asynchronous and will wait for a value.
    * */
-  async getPathAsync(path) {
+  async getPathAsync(path, timeoutMS) {
     const pathString = this.getPathString(path);
 
     return new Promise((res, rej) => {
@@ -312,6 +316,10 @@ export default class LifePod extends HashMatrix {
       this.addChangeHandler(pathString, handlers.onChange);
       this.addErrorHandler(pathString, handlers.onError);
 
+      if (typeof timeoutMS === 'number') {
+        setTimeout(() => handlers.onError(new Error(LifePod.ERROR_MESSAGES.RESOLUTION_TIMEOUT)), timeoutMS);
+      }
+
       handlers.onChange();
     });
   }
@@ -319,7 +327,7 @@ export default class LifePod extends HashMatrix {
   /**
    * The same as `getValue` but asynchronous and will wait for a value.
    * */
-  async getValueAsync() {
-    return this.getPathAsync([]);
+  async getValueAsync(timeoutMS) {
+    return this.getPathAsync([], timeoutMS);
   }
 }

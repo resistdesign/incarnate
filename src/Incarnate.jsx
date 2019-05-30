@@ -276,11 +276,11 @@ export default class Incarnate extends HashMatrix {
   /**
    * The same as `getPath` but triggers `LifePod` dependency resolution and waits for a value.
    * */
-  async getResolvedPathAsync(path) {
+  async getResolvedPathAsync(path, timeoutMS) {
     const dep = this.getDependency(path);
 
     if (dep instanceof LifePod) {
-      return dep.getValueAsync();
+      return dep.getValueAsync(timeoutMS);
     } else {
       return this.getPath(path);
     }

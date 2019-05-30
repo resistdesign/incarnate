@@ -197,7 +197,13 @@ export default class LifePod extends HashMatrix {
 
   async handleFactoryPromise(factoryPromise) {
     if (factoryPromise instanceof Promise) {
-      const value = await factoryPromise;
+      let value = undefined;
+
+      try {
+        value = await factoryPromise;
+      } catch (error) {
+        this.setError([], error);
+      }
 
       this.resolving = false;
 
@@ -227,9 +233,7 @@ export default class LifePod extends HashMatrix {
           }
 
           if (resolvedValue instanceof Promise) {
-            this
-              .handleFactoryPromise(resolvedValue)
-              .catch(error => this.setError([], error));
+            this.handleFactoryPromise(resolvedValue);
           } else {
             this.resolving = false;
           }

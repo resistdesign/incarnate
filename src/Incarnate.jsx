@@ -66,7 +66,8 @@ export default class Incarnate extends HashMatrix {
       setters = {},
       invalidators = {},
       listeners = {},
-      strict,
+      strict = this.strict,
+      pathDelimiter = this.pathDelimiter,
       ...otherConfig
     } = dependencyDeclaration;
     const newDependencyDeclaration = new DependencyDeclaration({
@@ -79,9 +80,8 @@ export default class Incarnate extends HashMatrix {
       setters: this.createFromMap(setters, this.createSetter),
       invalidators: this.createFromMap(invalidators, this.createInvalidator),
       listeners: this.createFromMap(listeners, this.createListener),
-      strict: typeof strict !== 'undefined' ?
-        strict :
-        this.strict
+      strict,
+      pathDelimiter
     });
 
     return new LifePod(newDependencyDeclaration);
@@ -91,7 +91,8 @@ export default class Incarnate extends HashMatrix {
     const {
       subMap = {},
       shared = {},
-      strict,
+      strict = this.strict,
+      pathDelimiter = this.pathDelimiter,
       ...otherConfig
     } = subMapDeclaration;
     const parsedSharedMap = Object.keys(shared)
@@ -112,9 +113,8 @@ export default class Incarnate extends HashMatrix {
       targetPath: name,
       hashMatrix: this,
       subMap: subMapWithShared,
-      strict: typeof strict !== 'undefined' ?
-        strict :
-        this.strict
+      strict,
+      pathDelimiter
     });
 
     for (const k in subMap) {

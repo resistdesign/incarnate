@@ -14,10 +14,7 @@ export default class HashMatrix extends ConfigurableInstance {
   static DEFAULT_NAME = 'HashMatrix';
   static DEFAULT_PATH_DELIMITER = '.';
   static ERRORS = {
-    INVALID_HASH_MATRIX: 'INVALID_HASH_MATRIX',
-    INVALID_PATH_DELIMITER: 'INVALID_PATH_DELIMITER',
-    INVALID_PATH_CHANGE_HANDLER: 'INVALID_PATH_CHANGE_HANDLER',
-    PROTECTED_HASH_MATRIX: 'PROTECTED_HASH_MATRIX'
+    INVALID_PATH_DELIMITER: 'INVALID_PATH_DELIMITER'
   };
 
   static keyIsNumeric(key) {
@@ -33,6 +30,8 @@ export default class HashMatrix extends ConfigurableInstance {
   }
 
   _changeHandlerMap = {};
+
+  _errorHandlerMap = {};
 
   /**
    * The name of this `HashMatrix`.
@@ -148,6 +147,68 @@ export default class HashMatrix extends ConfigurableInstance {
     handlerList.forEach((h) => h(path, causePath, this));
   }
 
+  getErrorHandlerList(path) {
+    const pathString = this.getPathString(path);
+
+    return this._errorHandlerMap[pathString] || [];
+  }
+
+  setErrorHandlerList(path, handlerList = []) {
+    const pathString = this.getPathString(path);
+
+    this._errorHandlerMap[pathString] = handlerList;
+  }
+
+  addErrorHandler(path = '', handler) {
+    if (this.hashMatrix instanceof HashMatrix) {
+      return this.hashMatrix.addErrorHandler(
+        this.getPathArray(path, this.targetPath),
+        handler
+      );
+    }
+
+    if (handler instanceof Function) {
+      const handlerList = this.getErrorHandlerList(path);
+
+      if (handlerList.indexOf(handler) === -1) {
+        handlerList.push(handler);
+
+        this.setErrorHandlerList(path, handlerList);
+
+        return () => this.removeErrorHandler(handler);
+      }
+    }
+  }
+
+  removeErrorHandler(path = '', handler) {
+    if (this.hashMatrix instanceof HashMatrix) {
+      return this.hashMatrix.removeErrorHandler(
+        this.getPathArray(path, this.targetPath),
+        handler
+      );
+    }
+
+    const handlerList = this.getErrorHandlerList(path);
+
+    if (handlerList.indexOf(handler) !== -1) {
+      const newHandlerList = [];
+
+      handlerList.forEach((h) => {
+        if (h !== handler) {
+          newHandlerList.push(h);
+        }
+      });
+
+      this.setErrorHandlerList(path, newHandlerList);
+    }
+  }
+
+  onError(error, path, causePath) {
+    const handlerList = this.getErrorHandlerList(path);
+
+    handlerList.forEach((h) => h(error, path, causePath, this));
+  }
+
   getBasePathArray(path = '') {
     return path instanceof Array ?
       [...path] :
@@ -191,6 +252,47 @@ export default class HashMatrix extends ConfigurableInstance {
     }
 
     this.onChange('', pathString);
+  }
+
+  dispatchErrors(error, path) {
+    const pathArray = this.getPathArray(path);
+    const pathString = this.getPathString(pathArray);
+
+    // Notify lifecycle listeners of errors all the way up the path.
+
+    if (pathArray.length) {
+      const currentPath = [...pathArray];
+
+      // TRICKY: Start with the deepest path and move up to the most shallow.
+      while (currentPath.length) {
+        this.onError(
+          // The error.
+          error,
+          // Path as a string.
+          this.getPathString(currentPath),
+          // The cause path.
+          pathString
+        );
+        currentPath.pop();
+      }
+    }
+
+    this.onError(error, '', pathString);
+  }
+
+  _setErrorInternal(path, error) {
+    if (this.hashMatrix instanceof HashMatrix) {
+      return this.hashMatrix.setError(
+        this.getPathArray(path, this.targetPath),
+        error
+      );
+    }
+
+    this.dispatchErrors(error, path);
+  }
+
+  setError(path, error) {
+    return this._setErrorInternal(path, error);
   }
 
   _getPathInternal(path) {

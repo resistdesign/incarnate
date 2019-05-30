@@ -23,12 +23,14 @@ export default class LifePod extends HashMatrix {
   set dependencies(value) {
     if (this._dependencies instanceof Object) {
       this.removeDependencyMapChangeHandlers(this._dependencies);
+      this.removeDependencyMapErrorHandlers(this._dependencies);
     }
 
     this._dependencies = value;
 
     if (this._dependencies instanceof Object) {
       this.addDependencyMapChangeHandlers(this._dependencies);
+      this.addDependencyMapErrorHandlers(this._dependencies);
     }
   }
 
@@ -122,6 +124,43 @@ export default class LifePod extends HashMatrix {
       .forEach(k => this.removeDependencyChangeHandler(dependencyMap[k]));
   };
 
+  handleDependencyError = (error, path, causePath, target) => {
+    const dependencyError = new Error('A dependency failed to resolve.');
+
+    dependencyError.source = {
+      error,
+      path,
+      causePath,
+      target
+    };
+
+    this.setError([], dependencyError);
+  };
+
+  addDependencyErrorHandler = (dependency) => {
+    if (dependency instanceof HashMatrix) {
+      dependency.addErrorHandler('', this.handleDependencyError);
+    }
+  };
+
+  removeDependencyErrorHandler = (dependency) => {
+    if (dependency instanceof HashMatrix) {
+      dependency.removeErrorHandler('', this.handleDependencyError);
+    }
+  };
+
+  addDependencyMapErrorHandlers = (dependencyMap = {}) => {
+    Object
+      .keys(dependencyMap)
+      .forEach(k => this.addDependencyErrorHandler(dependencyMap[k]));
+  };
+
+  removeDependencyMapErrorHandlers = (dependencyMap = {}) => {
+    Object
+      .keys(dependencyMap)
+      .forEach(k => this.removeDependencyErrorHandler(dependencyMap[k]));
+  };
+
   resolveDependency(dependency) {
     if (dependency instanceof HashMatrix) {
       return dependency.getValue();
@@ -174,10 +213,19 @@ export default class LifePod extends HashMatrix {
         const resolvedDependencyDeclaration = this.resolveDependencyMap(this.dependencies);
 
         if (typeof resolvedDependencyDeclaration !== 'undefined') {
-          resolvedValue = this.factory(resolvedDependencyDeclaration);
+          try {
+            resolvedValue = this.factory(resolvedDependencyDeclaration);
+          } catch (error) {
+            this.setError(
+              [],
+              error
+            );
+          }
 
           if (resolvedValue instanceof Promise) {
-            this.handleFactoryPromise(resolvedValue);
+            this
+              .handleFactoryPromise(resolvedValue)
+              .catch(error => this.setError([], error));
           } else {
             this.resolving = false;
           }
@@ -229,29 +277,42 @@ export default class LifePod extends HashMatrix {
     const pathString = this.getPathString(path);
 
     return new Promise((res, rej) => {
-      const handler = () => {
-        try {
-          const value = this.getPath(path);
+      const handlers = {
+        onChange: () => {
+          try {
+            const value = this.getPath(path);
 
-          if (typeof value !== 'undefined') {
-            this.removeChangeHandler(pathString, handler);
-            res(value);
+            if (typeof value !== 'undefined') {
+              this.removeChangeHandler(pathString, handlers.onChange);
+              this.removeErrorHandler(pathString, handlers.onError);
+              res(value);
+            }
+          } catch (error) {
+            const {message = ''} = error || {};
+
+            this.removeChangeHandler(pathString, handlers.onChange);
+            this.removeErrorHandler(pathString, handlers.onError);
+
+            rej({
+              message,
+              subject: this,
+              data: path,
+              error
+            });
           }
-        } catch (error) {
-          const {message = ''} = error || {};
+        },
+        onError: e => {
+          this.removeChangeHandler(pathString, handlers.onChange);
+          this.removeErrorHandler(pathString, handlers.onError);
 
-          rej({
-            message,
-            subject: this,
-            data: path,
-            error
-          });
+          rej(e);
         }
       };
 
-      this.addChangeHandler(pathString, handler);
+      this.addChangeHandler(pathString, handlers.onChange);
+      this.addErrorHandler(pathString, handlers.onError);
 
-      handler();
+      handlers.onChange();
     });
   }
 

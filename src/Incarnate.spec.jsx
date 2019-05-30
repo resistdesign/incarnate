@@ -104,6 +104,45 @@ export default {
         );
         expect(missingSharedDependencyError.data).to.equal('missing');
       }
+    },
+    'addErrorHandler': {
+      'should call the handler when an asynchronous error occurs at the given path': async () => {
+        const asyncNestedDepError = new Error('Error from `a.b`.');
+        const inc = new Incarnate(new SubMapDeclaration({
+          subMap: {
+            a: {
+              subMap: {
+                b: {
+                  factory: async () => {
+                    throw asyncNestedDepError;
+                  }
+                }
+              }
+            },
+            c: {
+              dependencies: {
+                dep: 'a.b'
+              },
+              strict: true,
+              factory: () => true
+            }
+          }
+        }));
+
+        try {
+          await inc.getResolvedPathAsync('c');
+
+          expect(true).to.equal(false);
+        } catch (error) {
+          const {
+            source: {
+              error: sourceError
+            }
+          } = error;
+
+          expect(sourceError).to.equal(asyncNestedDepError);
+        }
+      }
     }
   }
 };

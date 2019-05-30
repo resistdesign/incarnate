@@ -53,4 +53,10 @@ export default class DependencyDeclaration extends ConfigurableInstance {
    * @type {boolean}
    * */
   noCache;
+
+  /**
+   * Merge all dependency types into one `Object` when being passed to the `factory`. Default: `true`
+   * @type {boolean}
+   * */
+  mergeDeps;
 }

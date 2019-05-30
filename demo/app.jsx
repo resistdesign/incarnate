@@ -36,7 +36,7 @@ const inc = new Incarnate({
           dependencies: {
             user: 'user'
           },
-          factory: ({dependencies: {user: {authToken = ''} = {}} = {}} = {}) => {
+          factory: ({user: {authToken = ''} = {}} = {}) => {
             return async () => {
               // NOTE: IF we call this service method AFTER `login`,
               // the `authToken` will have been automatically updated,
@@ -77,7 +77,7 @@ const inc = new Incarnate({
           setters: {
             setUser: 'user'
           },
-          factory: ({dependencies: {loginService} = {}, setters: {setUser} = {}} = {}) => {
+          factory: ({loginService, setUser} = {}) => {
             return async ({username, password} = {}) => {
               // Login
               const authToken = await loginService(username, password);

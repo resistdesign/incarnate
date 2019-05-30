@@ -1,6 +1,6 @@
 {
-  "coverage": "36.44%",
-  "expectCount": 107,
+  "coverage": "36.11%",
+  "expectCount": 108,
   "actualCount": 39,
   "files": {
     "src/ConfigurableInstance.jsx": {
@@ -79,26 +79,27 @@
       ]
     },
     "src/LifePod.jsx": {
-      "expectCount": 31,
+      "expectCount": 32,
       "actualCount": 14,
       "undocumentLines": [
         9,
         11,
-        99,
+        15,
         103,
-        109,
-        115,
-        121,
-        127,
-        140,
-        146,
-        152,
-        158,
-        164,
-        170,
-        194,
+        107,
+        113,
+        119,
+        125,
+        131,
+        144,
+        150,
+        156,
+        162,
+        168,
+        174,
         198,
-        206
+        202,
+        210
       ]
     },
     "src/SubMapDeclaration.jsx": {

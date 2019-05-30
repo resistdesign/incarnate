@@ -84,6 +84,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/dependencydeclaration.jsx~dependencydeclaration#mergedeps",
+    "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-mergeDeps",
+    "src/DependencyDeclaration.jsx~DependencyDeclaration#mergeDeps",
+    "member"
+  ],
+  [
     "src/dependencydeclaration.jsx~dependencydeclaration#nocache",
     "class/src/DependencyDeclaration.jsx~DependencyDeclaration.html#instance-member-noCache",
     "src/DependencyDeclaration.jsx~DependencyDeclaration#noCache",
@@ -567,6 +573,12 @@ window.esdocSearchIndex = [
     "src/lifepod.jsx~lifepod#listeners",
     "class/src/LifePod.jsx~LifePod.html#instance-member-listeners",
     "src/LifePod.jsx~LifePod#listeners",
+    "member"
+  ],
+  [
+    "src/lifepod.jsx~lifepod#mergedeps",
+    "class/src/LifePod.jsx~LifePod.html#instance-member-mergeDeps",
+    "src/LifePod.jsx~LifePod#mergeDeps",
     "member"
   ],
   [

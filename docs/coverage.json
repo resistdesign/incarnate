@@ -1,7 +1,7 @@
 {
-  "coverage": "36.11%",
-  "expectCount": 108,
-  "actualCount": 39,
+  "coverage": "36.93%",
+  "expectCount": 111,
+  "actualCount": 41,
   "files": {
     "src/ConfigurableInstance.jsx": {
       "expectCount": 2,
@@ -12,8 +12,8 @@
       ]
     },
     "src/DependencyDeclaration.jsx": {
-      "expectCount": 9,
-      "actualCount": 8,
+      "expectCount": 10,
+      "actualCount": 9,
       "undocumentLines": [
         6
       ]
@@ -79,27 +79,28 @@
       ]
     },
     "src/LifePod.jsx": {
-      "expectCount": 32,
-      "actualCount": 14,
+      "expectCount": 34,
+      "actualCount": 15,
       "undocumentLines": [
-        9,
-        11,
-        15,
-        103,
-        107,
-        113,
-        119,
-        125,
+        4,
+        31,
+        33,
+        37,
         131,
-        144,
-        150,
-        156,
-        162,
-        168,
-        174,
-        198,
-        208,
-        216
+        135,
+        141,
+        147,
+        153,
+        159,
+        172,
+        178,
+        184,
+        190,
+        196,
+        202,
+        226,
+        236,
+        244
       ]
     },
     "src/SubMapDeclaration.jsx": {

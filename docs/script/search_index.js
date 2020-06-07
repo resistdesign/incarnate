@@ -505,13 +505,13 @@ window.esdocSearchIndex = [
   ],
   [
     "src/lifepod.jsx~lifepod#dependencies",
-    "class/src/LifePod.jsx~LifePod.html#instance-set-dependencies",
+    "class/src/LifePod.jsx~LifePod.html#instance-get-dependencies",
     "src/LifePod.jsx~LifePod#dependencies",
     "member"
   ],
   [
     "src/lifepod.jsx~lifepod#dependencies",
-    "class/src/LifePod.jsx~LifePod.html#instance-get-dependencies",
+    "class/src/LifePod.jsx~LifePod.html#instance-set-dependencies",
     "src/LifePod.jsx~LifePod#dependencies",
     "member"
   ],

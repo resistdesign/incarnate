@@ -1,6 +1,6 @@
 import Incarnate from '../src/index';
 
-// Declare your application.
+// Declare your application dependencies.
 const inc = new Incarnate({
   subMap: {
     // Keep track of your state.
@@ -42,7 +42,7 @@ const inc = new Incarnate({
               // the `authToken` will have been automatically updated,
               // in this service, by Incarnate.
               if (!authToken) {
-                throw new Error('The accounts service requires an authorization token but none was supplied.');
+                throw new Error('The accounts service requires an authorization token but one was not supplied.');
               }
 
               // Get a list of accounts with the `authToken` in the headers.
